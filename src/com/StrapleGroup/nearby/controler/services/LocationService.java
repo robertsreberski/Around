@@ -19,8 +19,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class LocationService extends Service {
-	public static final String BROADCAST_ACTION = "Hello World";
-	private static final int TWO_MINUTES = 1000 * 60 * 1;
+	public static final String BROADCAST_ACTION = "NearBy";
+	private static final int TWO_MINUTES = 1000 * 60 * 2;
 	public LocationManager locationManager;
 	public NearbyLocationListener listener;
 	public Location previousBestLocation = null;
@@ -55,7 +55,6 @@ public class LocationService extends Service {
 	        // A new location is always better than no location
 	        return true;
 	    }
-
 	    // Check whether the new location fix is newer or older
 	    long timeDelta = location.getTime() - currentBestLocation.getTime();
 	    boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
@@ -75,7 +74,7 @@ public class LocationService extends Service {
 	    int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
 	    boolean isLessAccurate = accuracyDelta > 0;
 	    boolean isMoreAccurate = accuracyDelta < 0;
-	    boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+	    boolean isSignificantlyLessAccurate = accuracyDelta > 500;
 
 	    // Check if the old and new location are from the same provider
 	    boolean isFromSameProvider = isSameProvider(location.getProvider(),
@@ -131,12 +130,12 @@ public class LocationService extends Service {
 	        Log.i("**************************************", "Location changed");
 	        if(isBetterLocation(loc, previousBestLocation)) {
 	            loc.getLatitude();
-	            loc.getLongitude();             
+	            loc.getLongitude();
+//	            intent.putExtra("")
 	            intent.putExtra("Latitude", loc.getLatitude());
 	            intent.putExtra("Longitude", loc.getLongitude());     
-	            intent.putExtra("Provider", loc.getProvider());                 
+//	            intent.putExtra("Provider", loc.getProvider());                 
 	            sendBroadcast(intent);          
-
 	        }                               
 	    }
 
