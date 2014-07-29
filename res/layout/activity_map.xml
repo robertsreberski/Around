@@ -4,30 +4,32 @@
     android:layout_height="match_parent"
     tools:context="${packageName}.${activityClass}" >
 
-    <Button
-        android:id="@+id/next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Next" />
-
-    <Button
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:onClick="start"
-        android:text="Location" />
-
     <fragment
         android:id="@+id/map_create"
         android:name="com.StrapleGroup.nearby.model.MapModel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/next"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
+    <Button
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/map_create"
+        android:onClick="start"
+        android:text="Location" />
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="next"
+        android:text="Next" />
 
     <Button
         android:id="@+id/settings"

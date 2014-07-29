@@ -41,8 +41,8 @@ public class LocationService extends Service {
 	public void onStart(Intent intent, int startId) {      
 	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	    listener = new NearbyLocationListener();        
-	    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 4000, 0, listener);
-	    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 4000, 0, listener);
+	    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 40, listener);
+	    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 40, listener);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class LocationService extends Service {
 	    int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
 	    boolean isLessAccurate = accuracyDelta > 0;
 	    boolean isMoreAccurate = accuracyDelta < 0;
-	    boolean isSignificantlyLessAccurate = accuracyDelta > 500;
+	    boolean isSignificantlyLessAccurate = accuracyDelta > 100;
 
 	    // Check if the old and new location are from the same provider
 	    boolean isFromSameProvider = isSameProvider(location.getProvider(),
@@ -122,7 +122,7 @@ public class LocationService extends Service {
 	    return t;
 	}
 
-	public class NearbyLocationListener implements LocationListener
+	private class NearbyLocationListener implements LocationListener
 	{
 
 	    public void onLocationChanged(final Location loc)
