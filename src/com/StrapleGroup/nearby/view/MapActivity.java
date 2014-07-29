@@ -36,6 +36,7 @@ public class MapActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 		mapPane = ((MapModel) getFragmentManager().findFragmentById(
@@ -94,6 +95,10 @@ public class MapActivity extends BaseActivity {
 		// lang = currentLocation.getLongitude();
 		// Toast.makeText(this,"Latitude: "+String.valueOf(lat)+" ;Longitude: "+String.valueOf(lang),
 		// Toast.LENGTH_LONG).show();
+	}
+	public void next(View v){
+		Intent intentNext = new Intent(this,FriendsListActivity.class);
+		startActivity(intentNext);
 	}
 
 	@Override

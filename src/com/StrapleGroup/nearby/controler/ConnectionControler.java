@@ -3,17 +3,12 @@ package com.StrapleGroup.nearby.controler;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.location.LocationManager;
 import android.util.Log;
 
 import com.StrapleGroup.nearby.base.BaseActivity;
 import com.StrapleGroup.nearby.view.ForErrorDialog.ErrorDialogFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationRequest;
 
 public class ConnectionControler extends BaseActivity {
 	// Klasa sprawdza dostepnosc uslug Google Play
