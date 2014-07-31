@@ -52,8 +52,7 @@ public class MapActivity extends BaseActivity {
 		setContentView(R.layout.activity_map);
 		//tworzenie mapy
 		mapPane = ((MapControler) getFragmentManager().findFragmentById(R.id.map_create)).getMap();
-		MapControler pMapCtrl = new MapControler();
-		pMapCtrl.mapCustomer();
+		mapCustomer();
 		//inicjacja zmiennych GCM
 		context = getApplicationContext();
 		googleCloudMessaging = GoogleCloudMessaging.getInstance(this);
@@ -79,6 +78,14 @@ public class MapActivity extends BaseActivity {
 	public void next(View v){
 		Intent intentNext = new Intent(this,FriendsListActivity.class);
 		startActivity(intentNext);
+	}
+	public void mapCustomer(){
+		mapPane.setMyLocationEnabled(true);
+		mapPane.getUiSettings().setCompassEnabled(false);
+		mapPane.getUiSettings().setZoomControlsEnabled(false);
+		mapPane.getUiSettings().setMyLocationButtonEnabled(false);
+		mapPane.getUiSettings().setZoomGesturesEnabled(false);
+		mapPane.getUiSettings().setScrollGesturesEnabled(false);
 	}
 
 	private void initLocationService() {
