@@ -19,7 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/map_create"
-        android:onClick="start"
         android:text="Location" />
 
     <Button
