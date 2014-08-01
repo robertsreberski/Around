@@ -48,15 +48,15 @@ public class MapActivity extends BaseActivity {
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_map);
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_map);
 		//tworzenie mapy
-		mapPane = ((MapControler) getFragmentManager().findFragmentById(R.id.map_create)).getMap();
-		mapCustomer();
+				mapPane = ((MapControler) getFragmentManager().findFragmentById(R.id.map_create)).getMap();
+				mapCustomer();
 		//inicjacja zmiennych GCM
-		context = getApplicationContext();
-		googleCloudMessaging = GoogleCloudMessaging.getInstance(this);
-        registrationId = getRegistrationId(context);
+				context = getApplicationContext();
+				googleCloudMessaging = GoogleCloudMessaging.getInstance(this);
+				registrationId = getRegistrationId(context);
 		 if (registrationId.isEmpty()) {
 	            registerInBackground();
 	        }
@@ -79,6 +79,7 @@ public class MapActivity extends BaseActivity {
 		Intent intentNext = new Intent(this,FriendsListActivity.class);
 		startActivity(intentNext);
 	}
+
 	public void mapCustomer(){
 		mapPane.setMyLocationEnabled(true);
 		mapPane.getUiSettings().setCompassEnabled(false);
@@ -166,12 +167,6 @@ public class MapActivity extends BaseActivity {
 	    editor.putInt(PROPERTY_APP_VERSION, appVersion);
 	    editor.commit();
 	}
-	
-	
-	
-	
-	
-	
 	public class LocationReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
