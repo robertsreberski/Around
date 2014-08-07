@@ -5,12 +5,11 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.util.Log;
 
-import com.StrapleGroup.nearby.base.BaseActivity;
-import com.StrapleGroup.nearby.view.ForErrorDialog.ErrorDialogFragment;
+import com.StrapleGroup.nearby.ui.view.ForErrorDialog.ErrorDialogFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-public class ConnectionControler extends BaseActivity {
+public class ConnectionControler extends Activity {
 	// Klasa sprawdza dostepnosc uslug Google Play
 	ConnectionResult connectionResult;
 	public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
