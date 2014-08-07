@@ -1,6 +1,6 @@
 package com.StrapleGroup.nearby.controler.services;
 
-import com.StrapleGroup.nearby.view.MapActivity;
+import com.StrapleGroup.nearby.ui.view.MapActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
