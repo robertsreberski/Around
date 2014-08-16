@@ -14,12 +14,13 @@
         android:layout_alignParentTop="true" />
 
     <Button
-        android:id="@+id/location"
+        android:id="@+id/Log_off"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/map_create"
-        android:text="Location" />
+        android:onClick="logoff"
+        android:text="Log off" />
 
     <Button
         android:id="@+id/next"
@@ -36,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/next"
-        android:layout_toRightOf="@+id/location"
+        android:layout_toRightOf="@+id/Log_off"
         android:text="Settings" />
 
 </RelativeLayout>

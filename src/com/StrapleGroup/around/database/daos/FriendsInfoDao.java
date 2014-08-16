@@ -29,31 +29,37 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
 	}
 
 	@Override
-	public long save(FriendsInfo entity) {
+	public long save(FriendsInfo friendsInfo) {
 		insertStatement.clearBindings();
-		insertStatement.bindString(1, entity.getLoginFriend());
-		insertStatement.bindDouble(2, entity.getXFriend());
-		insertStatement.bindDouble(3, entity.getYFriend());
+		insertStatement.bindString(1, friendsInfo.getLoginFriend());
+		insertStatement.bindDouble(2, friendsInfo.getXFriend());
+		insertStatement.bindDouble(3, friendsInfo.getYFriend());
 		return insertStatement.executeInsert();
 	}
 
 	@Override
-	public void update(FriendsInfo entity) {
+	public void update(FriendsInfo friendsInfo) {
 		final ContentValues values = new ContentValues();
-		values.put(FriendsInfoColumns.LOGIN_FRIEND, entity.getLoginFriend());
-		values.put(FriendsInfoColumns.X_FRIEND, entity.getXFriend());
-		values.put(FriendsInfoColumns.Y_FRIEND, entity.getYFriend());
+		values.put(FriendsInfoColumns.LOGIN_FRIEND, friendsInfo.getLoginFriend());
+		values.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
+		values.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
 		db.update(FriendsInfoTable.TABLE_NAME, values,
 				BaseColumns._ID + " = ?",
-				new String[] { String.valueOf(entity.getId()) });
-
+				new String[] { String.valueOf(friendsInfo.getId()) });
+	}
+	@Override
+	public void updateCoordinates(FriendsInfo friendsInfo){
+		final ContentValues pValues = new ContentValues();
+		pValues.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
+		pValues.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
+		db.update(FriendsInfoTable.TABLE_NAME, pValues , BaseColumns._ID + " =?", new String[] {String.valueOf(friendsInfo.getId())});
 	}
 
 	@Override
-	public void delete(FriendsInfo entity) {
-		if (entity.getId() > 0) {
+	public void delete(FriendsInfo friendsInfo) {
+		if (friendsInfo.getId() > 0) {
 			db.delete(FriendsInfoTable.TABLE_NAME, BaseColumns._ID + " =?",
-					new String[] { String.valueOf(entity.getId()) });
+					new String[] { String.valueOf(friendsInfo.getId()) });
 		}
 	}
 
@@ -72,7 +78,6 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
 		}
 		return pFriendsInfo;
 	}
-
 	@Override
 	public List<FriendsInfo> getAll() {
 		List<FriendsInfo> pFriendsList = new ArrayList<FriendsInfo>();

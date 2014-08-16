@@ -1,7 +1,6 @@
 package com.StrapleGroup.around.database;
 
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
-import com.StrapleGroup.around.database.tables.UserFriendsTable;
 import com.StrapleGroup.around.database.tables.UserInfoTable;
 
 import android.content.Context;
@@ -12,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class OpenHelper extends SQLiteOpenHelper {
 	
 	private static final int DATABASE_VERSION = 1;
-	private static final String DATABASE_NAME = "NearbyInfoControler.db";
+	private static final String DATABASE_NAME = "DataTables.db";
 	private Context context;
 	
 	public OpenHelper(final Context context) {
@@ -26,7 +25,6 @@ public class OpenHelper extends SQLiteOpenHelper {
 		
 		FriendsInfoTable.onCreate(db);
 		
-		UserFriendsTable.onCreate(db);
 	}
 
 	@Override
@@ -36,7 +34,6 @@ public class OpenHelper extends SQLiteOpenHelper {
 		
 		FriendsInfoTable.onUpgrade(db, oldVersion, newVersion);
 		
-		UserFriendsTable.onUpgrade(db, oldVersion, newVersion);
 	}
 
 }

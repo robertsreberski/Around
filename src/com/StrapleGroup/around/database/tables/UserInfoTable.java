@@ -19,8 +19,7 @@ public class UserInfoTable {
 	public static void onCreate(SQLiteDatabase db){
 		StringBuilder build = new StringBuilder();
 		build.append("CREATE TABLE " + UserInfoTable.TABLE_NAME + " (");
-		build.append(BaseColumns._ID + " INTEGER PRIMARY KEY, ");
-		build.append(UserInfoColumns.LOGIN + " TEXT UNIQUE NOT NULL, ");
+		build.append(UserInfoColumns.LOGIN + " TEXT, ");
 		build.append(UserInfoColumns.PASS + " TEXT, ");
 		build.append(UserInfoColumns.X + " DOUBLE, ");
 		build.append(UserInfoColumns.Y + " DOUBLE");
