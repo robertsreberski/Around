@@ -28,7 +28,9 @@ import com.StrapleGroup.around.ui.controler.MapControler;
 import com.StrapleGroup.around.controler.services.LocationService;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
+import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.base.UserInfo;
+import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +41,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class MapActivity extends Activity {
 	 public static final String USER_PREFS = "userLoginData";
 	public static final String EXTRA_MESSAGE = "message";
+	public static final String SENDER_ID = "960206351442";
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 	public static final String KEY_LOGIN = "login";
@@ -46,9 +49,10 @@ public class MapActivity extends Activity {
 	private GoogleMap mapPane = null;
 	private Location polledLocation = null;
 	private LocationReceiver broadcast = new LocationReceiver();
-	private String SENDER_ID = "960206351442";
+	
 	private GoogleCloudMessaging googleCloudMessaging = null;
 	private Context context = null;
+	private AtomicInteger msgId = new AtomicInteger();
 	private String registrationId = null;
 	private DataManagerImpl dataManager = null;
 	private SharedPreferences sharedUserInfo;
@@ -65,7 +69,13 @@ public class MapActivity extends Activity {
 		// creating database
 		SQLiteOpenHelper openHelper = new OpenHelper(this.context);
 		SQLiteDatabase db = openHelper.getWritableDatabase();
-		
+		FriendsInfoDao pFriendsInfo = new FriendsInfoDao(db);
+		FriendsInfo pTest = new FriendsInfo();
+		pTest.setLoginFriend("Deja vu");
+		pTest.setXFriend(57.424324);
+		pTest.setYFriend(12.47465);	
+		System.out.println(pTest.toString());
+//		pFriendsInfo.save(pTest);
 		//dataManager initialization
 		dataManager = new DataManagerImpl(this.context);
 		sharedUserInfo = getSharedPreferences(USER_PREFS, 0);
@@ -96,6 +106,7 @@ public class MapActivity extends Activity {
 			startActivity(pLoginIntent);
 			finish();
 		}
+		
 		super.onStart();
 	}
 
@@ -113,8 +124,33 @@ public class MapActivity extends Activity {
 			startActivity(logoffSuccessfulIntent);
 		}
 	}
-	public void next(View v) {
+	public void send(View v){
+		new AsyncTask<Void, Void, String>(){
+			@Override
+			protected String doInBackground(Void... params) {
+				googleCloudMessaging = GoogleCloudMessaging
+						.getInstance(context);
+				try {
+				Bundle data = new Bundle();
+				data.putString("message", "Good work Miko³aj!");
+				String id = Integer.toString(msgId.incrementAndGet());
+					googleCloudMessaging.send(SENDER_ID+"@gcm.googleapis.com", id, data);
+					Log.e("GOOD", "sth");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
+			}
+			
+		}.execute(null, null, null);
+	}
+	public void next(View v) throws IOException {
+		googleCloudMessaging = GoogleCloudMessaging
+				.getInstance(context);
 		 Intent pFriendListNext = new Intent(this,FriendsListActivity.class);
+		 sendRegistrationIdToBackend();
+			Log.i("WORK", "Good Work Nicolas");
 		 startActivity(pFriendListNext);
 	}
 
@@ -161,6 +197,7 @@ public class MapActivity extends Activity {
 			Log.i("baaad", "Registration not found.");
 			return "";
 		}
+		Log.e("REG_ID", registrationId);
 		return registrationId;
 	}
 
@@ -181,7 +218,7 @@ public class MapActivity extends Activity {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void registerInBackground() {
 		new AsyncTask() {
 			@Override
@@ -193,6 +230,7 @@ public class MapActivity extends Activity {
 								.getInstance(context);
 					}
 					registrationId = googleCloudMessaging.register(SENDER_ID);
+					Log.e("HURRAY", "Registration Works");
 					msg = "Device registered, registration ID="
 							+ registrationId;
 					sendRegistrationIdToBackend();
@@ -205,8 +243,20 @@ public class MapActivity extends Activity {
 		}.execute(null, null, null);
 	}
 
-	private void sendRegistrationIdToBackend() {
-		// wysylanie registrationId na serwer
+	private void sendRegistrationIdToBackend() throws IOException {
+		String msg = "";
+//        try {
+            Bundle data = new Bundle();
+                data.putString("my_action", "com.StrapleGroup.around.REGISTER");
+                String id = Integer.toString(msgId.incrementAndGet());
+                googleCloudMessaging.send(SENDER_ID + "@gcm.googleapis.com", id, data);
+                msg = "Sent message";
+                Log.e("HURRAY", "Registration Works");
+//        }
+//        catch (IOException ex) {
+//            msg = "Error :" + ex.getMessage();
+//        }
+		
 	}
 
 	private void storeRegistrationId(Context context, String regId) {

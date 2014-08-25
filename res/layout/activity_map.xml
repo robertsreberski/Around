@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     tools:context="${packageName}.${activityClass}" >
 
-    <fragment
+    
+    
+  <fragment
         android:id="@+id/map_create"
         android:name="com.StrapleGroup.around.ui.controler.MapControler"
         android:layout_width="match_parent"
@@ -32,12 +34,13 @@
         android:text="Next" />
 
     <Button
-        android:id="@+id/settings"
+        android:id="@+id/send"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/next"
         android:layout_toRightOf="@+id/Log_off"
-        android:text="Settings" />
+        android:onClick="send"
+        android:text="Send" />
 
 </RelativeLayout>

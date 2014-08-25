@@ -17,7 +17,7 @@ public class FriendsInfoTable {
 		StringBuilder build = new StringBuilder();
 		build.append("CREATE TABLE " + FriendsInfoTable.TABLE_NAME + " (");
 		build.append(BaseColumns._ID + " INTEGER PRIMARY KEY, ");
-		build.append(FriendsInfoColumns.LOGIN_FRIEND + " TEXT UNIQUE NOT NULL, ");
+		build.append(FriendsInfoColumns.LOGIN_FRIEND + " TEXT, ");
 		build.append(FriendsInfoColumns.X_FRIEND + " DOUBLE, ");
 		build.append(FriendsInfoColumns.Y_FRIEND + " DOUBLE");
 		build.append(");");

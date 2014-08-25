@@ -1,14 +1,5 @@
 package com.StrapleGroup.around.ui.controler;
 
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.StrapleGroup.around.R;
-import com.StrapleGroup.around.ui.view.MapActivity;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 
 public class MapControler extends MapFragment{
