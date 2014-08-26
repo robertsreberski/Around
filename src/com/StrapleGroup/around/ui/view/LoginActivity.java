@@ -52,7 +52,8 @@ public class LoginActivity extends Activity {
 			protected String doInBackground(Void... voids) {
 				googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
 				Bundle data = new Bundle();
-				data.putString("my_message", "This kurwa works");
+				data.putString("login", "This kurwa works");
+				data.putString("password", );
 				 String id = Integer.toString(msgId.incrementAndGet());
 				try {
 					googleCloudMessaging.send(MapActivity.SENDER_ID + "@gcm.googleapis.com", id, data);
