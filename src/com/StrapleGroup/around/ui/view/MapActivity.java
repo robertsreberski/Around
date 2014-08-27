@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.ui.controler.MapControler;
+import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.services.LocationService;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
@@ -38,10 +39,9 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MapActivity extends Activity {
+public class MapActivity extends Activity implements Constants {
 	 public static final String USER_PREFS = "userLoginData";
 	public static final String EXTRA_MESSAGE = "message";
-	public static final String SENDER_ID = "960206351442";
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 	public static final String KEY_LOGIN = "login";
@@ -134,7 +134,7 @@ public class MapActivity extends Activity {
 				Bundle data = new Bundle();
 				data.putString("message", "Good work Miko³aj!");
 				String id = Integer.toString(msgId.incrementAndGet());
-					googleCloudMessaging.send(SENDER_ID+"@gcm.googleapis.com", id, data);
+					googleCloudMessaging.send(SERVER_ID, id, data);
 					Log.e("GOOD", "sth");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

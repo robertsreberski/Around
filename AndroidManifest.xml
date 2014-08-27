@@ -53,25 +53,18 @@
             android:exported="true" >
         </service>
 
-        <receiver android:name=".controler.services.BootBroadcast" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name="com.StrapleGroup.around.ui.view.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
           <receiver
-            android:name=".controler.services.GcmSendingService"
+            android:name=".controler.services.LoginRequestReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <category android:name="com.StrapleGroup.around" />
             </intent-filter>
         </receiver>
-         <service android:name=".controler.services.GcmReceivingService" />
     </application>
 
 </manifest>

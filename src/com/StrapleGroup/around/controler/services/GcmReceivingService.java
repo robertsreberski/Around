@@ -22,7 +22,7 @@ public class GcmReceivingService extends IntentService{
 		private String TAG ="sth";
 
 	    public GcmReceivingService() {
-	        super("GcmIntentService");
+	        super("GcmReceivingService");
 	    }
 
 	    @Override
