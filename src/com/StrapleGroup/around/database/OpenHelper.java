@@ -3,7 +3,6 @@ package com.StrapleGroup.around.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
 
 public class OpenHelper extends SQLiteOpenHelper {

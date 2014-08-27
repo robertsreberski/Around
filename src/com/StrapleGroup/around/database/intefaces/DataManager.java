@@ -1,9 +1,8 @@
 package com.StrapleGroup.around.database.intefaces;
 
-import java.util.List;
-
 import com.StrapleGroup.around.database.base.FriendsInfo;
-import com.StrapleGroup.around.database.base.UserInfo;
+
+import java.util.List;
 
 public interface DataManager {
 	

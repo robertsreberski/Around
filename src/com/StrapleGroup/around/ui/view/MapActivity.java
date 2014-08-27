@@ -1,14 +1,7 @@
 package com.StrapleGroup.around.ui.view;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -19,18 +12,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.StrapleGroup.around.R;
-import com.StrapleGroup.around.ui.controler.MapControler;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.services.LocationService;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
 import com.StrapleGroup.around.database.base.FriendsInfo;
-import com.StrapleGroup.around.database.base.UserInfo;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,6 +26,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MapActivity extends Activity implements Constants {
 	 public static final String USER_PREFS = "userLoginData";
@@ -132,7 +123,7 @@ public class MapActivity extends Activity implements Constants {
 						.getInstance(context);
 				try {
 				Bundle data = new Bundle();
-				data.putString("message", "Good work Miko³aj!");
+				data.putString("message", "Good work Mikoï¿½aj!");
 				String id = Integer.toString(msgId.incrementAndGet());
 					googleCloudMessaging.send(SERVER_ID, id, data);
 					Log.e("GOOD", "sth");

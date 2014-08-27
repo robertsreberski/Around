@@ -1,10 +1,6 @@
 package com.StrapleGroup.around.ui.view;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -12,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.database.OpenHelper;
 import com.StrapleGroup.around.database.base.FriendsInfo;

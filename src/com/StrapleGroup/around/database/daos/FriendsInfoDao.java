@@ -1,18 +1,17 @@
 package com.StrapleGroup.around.database.daos;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.provider.BaseColumns;
-
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.intefaces.Dao;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable.FriendsInfoColumns;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FriendsInfoDao implements Dao<FriendsInfo> {
 	private static final String INSERT_ALL = "insert into "

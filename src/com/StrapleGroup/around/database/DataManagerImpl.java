@@ -1,18 +1,15 @@
 package com.StrapleGroup.around.database;
 
-import java.util.List;
-
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.SyncStateContract.Constants;
 import android.util.Log;
-
 import com.StrapleGroup.around.database.base.FriendsInfo;
-import com.StrapleGroup.around.database.base.UserInfo;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.StrapleGroup.around.database.intefaces.DataManager;
+
+import java.util.List;
 public class DataManagerImpl implements DataManager{
 
 	
