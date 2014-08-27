@@ -18,8 +18,6 @@ import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.services.LocationService;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
-import com.StrapleGroup.around.database.base.FriendsInfo;
-import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,12 +29,11 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MapActivity extends Activity implements Constants {
-	 public static final String USER_PREFS = "userLoginData";
+
 	public static final String EXTRA_MESSAGE = "message";
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
-	public static final String KEY_LOGIN = "login";
-	public static final String KEY_PASS = "pass";
+
 	private GoogleMap mapPane = null;
 	private Location polledLocation = null;
 	private LocationReceiver broadcast = new LocationReceiver();
@@ -47,6 +44,7 @@ public class MapActivity extends Activity implements Constants {
 	private String registrationId = null;
 	private DataManagerImpl dataManager = null;
 	private SharedPreferences sharedUserInfo;
+    private SharedPreferences sharedLatLng;
 	private String userLoginData = null;
 	
 	
@@ -60,17 +58,10 @@ public class MapActivity extends Activity implements Constants {
 		// creating database
 		SQLiteOpenHelper openHelper = new OpenHelper(this.context);
 		SQLiteDatabase db = openHelper.getWritableDatabase();
-		FriendsInfoDao pFriendsInfo = new FriendsInfoDao(db);
-		FriendsInfo pTest = new FriendsInfo();
-		pTest.setLoginFriend("Deja vu");
-		pTest.setXFriend(57.424324);
-		pTest.setYFriend(12.47465);	
-		System.out.println(pTest.toString());
-//		pFriendsInfo.save(pTest);
 		//dataManager initialization
 		dataManager = new DataManagerImpl(this.context);
-		sharedUserInfo = getSharedPreferences(USER_PREFS, 0);
-		
+		sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+		sharedLatLng = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
 		// creating map
 		mapPane = ((MapFragment) getFragmentManager().findFragmentById(
 				R.id.map_create)).getMap();
@@ -116,25 +107,29 @@ public class MapActivity extends Activity implements Constants {
 		}
 	}
 	public void send(View v){
-		new AsyncTask<Void, Void, String>(){
-			@Override
-			protected String doInBackground(Void... params) {
-				googleCloudMessaging = GoogleCloudMessaging
-						.getInstance(context);
-				try {
-				Bundle data = new Bundle();
-				data.putString("message", "Good work Miko�aj!");
-				String id = Integer.toString(msgId.incrementAndGet());
-					googleCloudMessaging.send(SERVER_ID, id, data);
-					Log.e("GOOD", "sth");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return null;
-			}
-			
-		}.execute(null, null, null);
+//		new AsyncTask<Void, Void, String>(){
+//			@Override
+//			protected String doInBackground(Void... params) {
+//				googleCloudMessaging = GoogleCloudMessaging
+//						.getInstance(context);
+//				try {
+//				Bundle data = new Bundle();
+//				String id = "m-"+ UUID.randomUUID().toString();
+//                    data.putString("action", REGISTER_ACTION);
+//                    data.putString("login", "robert_super");
+//                    data.putString("password", "gosc");
+//                    data.putString("x", "42.134124");
+//                    data.putString("y", "42.621123");
+//					googleCloudMessaging.send(SERVER_ID, id, 0, data);
+//					Log.e("GOOD", "sth");
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				return null;
+//			}
+//
+//		}.execute(null, null, null);
 	}
 	public void next(View v) throws IOException {
 		googleCloudMessaging = GoogleCloudMessaging
@@ -175,6 +170,10 @@ public class MapActivity extends Activity implements Constants {
 				Double.toString(polledLocation.getLatitude()) + " , "
 						+ Double.toString(polledLocation.getLongitude()),
 				Toast.LENGTH_LONG).show();
+        SharedPreferences.Editor pLatLngEditor = sharedLatLng.edit();
+        pLatLngEditor.putString("x",Double.toString(polledLocation.getLatitude()));
+        pLatLngEditor.putString("y",Double.toString(polledLocation.getLongitude()));
+        pLatLngEditor.commit();
 		CameraPosition cameraPosition = new CameraPosition.Builder()
 				.target(pLatLng).zoom(15).tilt(30).build();
 		mapPane.animateCamera(CameraUpdateFactory

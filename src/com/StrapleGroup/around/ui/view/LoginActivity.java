@@ -14,42 +14,46 @@ import com.StrapleGroup.around.base.Constants;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.UUID;
 
 public class LoginActivity extends Activity implements Constants {
 	public static final String USER_PREFS = "userLoginData";
 	private Context context;
 	private EditText loginField;
 	private EditText passField;
-	private SharedPreferences sharedUserInfo;
 	public GoogleCloudMessaging googleCloudMessaging;
-	private AtomicInteger msgId = new AtomicInteger();
 	private LoginResultReceiver loginResultReceiver;
-	@Override
+    private SharedPreferences userInfoPreferences;
+    private IntentFilter loginResultFilter;
+    private String login = null;
+    private  String pass = null;
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		loginResultReceiver = new LoginResultReceiver();
-		IntentFilter loginResultFilter = new IntentFilter(LOGIN_ACTION);
-		registerReceiver(loginResultReceiver, loginResultFilter);
 		setContentView(R.layout.activity_login);
+        loginResultReceiver = new LoginResultReceiver();
+        loginResultFilter = new IntentFilter(LOGIN_LOCAL_ACTION);
+
 		context = getApplicationContext();
-		sharedUserInfo = getSharedPreferences(USER_PREFS, 0);
 		loginField = (EditText) findViewById(R.id.loginField);
 		passField = (EditText) findViewById(R.id.passField);
 	}
-
+    public void goRegister(View v){
+        Intent pGoRegister = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(pGoRegister);
+    }
 	public void login(View v) {
 		boolean done = true;
 		loginField.setError(null);
 		passField.setError(null);
-		String pLogin = loginField.getText().toString();
-		String pPass = passField.getText().toString();
-		if(TextUtils.isEmpty(pLogin)){
+		login = loginField.getText().toString();
+		pass = passField.getText().toString();
+		if(TextUtils.isEmpty(login)){
 			loginField.setError("Field required");
 			done = false;
 		}
-		else if(TextUtils.isEmpty(pPass)){
+		else if(TextUtils.isEmpty(pass)){
 			passField.setError("Field required");
 			done = false;
 		}
@@ -60,14 +64,14 @@ public class LoginActivity extends Activity implements Constants {
 				googleCloudMessaging = GoogleCloudMessaging
 						.getInstance(context);
 				Bundle pLoginData = new Bundle();
-				pLoginData.putString("action", "com.StrapleGroup.gcm.LOGIN");
+				pLoginData.putString("action", LOGIN_ACTION);
 				pLoginData.putString(LOGIN, loginField.getText().toString());
 				pLoginData.putString(PASS, passField.getText().toString());
 				pLoginData.putString("x", "69.3004");
 				pLoginData.putString("y", "30.0049");
-				String id = Integer.toString(msgId.incrementAndGet());
+				String id = "m-"+UUID.randomUUID().toString();
 				try {
-					
+
 					googleCloudMessaging.send(SERVER_ID, id, pLoginData);
 					Log.i("REQUESTED SUCCESSFUL",
 							"*************************************************");
@@ -82,17 +86,18 @@ public class LoginActivity extends Activity implements Constants {
 		}
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-	}
+    @Override
+    protected void onPause() {
+        unregisterReceiver(loginResultReceiver);
+        super.onPause();
+    }
 
-	@Override
-	protected void onStop() {
-		unregisterReceiver(loginResultReceiver);
-		super.onStop();
-		
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(loginResultReceiver, loginResultFilter);
+    }
+
 	protected void nextActivity(){
 		Intent pNextActivityIntent = new Intent(this, MapActivity.class);
 		startActivity(pNextActivityIntent);
@@ -106,6 +111,11 @@ public class LoginActivity extends Activity implements Constants {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if(intent.getBooleanExtra(MESSAGE, true)){
+                userInfoPreferences = getSharedPreferences(USER_PREFS,MODE_PRIVATE);
+                SharedPreferences.Editor pEditor = userInfoPreferences.edit();
+                pEditor.putString(KEY_LOGIN,login);
+                pEditor.putString(KEY_PASS,pass);
+                pEditor.commit();
 				nextActivity();
 			}else {
                 badRequest();
