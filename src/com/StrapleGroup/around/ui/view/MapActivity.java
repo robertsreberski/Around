@@ -5,8 +5,6 @@ import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,7 +15,6 @@ import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.services.LocationService;
 import com.StrapleGroup.around.database.DataManagerImpl;
-import com.StrapleGroup.around.database.OpenHelper;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,8 +33,7 @@ public class MapActivity extends Activity implements Constants {
 
 	private GoogleMap mapPane = null;
 	private Location polledLocation = null;
-	private LocationReceiver broadcast = new LocationReceiver();
-	
+
 	private GoogleCloudMessaging googleCloudMessaging = null;
 	private Context context = null;
 	private AtomicInteger msgId = new AtomicInteger();
@@ -46,7 +42,7 @@ public class MapActivity extends Activity implements Constants {
 	private SharedPreferences sharedUserInfo;
     private SharedPreferences sharedLatLng;
 	private String userLoginData = null;
-	
+	private LocationReceiver locationReceiver;
 	
 	
 	@Override
@@ -54,12 +50,12 @@ public class MapActivity extends Activity implements Constants {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 		context = getApplicationContext();
-		
+        locationReceiver = new LocationReceiver();
 		// creating database
-		SQLiteOpenHelper openHelper = new OpenHelper(this.context);
-		SQLiteDatabase db = openHelper.getWritableDatabase();
+//		SQLiteOpenHelper openHelper = new OpenHelper(this.context);
+//		SQLiteDatabase db = openHelper.getWritableDatabase();
 		//dataManager initialization
-		dataManager = new DataManagerImpl(this.context);
+//		dataManager = new DataManagerImpl(this.context);
 		sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
 		sharedLatLng = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
 		// creating map
@@ -74,31 +70,25 @@ public class MapActivity extends Activity implements Constants {
 		}
 		
 	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		initLocationService();
-	}
-
 	@Override
 	protected void onStart() {
-		if(checkIfLogin() == false){
-			Intent pLoginIntent = new Intent(this.context, LoginActivity.class);
-			startActivity(pLoginIntent);
-			finish();
-		}
-		
+//		if(checkIfLogin() == false){
+//
+//			Intent pLoginIntent = new Intent(this.context, LoginActivity.class);
+//			startActivity(pLoginIntent);
+//			finish();
+//		}
+        initLocationService();
 		super.onStart();
 	}
 
-	@Override
-	protected void onPause() {
-		unregisterReceiver(broadcast);
-		super.onPause();
-	}
+    @Override
+    protected void onStop() {
+        unregisterReceiver(locationReceiver);
+        super.onStop();
+    }
 
-	public void logoff(View v){
+    public void logoff(View v){
 		sharedUserInfo.edit().clear().commit();
 		Log.i("GREAT", "Successfully logged off");
 		if(!sharedUserInfo.contains(KEY_LOGIN) && !sharedUserInfo.contains(KEY_PASS)){
@@ -152,8 +142,8 @@ public class MapActivity extends Activity implements Constants {
 	private void initLocationService() {
 		Intent pIntentLocationService = new Intent(this, LocationService.class);
 		startService(pIntentLocationService);
-		registerReceiver(broadcast, new IntentFilter(
-				LocationService.BROADCAST_ACTION));
+        IntentFilter locationFilter = new IntentFilter(LOCATION_ACTION);
+		registerReceiver(locationReceiver, locationFilter);
 	}
 
 	public void serviceUsing(Intent intent) {
@@ -267,10 +257,11 @@ public class MapActivity extends Activity implements Constants {
 		return pCheck;
 	}
 	
-	public class LocationReceiver extends BroadcastReceiver {
+	private class LocationReceiver extends BroadcastReceiver {
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			MapActivity.this.serviceUsing(intent);
+            serviceUsing(intent);
 		}
 	}
 }

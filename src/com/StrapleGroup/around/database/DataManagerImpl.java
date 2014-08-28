@@ -29,43 +29,6 @@ public class DataManagerImpl implements DataManager{
 //		userDao = new UserInfoDao(db);
 		friendsDao = new FriendsInfoDao(db);
 	}
-//	@Override
-//	public long saveUserInfo(UserInfo userInfo) {
-//		long userId = 0L;
-//		try{
-//			db.beginTransaction();
-//			userId = userDao.save(userInfo);
-//		} catch(SQLException e) {
-//			e.printStackTrace();
-//			Log.e("Transaction unsuccessful", "SthBroke");
-//			userId = 0L;
-//		} finally {
-//			db.setTransactionSuccessful();
-//			db.endTransaction();
-//		}
-//		return userId;
-//	}
-//
-//	@Override
-//	public void updateUserCoordinates(UserInfo userInfo) {
-//			userDao.updateCoordinates(userInfo);
-//	}
-//	
-//	@Override
-//	public boolean deleteUserInfo(long userId) {
-//		// *******************************TO SET
-//		return true;
-//	}
-//
-//	@Override
-//	public List<UserInfo> getAllUserInfo() {
-//		return userDao.getAll();
-//	}
-//
-//	@Override
-//	public List<UserInfo> getLogin() {
-//		return userDao.getLogin();
-//	}
 
 	@Override
 	public FriendsInfo getFriendInfo(long friendId) {

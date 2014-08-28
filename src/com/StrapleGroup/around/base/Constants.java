@@ -15,4 +15,5 @@ public interface Constants {
     static final String LOGIN_ACTION = "com.StrapleGroup.gcm.LOGIN";
     public static final String KEY_LOGIN = "login";
     public static final String KEY_PASS = "pass";
+    public static final String LOCATION_ACTION = "com.StrapleGroup.around.action.LOCATION_INFO";
 }
