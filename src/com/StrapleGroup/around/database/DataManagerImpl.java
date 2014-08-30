@@ -10,74 +10,81 @@ import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.StrapleGroup.around.database.intefaces.DataManager;
 
 import java.util.List;
-public class DataManagerImpl implements DataManager{
 
-	
-	private static final int DATABASE_VERSION = 1;
-	
-	private Context context;
-	private SQLiteDatabase db;
-	private FriendsInfoDao friendsDao;
+public class DataManagerImpl implements DataManager {
+
+
+    private static final int DATABASE_VERSION = 1;
+
+    private Context context;
+    private SQLiteDatabase db;
+    private FriendsInfoDao friendsDao;
 //	private UserInfoDao userDao;
-	
-	public DataManagerImpl(Context context){
-		
-		this.context = context;
-		
-		SQLiteOpenHelper openHelper = new OpenHelper(this.context);
-		db = openHelper.getWritableDatabase();
-//		userDao = new UserInfoDao(db);
-		friendsDao = new FriendsInfoDao(db);
-	}
 
-	@Override
-	public FriendsInfo getFriendInfo(long friendId) {
-		FriendsInfo pFriendInfo = friendsDao.get(friendId);
-		return pFriendInfo;
-	}
+    public DataManagerImpl(Context context) {
 
-	@Override
-	public List<FriendsInfo> getAllFriendsInfo() {
-		return friendsDao.getAll();
-	}
+        this.context = context;
 
-	@Override
-	public FriendsInfo findFriendInfo(String friendLogin) {
-		return friendsDao.find(friendLogin);
-	}
+        SQLiteOpenHelper openHelper = new OpenHelper(this.context);
+        db = openHelper.getWritableDatabase();
+        friendsDao = new FriendsInfoDao(db);
+    }
 
-	@Override
-	public long saveFriendInfo(FriendsInfo friendInfo) {
-		long friendId = 0L;
-		try{
-			db.beginTransaction();
-			friendId = friendsDao.save(friendInfo);
-			db.setTransactionSuccessful();
-		} catch(SQLException e) {
-			Log.e("Transaction unsuccessful", "SthBroke");
-			friendId = 0L;
-		} finally {
-			db.endTransaction();
-		}
-		return friendId;
-	}
+    @Override
+    public FriendsInfo getFriendInfo(long friendId) {
+        FriendsInfo pFriendInfo = friendsDao.get(friendId);
+        return pFriendInfo;
+    }
 
-	@Override
-	public boolean deleteFriend(long friendId) {
-		boolean result = false;
-		try{
-			db.beginTransaction();
-			FriendsInfo friendInfo = friendsDao.get(friendId);
-			friendsDao.delete(friendInfo);
-			db.setTransactionSuccessful();
-			result = true;
-		} catch(SQLException e){
-			Log.e("Transaction unsuccessful", "SthBroke");
-		} finally {
-			db.endTransaction();
-		}
-		return result;
-	}
-	
+    @Override
+    public List<FriendsInfo> getAllFriendsInfo() {
+        return friendsDao.getAll();
+    }
+
+    @Override
+    public FriendsInfo findFriendInfo(String friendLogin) {
+        return friendsDao.find(friendLogin);
+    }
+
+    @Override
+    public long saveFriendInfo(FriendsInfo friendInfo) {
+        long friendId = 0L;
+        try {
+            db.beginTransaction();
+            friendId = friendsDao.save(friendInfo);
+            db.setTransactionSuccessful();
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "SthBroke");
+            friendId = 0L;
+        } finally {
+            db.endTransaction();
+        }
+        return friendId;
+    }
+
+    @Override
+    public boolean deleteFriend(long friendId) {
+        boolean result = false;
+        try {
+            db.beginTransaction();
+            FriendsInfo friendInfo = friendsDao.get(friendId);
+            friendsDao.delete(friendInfo);
+            db.setTransactionSuccessful();
+            result = true;
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "SthBroke");
+        } finally {
+            db.endTransaction();
+        }
+        return result;
+    }
+
+    public void addFriend(FriendsInfo friendsInfo) {
+        db.beginTransaction();
+        friendsDao.update(friendsInfo);
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        Log.i("***********************", "transaction successful");
+    }
 
 }

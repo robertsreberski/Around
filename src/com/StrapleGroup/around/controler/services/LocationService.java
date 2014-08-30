@@ -36,8 +36,8 @@ public class LocationService extends Service implements Constants {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new NearbyLocationListener();
 //        locationManager.re
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 40, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 40, listener);
     }
 
     @Override
@@ -124,14 +124,14 @@ public class LocationService extends Service implements Constants {
         public void onLocationChanged(Location loc) {
             intent = new Intent(LOCATION_ACTION);
             Log.i("**************************************", "Location changed");
-//	        if(isBetterLocation(loc, previousBestLocation)) {
+            if (isBetterLocation(loc, previousBestLocation)) {
             loc.getLatitude();
             loc.getLongitude();
 //	            intent.putExtra("")
             intent.putExtra("Latitude", loc.getLatitude());
             intent.putExtra("Longitude", loc.getLongitude());
             sendBroadcast(intent);
-//	        }
+            }
         }
 
         public void onProviderDisabled(String provider) {

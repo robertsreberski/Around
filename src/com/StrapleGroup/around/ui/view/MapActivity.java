@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.controler.services.DataLoadService;
 import com.StrapleGroup.around.controler.services.LocationService;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -122,16 +123,13 @@ public class MapActivity extends Activity implements Constants {
 //		}.execute(null, null, null);
 	}
 	public void next(View v) throws IOException {
-		googleCloudMessaging = GoogleCloudMessaging
-				.getInstance(context);
 		 Intent pFriendListNext = new Intent(this,FriendsListActivity.class);
-		 sendRegistrationIdToBackend();
-			Log.i("WORK", "Good Work Nicolas");
 		 startActivity(pFriendListNext);
 	}
 
 	public void mapCustomer() {
-		mapPane.setMyLocationEnabled(true);
+        mapPane.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mapPane.setMyLocationEnabled(true);
 		mapPane.getUiSettings().setCompassEnabled(false);
 		mapPane.getUiSettings().setZoomControlsEnabled(false);
 		mapPane.getUiSettings().setMyLocationButtonEnabled(false);
@@ -140,7 +138,9 @@ public class MapActivity extends Activity implements Constants {
 	}
 
 	private void initLocationService() {
-		Intent pIntentLocationService = new Intent(this, LocationService.class);
+        Intent pTest = new Intent(this, DataLoadService.class);
+        startService(pTest);
+        Intent pIntentLocationService = new Intent(this, LocationService.class);
 		startService(pIntentLocationService);
         IntentFilter locationFilter = new IntentFilter(LOCATION_ACTION);
 		registerReceiver(locationReceiver, locationFilter);
@@ -156,10 +156,10 @@ public class MapActivity extends Activity implements Constants {
 		LatLng pLatLng = new LatLng(polledLocation.getLatitude(),
 				polledLocation.getLongitude());
 		Toast.makeText(
-				this,
-				Double.toString(polledLocation.getLatitude()) + " , "
-						+ Double.toString(polledLocation.getLongitude()),
-				Toast.LENGTH_LONG).show();
+                this,
+                Double.toString(polledLocation.getLatitude()) + " , "
+                        + Double.toString(polledLocation.getLongitude()),
+                Toast.LENGTH_LONG).show();
         SharedPreferences.Editor pLatLngEditor = sharedLatLng.edit();
         pLatLngEditor.putString("x",Double.toString(polledLocation.getLatitude()));
         pLatLngEditor.putString("y",Double.toString(polledLocation.getLongitude()));
@@ -177,8 +177,8 @@ public class MapActivity extends Activity implements Constants {
 			Log.i("baaad", "Registration not found.");
 			return "";
 		}
-		Log.e("REG_ID", registrationId);
-		return registrationId;
+//		Log.e("REG_ID", registrationId);
+        return registrationId;
 	}
 
 	// Do zmiany na bardziej bezpieczne przechowywanie registerID

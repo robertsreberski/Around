@@ -100,7 +100,8 @@ public class LoginActivity extends Activity implements Constants {
 
 	protected void nextActivity(){
 		Intent pNextActivityIntent = new Intent(this, MapActivity.class);
-		startActivity(pNextActivityIntent);
+        pNextActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(pNextActivityIntent);
 	}
 	protected void badRequest(){
 		Toast.makeText(this, "Unauthorized", Toast.LENGTH_SHORT).show();
