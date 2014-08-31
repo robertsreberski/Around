@@ -44,7 +44,7 @@ public class AddFriendActivity extends Activity {
         pFriend.setYFriend(0.00);
         pFriend.setXFriend(0.00);
         dataManager.saveFriendInfo(pFriend);
-        Intent intent = new Intent(context, FriendsListActivity.class);
+        Intent intent = new Intent(context, FriendsListFragment.class);
         startActivity(intent);
         finish();
     }

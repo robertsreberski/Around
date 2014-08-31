@@ -111,7 +111,7 @@ public class LoginActivity extends Activity implements Constants {
     }
 
 	protected void nextActivity(){
-		Intent pNextActivityIntent = new Intent(this, MapActivity.class);
+        Intent pNextActivityIntent = new Intent(this, AroundMapFragment.class);
         startActivity(pNextActivityIntent);
         finish();
     }
