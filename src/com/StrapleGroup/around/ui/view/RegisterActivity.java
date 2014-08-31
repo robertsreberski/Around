@@ -109,6 +109,7 @@ public class RegisterActivity extends Activity implements Constants {
         Toast.makeText(context,"Registration successful!",Toast.LENGTH_SHORT).show();
         Intent returnIntent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(returnIntent);
+        finish();
     }
     public void registrationUnsuccessful(){
         Toast.makeText(context, "Something go wrong :c", Toast.LENGTH_SHORT).show();

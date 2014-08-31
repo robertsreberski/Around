@@ -37,14 +37,15 @@ public class FriendsListActivity extends Activity {
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
         friend = new FriendsInfo();
-        for (int i = 0; i < 10; i++) {
-            friend.setId(i);
-            friend.setLoginFriend("robin" + i);
-            friend.setXFriend(42.42352);
-            friend.setYFriend(31.123123);
-            dataManager.saveFriendInfo(friend);
-        }
+//        for (int i = 0; i < 10; i++) {
+//            friend.setId(i);
+//            friend.setLoginFriend("robin" + i);
+//            friend.setXFriend(42.42352);
+//            friend.setYFriend(31.123123);
+//            dataManager.saveFriendInfo(friend);
+//        }
         friendsList = dataManager.getAllFriendsInfo();
+        db.endTransaction();
         FriendsAdapter adapter = new FriendsAdapter(context, friendsList);
         ListView listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(adapter);

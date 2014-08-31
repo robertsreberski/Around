@@ -24,6 +24,7 @@ public class LoginActivity extends Activity implements Constants {
 	public GoogleCloudMessaging googleCloudMessaging;
 	private LoginResultReceiver loginResultReceiver;
     private SharedPreferences userInfoPreferences;
+    private SharedPreferences locationPreferences;
     private IntentFilter loginResultFilter;
     private String login = null;
     private  String pass = null;
@@ -65,7 +66,8 @@ public class LoginActivity extends Activity implements Constants {
 						.getInstance(context);
 				Bundle pLoginData = new Bundle();
 				pLoginData.putString("action", LOGIN_ACTION);
-				pLoginData.putString(LOGIN, loginField.getText().toString());
+
+                pLoginData.putString(LOGIN, loginField.getText().toString());
 				pLoginData.putString(PASS, passField.getText().toString());
 				pLoginData.putString("x", "69.3004");
 				pLoginData.putString("y", "30.0049");
@@ -100,9 +102,9 @@ public class LoginActivity extends Activity implements Constants {
 
 	protected void nextActivity(){
 		Intent pNextActivityIntent = new Intent(this, MapActivity.class);
-        pNextActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(pNextActivityIntent);
-	}
+        finish();
+    }
 	protected void badRequest(){
 		Toast.makeText(this, "Unauthorized", Toast.LENGTH_SHORT).show();
 	}

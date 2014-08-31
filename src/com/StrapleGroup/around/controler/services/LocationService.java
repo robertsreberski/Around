@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -104,32 +103,32 @@ public class LocationService extends Service implements Constants {
         locationManager.removeUpdates(listener);
     }
 
-//	public static Thread performOnBackgroundThread(final Runnable runnable) {
-//	    final Thread t = new Thread() {
-//	        @Override
-//	        public void run() {
-//	            try {
-//	                runnable.run();
-//	            } finally {
-//
-//	            }
-//	        }
-//	    };
-//	    t.start();
-//	    return t;
-//	}
+    public static Thread performOnBackgroundThread(final Runnable runnable) {
+        final Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    runnable.run();
+                } finally {
+
+                }
+            }
+        };
+        t.start();
+        return t;
+    }
 
     private class NearbyLocationListener implements LocationListener {
 
-        public void onLocationChanged(Location loc) {
+        public void onLocationChanged(Location currentLocation) {
             intent = new Intent(LOCATION_ACTION);
             Log.i("**************************************", "Location changed");
-            if (isBetterLocation(loc, previousBestLocation)) {
-            loc.getLatitude();
-            loc.getLongitude();
+            if (isBetterLocation(currentLocation, previousBestLocation)) {
+                currentLocation.getLatitude();
+                currentLocation.getLongitude();
 //	            intent.putExtra("")
-            intent.putExtra("Latitude", loc.getLatitude());
-            intent.putExtra("Longitude", loc.getLongitude());
+                intent.putExtra("Latitude", currentLocation.getLatitude());
+                intent.putExtra("Longitude", currentLocation.getLongitude());
             sendBroadcast(intent);
             }
         }
@@ -145,14 +144,15 @@ public class LocationService extends Service implements Constants {
 
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            if (status == LocationProvider.OUT_OF_SERVICE || status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
-                locationManager.removeUpdates(this);
-                Toast.makeText(getApplicationContext(), "Service closed", Toast.LENGTH_SHORT).show();
-            }
-            if( status == LocationProvider.AVAILABLE){
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
-            }
+//            if (status == LocationProvider.OUT_OF_SERVICE || status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+//                locationManager.removeUpdates(this);
+//                Toast.makeText(getApplicationContext(), "Service closed", Toast.LENGTH_SHORT).show();
+//            }
+//            if( status == LocationProvider.AVAILABLE){
+//                Toast.makeText(getApplicationContext(), "Service closed", Toast.LENGTH_SHORT).show();
+//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
+//                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+//            }
 
         }
 
