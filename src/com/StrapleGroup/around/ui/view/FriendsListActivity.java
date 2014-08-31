@@ -24,7 +24,6 @@ public class FriendsListActivity extends Activity {
     private Context context;
     private DataManager dataManager;
     private AtomicInteger atomicInteger = new AtomicInteger();
-    private FriendsInfo friend;
     private List<FriendsInfo> friendsList;
 
     @Override
@@ -36,16 +35,8 @@ public class FriendsListActivity extends Activity {
         SQLiteDatabase db = openHelper.getWritableDatabase();
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
-        friend = new FriendsInfo();
-//        for (int i = 0; i < 10; i++) {
-//            friend.setId(i);
-//            friend.setLoginFriend("robin" + i);
-//            friend.setXFriend(42.42352);
-//            friend.setYFriend(31.123123);
-//            dataManager.saveFriendInfo(friend);
-//        }
         friendsList = dataManager.getAllFriendsInfo();
-        db.endTransaction();
+//        db.endTransaction();
         FriendsAdapter adapter = new FriendsAdapter(context, friendsList);
         ListView listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(adapter);
