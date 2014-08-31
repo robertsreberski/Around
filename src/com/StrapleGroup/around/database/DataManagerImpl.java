@@ -79,12 +79,5 @@ public class DataManagerImpl implements DataManager {
         return result;
     }
 
-    public void addFriend(FriendsInfo friendsInfo) {
-        db.beginTransaction();
-        friendsDao.update(friendsInfo);
-        db.setTransactionSuccessful();
-        db.endTransaction();
-        Log.i("***********************", "transaction successful");
-    }
 
 }

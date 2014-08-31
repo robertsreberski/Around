@@ -16,5 +16,4 @@ public interface DataManager {
 
     public boolean deleteFriend(long friendId);
 
-    public void addFriend(FriendsInfo friendsInfo);
 }

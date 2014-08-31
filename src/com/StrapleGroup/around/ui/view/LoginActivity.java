@@ -75,13 +75,13 @@ public class LoginActivity extends Activity implements Constants {
 				googleCloudMessaging = GoogleCloudMessaging
 						.getInstance(context);
 				Bundle pLoginData = new Bundle();
-				pLoginData.putString("action", LOGIN_ACTION);
-
+                locationPreferences = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
+                pLoginData.putString("action", LOGIN_ACTION);
                 pLoginData.putString(LOGIN, loginField.getText().toString());
 				pLoginData.putString(PASS, passField.getText().toString());
-				pLoginData.putString("x", "69.3004");
-				pLoginData.putString("y", "30.0049");
-				String id = "m-"+UUID.randomUUID().toString();
+                pLoginData.putString("x", locationPreferences.getString("LAT", ""));
+                pLoginData.putString("y", locationPreferences.getString("LNG", ""));
+                String id = "m-"+UUID.randomUUID().toString();
 				try {
 
 					googleCloudMessaging.send(SERVER_ID, id, pLoginData);
@@ -111,7 +111,7 @@ public class LoginActivity extends Activity implements Constants {
     }
 
 	protected void nextActivity(){
-        Intent pNextActivityIntent = new Intent(this, AroundMapFragment.class);
+        Intent pNextActivityIntent = new Intent(this, SwipeActivities.class);
         startActivity(pNextActivityIntent);
         finish();
     }
@@ -158,7 +158,7 @@ public class LoginActivity extends Activity implements Constants {
         Bundle data = new Bundle();
         data.putString("my_action", "com.StrapleGroup.around.REGISTER");
         String id = UUID.randomUUID().toString();
-        googleCloudMessaging.send(SENDER_ID + "@gcm.googleapis.com", id, data);
+        googleCloudMessaging.send(SENDER_ID + "@gcm.googleapis.com", "m-" + id, data);
         Log.e("HURRAY", "Registration Works");
     }
 

@@ -57,12 +57,11 @@ public class AroundMapFragment extends Fragment implements Constants {
             mapCustomer();
         }
         initLocationService();
-
-//        if (checkIfLogin() == false) {
-//            Intent pLoginIntent = new Intent(this.context, LoginActivity.class);
-//            startActivity(pLoginIntent);
-//            finish();
-//        }
+        if (checkIfLogin() == false) {
+            Intent pLoginIntent = new Intent(this.context, LoginActivity.class);
+            startActivity(pLoginIntent);
+            getActivity().finish();
+        }
         super.onStart();
     }
 

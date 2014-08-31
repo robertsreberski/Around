@@ -10,6 +10,7 @@
             android:id="@+id/friend_field" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" android:layout_marginLeft="82dp"
             android:layout_marginTop="34dp" android:layout_alignParentRight="true"
+            android:inputType="textVisiblePassword"
             android:layout_alignParentEnd="false" android:maxLength="20"/>
     <Button
             android:layout_width="80dp"

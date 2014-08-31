@@ -40,6 +40,19 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     }
                     context.sendBroadcast(pRegisterIntent);
                 }
+                if (loginResult.getString(ACTION).equals("ADD")) {
+                    Intent pAddIntent = new Intent(ADD_LOCAL_ACTION);
+                    if (loginResult.getString(MESSAGE).equals("completed")) {
+                        pAddIntent.putExtra("LAT", loginResult.getString("x"));
+                        pAddIntent.putExtra("LNG", loginResult.getString("y"));
+                        pAddIntent.putExtra(MESSAGE, true);
+                    }
+                    if (loginResult.getString(MESSAGE).equals("incompleted")) {
+                        pAddIntent.putExtra(MESSAGE, false);
+
+                    }
+                    context.sendBroadcast(pAddIntent);
+                }
 
 			}
 		}
