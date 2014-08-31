@@ -17,4 +17,7 @@ public interface Constants {
     public static final String KEY_PASS = "pass";
     public static final String LOCATION_ACTION = "com.StrapleGroup.around.action.LOCATION_INFO";
     public static final String GCM_PREFS = "gcmStorage";
+    public static final String EXTRA_MESSAGE = "message";
+    public static final String PROPERTY_REG_ID = "registration_id";
+    public static final String PROPERTY_APP_VERSION = "appVersion";
 }

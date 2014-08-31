@@ -69,9 +69,6 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
 
     public void sendLocation() {
         if (locationClient.isConnected()) {
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... params) {
             Bundle pLoginData = new Bundle();
             pLoginData.putString("action", LOGIN_ACTION);
             pLoginData.putString(LOGIN, "null");
@@ -100,10 +97,6 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
                 pEditor.putString("LNG", Double.toString(pLastLocation.getLongitude()));
                 pEditor.commit();
             }
-
-//                return null;
-//            }
-//        }.execute(null, null, null);
         } else {
             Log.e("NOT_CONNECTED", "ERROR IN DATALOADSERVICE");
         }
