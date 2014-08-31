@@ -22,6 +22,7 @@ public class RefreshFriendsService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
+
     }
 
     private class RefreshRequestReceiver extends BroadcastReceiver {

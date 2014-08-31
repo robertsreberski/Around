@@ -9,33 +9,33 @@ import com.StrapleGroup.around.base.Constants;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
-		Constants {
+        Constants {
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		GoogleCloudMessaging pGcm = GoogleCloudMessaging.getInstance(context);
-		Bundle loginResult = intent.getExtras();
-		String messageType = pGcm.getMessageType(intent);
-		if (!loginResult.isEmpty()) {
-			if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        GoogleCloudMessaging pGcm = GoogleCloudMessaging.getInstance(context);
+        Bundle loginResult = intent.getExtras();
+        String messageType = pGcm.getMessageType(intent);
+        if (!loginResult.isEmpty()) {
+            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 //				Log.i("GREATEST", "Received: " + loginResult.getString(MESSAGE));
-                if(loginResult.getString(ACTION).equals("LOGIN")){
+                if (loginResult.getString(ACTION).equals("LOGIN")) {
                     Intent pLoginIntent = new Intent(LOGIN_LOCAL_ACTION);
-				if (loginResult.getString(MESSAGE).equals("valid")) {
-					pLoginIntent.putExtra(MESSAGE, true);
-				}else if (loginResult.getString(MESSAGE).equals("invalid")) {
-					Toast.makeText(context, "Invalid login or password",
-							Toast.LENGTH_LONG).show();
-					pLoginIntent.putExtra(MESSAGE, false);
-				}
+                    if (loginResult.getString(MESSAGE).equals("valid")) {
+                        pLoginIntent.putExtra(MESSAGE, true);
+                    } else if (loginResult.getString(MESSAGE).equals("invalid")) {
+                        Toast.makeText(context, "Invalid login or password",
+                                Toast.LENGTH_LONG).show();
+                        pLoginIntent.putExtra(MESSAGE, false);
+                    }
                     context.sendBroadcast(pLoginIntent);
                 }
-                if(loginResult.getString(ACTION).equals("REGISTER")){
+                if (loginResult.getString(ACTION).equals("REGISTER")) {
                     Intent pRegisterIntent = new Intent(REGISTER_LOCAL_ACTION);
-                    if(loginResult.getString(MESSAGE).equals("completed")){
+                    if (loginResult.getString(MESSAGE).equals("completed")) {
                         pRegisterIntent.putExtra(MESSAGE, true);
                     }
-                    if(loginResult.getString(MESSAGE).equals("incompleted")){
+                    if (loginResult.getString(MESSAGE).equals("incompleted")) {
                         pRegisterIntent.putExtra(MESSAGE, false);
                     }
                     context.sendBroadcast(pRegisterIntent);
@@ -49,12 +49,11 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     }
                     if (loginResult.getString(MESSAGE).equals("incompleted")) {
                         pAddIntent.putExtra(MESSAGE, false);
-
                     }
                     context.sendBroadcast(pAddIntent);
                 }
 
-			}
-		}
-	}
+            }
+        }
+    }
 }
