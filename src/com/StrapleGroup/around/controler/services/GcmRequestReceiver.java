@@ -71,7 +71,7 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     friendsList = dataManager.getAllFriendsInfo();
                     if (loginResult.getString(MESSAGE).equals("completed")) {
                     for (int pCount = 0; pCount < friendsList.size(); pCount++) {
-                        FriendsInfo pFriend = dataManager.getFriendInfo(pCount);
+                        FriendsInfo pFriend = dataManager.getFriendInfo(pCount + 1);
                         String test1 = pFriend.getLoginFriend() + "x";
                         String test2 = pFriend.getLoginFriend() + "y";
                         pFriend.setXFriend(Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + "x")));

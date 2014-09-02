@@ -64,9 +64,8 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
 
 	public FriendsInfo get(long id) {
 		FriendsInfo pFriendsInfo = null;
-		Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[] {
-				BaseColumns._ID, FriendsInfoColumns.LOGIN_FRIEND,
-				FriendsInfoColumns.X_FRIEND, FriendsInfoColumns.Y_FRIEND },
+        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoColumns.LOGIN_FRIEND,
+                        FriendsInfoColumns.X_FRIEND, FriendsInfoColumns.Y_FRIEND },
 				BaseColumns._ID + " =?", new String[] { String.valueOf(id) },
 				null, null, null, "1");
 		if (pCursor.moveToFirst()) {
