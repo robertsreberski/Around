@@ -15,13 +15,12 @@ import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
         Constants {
     private DataManagerImpl dataManager;
-
+    private List<FriendsInfo> friendsList;
     @Override
     public void onReceive(Context context, Intent intent) {
         GoogleCloudMessaging pGcm = GoogleCloudMessaging.getInstance(context);
@@ -69,11 +68,11 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     SQLiteDatabase db = openHelper.getWritableDatabase();
                     FriendsInfoDao dao = new FriendsInfoDao(db);
                     dataManager = new DataManagerImpl(context);
-                    List<FriendsInfo> friendsList;
                     friendsList = dataManager.getAllFriendsInfo();
-                    Iterator<FriendsInfo> friendsIterator = friendsList.iterator();
-                    while (friendsIterator.hasNext()) {
-                        FriendsInfo pFriend = friendsIterator.next();
+                    for (int pCount = 0; pCount < friendsList.size(); pCount++) {
+                        FriendsInfo pFriend = dataManager.getFriendInfo(pCount);
+                        String test1 = pFriend.getLoginFriend() + "x";
+                        String test2 = pFriend.getLoginFriend() + "y";
                         pFriend.setXFriend(Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + "x")));
                         pFriend.setYFriend(Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + "y")));
                         dao.updateCoordinates(pFriend, Long.toString(pFriend.getId()));
