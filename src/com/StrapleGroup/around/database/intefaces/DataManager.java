@@ -10,7 +10,7 @@ public interface DataManager {
 
     public List<FriendsInfo> getAllFriendsInfo();
 
-    public FriendsInfo findFriendInfo(String friendLogin);
+    long findFriend(String friendLogin);
 
     public long saveFriendInfo(FriendsInfo friendInfo);
 

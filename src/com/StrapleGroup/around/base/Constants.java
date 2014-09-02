@@ -23,4 +23,6 @@ public interface Constants {
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String PROPERTY_APP_VERSION = "appVersion";
     static final String REFRESH_ACTION = "com.StrapleGroup.gcm.LOCATION";
+    static final String REFRESH_LOCAL_ACTION = "com.StrapleGroup.around.action.REFRESH";
+    static final String MSG_ID = "msgId";
 }

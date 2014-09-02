@@ -33,7 +33,6 @@ public class FriendsListFragment extends ListFragment {
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
         friendsList = dataManager.getAllFriendsInfo();
-//        db.endTransaction();
 
     }
 

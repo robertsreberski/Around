@@ -96,8 +96,7 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
                     if (checkIfLogin() && pLastLocation != null) {
                         try {
                             googleCloudMessaging.send(SERVER_ID, id, pLoginData);
-                            Log.i("REQUESTED SUCCESSFUL",
-                                    "*************************************************");
+                            Log.i("REQUESTED SUCCESSFUL", "*************************************************");
                         } catch (IOException e) {
                             e.printStackTrace();
                             Log.e("PROBLEM WITH LOGIN REQUEST",

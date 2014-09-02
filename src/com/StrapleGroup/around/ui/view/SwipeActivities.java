@@ -65,6 +65,15 @@ public class SwipeActivities extends FragmentActivity implements Constants {
     }
 
     public void logoff(View v) {
+//        SQLiteOpenHelper openHelper = new OpenHelper(this.context);
+//        SQLiteDatabase db = openHelper.getWritableDatabase();
+//        //dataManager initialization
+//        FriendsInfoDao dao = new FriendsInfoDao(db);
+//        FriendsInfo friend = new FriendsInfo();
+//        friend.setXFriend(0.00);
+//        friend.setYFriend(0.00);
+//        dao.updateCoordinates(friend);
+//        Toast.makeText(context,"DATABASE WORKS! =)",Toast.LENGTH_SHORT).show();
         sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
         sharedUserInfo.edit().clear().commit();
         Log.i("GREAT", "Successfully logged off");
@@ -73,6 +82,7 @@ public class SwipeActivities extends FragmentActivity implements Constants {
             startActivity(logoffSuccessfulIntent);
             finish();
         }
+
     }
 
     @Override

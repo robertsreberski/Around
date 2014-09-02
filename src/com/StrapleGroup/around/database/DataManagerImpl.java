@@ -42,7 +42,7 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
-    public FriendsInfo findFriendInfo(String friendLogin) {
+    public long findFriend(String friendLogin) {
         return friendsDao.find(friendLogin);
     }
 

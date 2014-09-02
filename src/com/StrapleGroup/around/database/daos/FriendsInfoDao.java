@@ -47,12 +47,12 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
 				new String[] { String.valueOf(friendsInfo.getId()) });
 	}
 	@Override
-	public void updateCoordinates(FriendsInfo friendsInfo){
-		final ContentValues pValues = new ContentValues();
+    public void updateCoordinates(FriendsInfo friendsInfo, String id) {
+        final ContentValues pValues = new ContentValues();
 		pValues.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
 		pValues.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
-		db.update(FriendsInfoTable.TABLE_NAME, pValues , BaseColumns._ID + " =?", new String[] {String.valueOf(friendsInfo.getId())});
-	}
+        db.update(FriendsInfoTable.TABLE_NAME, pValues, BaseColumns._ID + " =?", new String[]{String.valueOf(friendsInfo.getId())});
+    }
 
 	@Override
 	public void delete(FriendsInfo friendsInfo) {
@@ -110,9 +110,9 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         }
 		return pFriendsInfo;
 	}
-	
-	public FriendsInfo find(String login){
-		long pFriendId = 0L;
+
+    public long find(String login) {
+        long pFriendId = 0L;
 		String sql = "select _id from " + FriendsInfoTable.TABLE_NAME + " where upper(" + FriendsInfoColumns.LOGIN_FRIEND + ") = ? limit 1";
 		Cursor pCursor = db.rawQuery(sql, new String[] { login.toUpperCase()});
 		if(pCursor.moveToFirst()){
@@ -121,6 +121,6 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
 		if(!pCursor.isClosed()){
 			pCursor.close();
 		}
-		return this.get(pFriendId);
-	}
+        return pFriendId;
+    }
 }

@@ -17,8 +17,8 @@ import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
-import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Robert on 2014-08-30.
@@ -31,6 +31,7 @@ public class AddFriendActivity extends Activity implements Constants {
     private GoogleCloudMessaging googleCloudMessaging;
     private SharedPreferences userInfoPrefs;
     private FriendAddResultReceiver friendAddResultReceiver;
+    private AtomicInteger atomicInt;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +43,6 @@ public class AddFriendActivity extends Activity implements Constants {
         dataManager = new DataManagerImpl(this.context);
         friendLogin = (EditText) findViewById(R.id.friend_field);
         friendAddResultReceiver = new FriendAddResultReceiver();
-
     }
 
     @Override
@@ -91,11 +91,20 @@ public class AddFriendActivity extends Activity implements Constants {
         public void onReceive(Context context, Intent intent) {
             if (intent.getBooleanExtra(MESSAGE, true)) {
                 final FriendsInfo pFriend = new FriendsInfo();
-                Random random = new Random();
-                pFriend.setId(random.nextLong());
+                userInfoPrefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+                int pMsgId = 0;
+                if (userInfoPrefs.getInt(MSG_ID, 0) != 0) {
+                    pMsgId = userInfoPrefs.getInt(MSG_ID, 0);
+                    userInfoPrefs.edit().putInt(MSG_ID, pMsgId + 1).commit();
+                    pMsgId++;
+                } else {
+                    userInfoPrefs.edit().putInt(MSG_ID, 1).commit();
+                    pMsgId = 1;
+                }
+                pFriend.setId(pMsgId);
                 pFriend.setLoginFriend(friendLogin.getText().toString());
-                pFriend.setYFriend(intent.getDoubleExtra("LAT", 0.00));
-                pFriend.setXFriend(intent.getDoubleExtra("LNG", 0.00));
+                pFriend.setYFriend(Double.parseDouble(intent.getStringExtra("LAT")));
+                pFriend.setXFriend(Double.parseDouble(intent.getStringExtra("LNG")));
                 dataManager.saveFriendInfo(pFriend);
                 Intent successfulAddIntent = new Intent(context, SwipeActivities.class);
                 startActivity(successfulAddIntent);

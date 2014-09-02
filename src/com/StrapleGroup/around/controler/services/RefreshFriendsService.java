@@ -1,9 +1,9 @@
 package com.StrapleGroup.around.controler.services;
 
 import android.app.IntentService;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import com.StrapleGroup.around.database.DataManagerImpl;
 
 /**
  * Created by Robert on 2014-08-31.
@@ -19,17 +19,15 @@ public class RefreshFriendsService extends IntentService {
         super(name);
     }
 
+    private DataManagerImpl dataManager;
+    private Context context;
     @Override
     protected void onHandleIntent(Intent intent) {
-
-
+//        context = getApplicationContext();
+//        SQLiteOpenHelper openHelper = new OpenHelper(context);
+//        SQLiteDatabase db = openHelper.getWritableDatabase();
+//        dataManager = new DataManagerImpl(context);
+//        dataManager.findFriend()
     }
 
-    private class RefreshRequestReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-        }
-    }
 }
