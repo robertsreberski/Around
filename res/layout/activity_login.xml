@@ -2,14 +2,18 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="${relativePackage}.${activityClass}">
+                tools:context="${relativePackage}.${activityClass}" android:background="#2c3e50">
 
     <EditText
             android:id="@+id/loginField"
+            android:hint="login"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="29dp"
-            android:ems="10" android:layout_below="@+id/sign_in" android:layout_centerHorizontal="true">
+            android:layout_height="27dp"
+            android:layout_marginTop="121dp"
+            android:background="@drawable/edit_texts"
+            android:ems="10"
+            android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp">
 
         <requestFocus/>
     </EditText>
@@ -17,58 +21,31 @@
     <EditText
             android:id="@+id/passField"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/loginField"
-            android:layout_below="@+id/loginField"
+            android:hint="password"
+            android:background="@drawable/edit_texts"
+            android:layout_height="27dp"
             android:ems="10"
-            android:inputType="textPassword"/>
-
-    <TextView
-            android:id="@+id/login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Login:"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_above="@+id/passField" android:layout_alignLeft="@+id/sign_in"
-            android:layout_alignStart="@+id/sign_in"/>
-
-    <TextView
-            android:id="@+id/pass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pass:"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_alignBottom="@+id/passField" android:layout_alignLeft="@+id/login"
-            android:layout_alignStart="@+id/login"/>
-
-    <TextView
-            android:id="@+id/sign_in"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="23dp"
-            android:text="Please Sign In"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:inputType="textPassword"
+            android:layout_below="@+id/loginField" android:layout_alignLeft="@+id/loginField"
+            android:layout_alignStart="@+id/loginField" android:layout_marginTop="22dp"/>
 
     <Button
             android:id="@+id/loginButton"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="90dp"
             android:onClick="login"
             android:text="Log in"
-            android:layout_below="@+id/passField" android:layout_alignLeft="@+id/pass"
-            android:layout_alignStart="@+id/pass" android:layout_alignRight="@+id/passField"
-            android:layout_alignEnd="@+id/passField"/>
+            android:layout_above="@+id/goRegisterButton" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:background="#fff64747"/>
     <Button
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="90dp"
             android:text="Register"
             android:onClick="goRegister"
-            android:id="@+id/goRegisterButton" android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" android:layout_marginRight="34dp" android:layout_marginBottom="33dp"
-            android:layout_toRightOf="@+id/sign_in"/>
+            android:id="@+id/goRegisterButton"
+            android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:background="#fff9bf3b"/>
 
 </RelativeLayout>

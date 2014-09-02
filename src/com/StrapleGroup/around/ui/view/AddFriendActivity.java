@@ -92,16 +92,11 @@ public class AddFriendActivity extends Activity implements Constants {
             if (intent.getBooleanExtra(MESSAGE, true)) {
                 final FriendsInfo pFriend = new FriendsInfo();
                 userInfoPrefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-                int pMsgId = 0;
-                if (userInfoPrefs.getInt(MSG_ID, 0) != 0) {
-                    pMsgId = userInfoPrefs.getInt(MSG_ID, 0);
-                    userInfoPrefs.edit().putInt(MSG_ID, pMsgId + 1).commit();
-                    pMsgId++;
-                } else {
-                    userInfoPrefs.edit().putInt(MSG_ID, 1).commit();
-                    pMsgId = 1;
-                }
-                pFriend.setId(pMsgId);
+//                    int pMsgId;
+//                    pMsgId = userInfoPrefs.getInt(MSG_ID, 0);
+//                    pMsgId = pMsgId + 1;
+//                    userInfoPrefs.edit().putInt(MSG_ID, pMsgId).commit();
+//                pFriend.setId(pMsgId);
                 pFriend.setLoginFriend(friendLogin.getText().toString());
                 pFriend.setYFriend(Double.parseDouble(intent.getStringExtra("LAT")));
                 pFriend.setXFriend(Double.parseDouble(intent.getStringExtra("LNG")));

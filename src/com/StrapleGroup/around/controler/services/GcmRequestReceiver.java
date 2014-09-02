@@ -69,6 +69,7 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     FriendsInfoDao dao = new FriendsInfoDao(db);
                     dataManager = new DataManagerImpl(context);
                     friendsList = dataManager.getAllFriendsInfo();
+                    if (loginResult.getString(MESSAGE).equals("completed")) {
                     for (int pCount = 0; pCount < friendsList.size(); pCount++) {
                         FriendsInfo pFriend = dataManager.getFriendInfo(pCount);
                         String test1 = pFriend.getLoginFriend() + "x";
@@ -77,6 +78,8 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                         pFriend.setYFriend(Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + "y")));
                         dao.updateCoordinates(pFriend, Long.toString(pFriend.getId()));
                         Log.e("REFRESHED", "REFRESH SUCCESSFUL");
+                    }
+
                     }
                 }
 
