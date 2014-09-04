@@ -88,6 +88,8 @@ public class AroundMapFragment extends Fragment implements Constants {
 
     public void mapCustomer() {
         mapPane.setMyLocationEnabled(true);
+        mapPane.setBuildingsEnabled(true);
+//        mapPane.addMarker(new MarkerOptions().flat(true));
         mapPane.getUiSettings().setAllGesturesEnabled(false);
         mapPane.getUiSettings().setCompassEnabled(false);
         mapPane.getUiSettings().setZoomControlsEnabled(false);

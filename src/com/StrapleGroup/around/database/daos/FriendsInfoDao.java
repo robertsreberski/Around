@@ -51,7 +51,7 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         final ContentValues pValues = new ContentValues();
 		pValues.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
 		pValues.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
-        db.update(FriendsInfoTable.TABLE_NAME, pValues, BaseColumns._ID + " =?", new String[]{String.valueOf(friendsInfo.getId())});
+        db.update(FriendsInfoTable.TABLE_NAME, pValues, BaseColumns._ID + "=" + id, null);
     }
 
 	@Override

@@ -8,7 +8,9 @@
             android:id="@+id/loginField"
             android:hint="login"
             android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:layout_width="250dp"
+            android:singleLine="true"
             android:layout_height="50dp"
             android:background="@drawable/edit_texts"
             android:ems="10"
@@ -16,13 +18,14 @@
             android:layout_alignParentTop="true" android:layout_alignLeft="@+id/passField"
             android:layout_alignStart="@+id/passField">
 
-    <requestFocus/>
+        <requestFocus/>
     </EditText>
 
     <EditText
             android:id="@+id/passField"
             android:layout_width="250dp"
             android:hint="password"
+            android:paddingRight="15dp"
             android:paddingLeft="15dp"
             android:background="@drawable/edit_texts"
             android:layout_height="50dp"
@@ -41,14 +44,39 @@
             android:background="@drawable/flat_buttons"
             android:layout_below="@+id/passField" android:layout_centerHorizontal="true"
             android:layout_marginTop="45dp"/>
-    <Button
-            android:layout_width="300dp"
-            android:layout_height="70dp"
-            android:text="Register"
-            android:onClick="goRegister"
-            android:id="@+id/goRegisterButton"
-            android:background="@drawable/flat_buttons"
-            android:layout_below="@+id/loginButton" android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"/>
+    <!--<Button-->
+    <!--android:layout_width="300dp"-->
+    <!--android:layout_height="70dp"-->
+    <!--android:text="Don't have an account? Register now"-->
+    <!--android:onClick="goRegister"-->
+    <!--android:visibility="false"-->
+    <!--android:id="@+id/goRegisterButton"-->
+    <!--android:background="@drawable/flat_buttons"-->
+    <!--android:layout_marginTop="94dp" android:layout_below="@+id/loginProgress"-->
+    <!--android:layout_alignLeft="@+id/loginButton" android:layout_alignStart="@+id/loginButton"/>-->
+    <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginProgress" android:layout_alignTop="@+id/loginButton"
+            android:layout_centerHorizontal="true" android:indeterminate="false"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ecf0f1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Don't have an account? Register "
+            android:id="@+id/textView"
+            android:layout_below="@+id/loginProgress" android:layout_alignLeft="@+id/loginButton"
+            android:layout_alignStart="@+id/loginButton" android:layout_marginTop="11dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#7f8c8d"
+            android:linksClickable="true"
+            android:text="here"
+            android:id="@+id/linkText"
+            android:layout_toRightOf="@+id/textView" android:layout_alignTop="@+id/textView"/>
 
 </RelativeLayout>

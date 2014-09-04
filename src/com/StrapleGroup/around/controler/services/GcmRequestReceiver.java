@@ -71,18 +71,22 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     friendsList = dataManager.getAllFriendsInfo();
                     if (loginResult.getString(MESSAGE).equals("completed")) {
                     for (int pCount = 0; pCount < friendsList.size(); pCount++) {
-                        FriendsInfo pFriend = dataManager.getFriendInfo(pCount + 1);
-                        String test1 = pFriend.getLoginFriend() + "x";
-                        String test2 = pFriend.getLoginFriend() + "y";
-                        pFriend.setXFriend(Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + "x")));
-                        pFriend.setYFriend(Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + "y")));
-                        dao.updateCoordinates(pFriend, Long.toString(pFriend.getId()));
+                        int pInteger = pCount + 1;
+                        FriendsInfo pFriend = dataManager.getFriendInfo(pInteger);
+                        double pLat = Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + "x"));
+                        double pLng = Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + "y"));
+                        pFriend.setXFriend(pLat);
+                        pFriend.setYFriend(pLng);
+                        dao.updateCoordinates(pFriend, Integer.toString(pInteger));
                         Log.e("REFRESHED", "REFRESH SUCCESSFUL");
+                        pRefreshIntent.putExtra(MESSAGE, true);
                     }
-
+                        if (loginResult.get(MESSAGE).equals("incompleted")) {
+                            pRefreshIntent.putExtra(MESSAGE, false);
+                        }
                     }
+                    context.startService(pRefreshIntent);
                 }
-
             }
         }
     }

@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
@@ -29,15 +31,19 @@ public class RegisterActivity extends Activity implements Constants {
     private String login;
     private String pass;
     private  IntentFilter resultFilter;
+    private ProgressBar registerProgress;
+    private Button registerButton;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         registerResultReceiver = new RegisterResultReceiver();
         resultFilter = new IntentFilter(REGISTER_LOCAL_ACTION);
-
+        registerButton = (Button) findViewById(R.id.registerButton);
         loginField = (EditText) findViewById(R.id.loginField_register);
         passField = (EditText) findViewById(R.id.passField_register);
+        registerProgress = (ProgressBar) findViewById(R.id.registerProgress);
+        registerProgress.setVisibility(View.INVISIBLE);
         context = getApplicationContext();
     }
 
@@ -60,6 +66,8 @@ public class RegisterActivity extends Activity implements Constants {
             done = false;
         }
         if(done){
+            registerButton.setText("");
+            registerProgress.setVisibility(View.VISIBLE);
             new AsyncTask<Void, Void, Void>(){
 
                 @Override
@@ -73,8 +81,8 @@ public class RegisterActivity extends Activity implements Constants {
                         data.putString("action", REGISTER_ACTION);
                         data.putString("login", login);
                         data.putString("password", pass);
-                        String pLat = "34.32123";
-                        String pLng = "53.31331";
+                        String pLat = "00.00000";
+                        String pLng = "00.00000";
                         if(latLngPrefs.contains("x") && latLngPrefs.contains("y")){
                         pLat = latLngPrefs.getString("x","");
                         pLng = latLngPrefs.getString("y","");}
@@ -83,8 +91,10 @@ public class RegisterActivity extends Activity implements Constants {
                         googleCloudMessaging.send(SERVER_ID, id, 0, data);
                         Log.e("GOOD", "sth");
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        registerProgress.setVisibility(View.INVISIBLE);
+                        registerButton.setText("Register");
+                        Log.e("PROBLEM WITH LOGIN REQUEST",
+                                "*******************************************************");
                     }
                     return null;
                 }

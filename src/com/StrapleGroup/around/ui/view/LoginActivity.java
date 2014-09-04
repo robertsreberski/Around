@@ -9,8 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.*;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -32,6 +31,9 @@ public class LoginActivity extends Activity implements Constants {
     private SharedPreferences gcmStorage;
     private GoogleCloudMessaging googleCloudMessaging = null;
     private  String pass = null;
+    private Button loginButton = null;
+    private ProgressBar loginProgress = null;
+    private TextView linkText = null;
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -43,7 +45,17 @@ public class LoginActivity extends Activity implements Constants {
 		context = getApplicationContext();
 		loginField = (EditText) findViewById(R.id.loginField);
 		passField = (EditText) findViewById(R.id.passField);
-
+        loginButton = (Button) findViewById(R.id.loginButton);
+        loginProgress = (ProgressBar) findViewById(R.id.loginProgress);
+        loginProgress.setVisibility(View.INVISIBLE);
+        linkText = (TextView) findViewById(R.id.linkText);
+        linkText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pGoRegister = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(pGoRegister);
+            }
+        });
         googleCloudMessaging = GoogleCloudMessaging.getInstance(this);
         registrationId = getRegistrationId();
         if (registrationId.isEmpty()) {
@@ -69,7 +81,9 @@ public class LoginActivity extends Activity implements Constants {
 			done = false;
 		}
 		if(done){
-		new AsyncTask<Void, Void, String>() {
+            loginButton.setText("");
+            loginProgress.setVisibility(View.VISIBLE);
+            new AsyncTask<Void, Void, String>() {
 			@Override
 			protected String doInBackground(Void... params) {
 				googleCloudMessaging = GoogleCloudMessaging
@@ -77,8 +91,8 @@ public class LoginActivity extends Activity implements Constants {
 				Bundle pLoginData = new Bundle();
                 locationPreferences = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
                 pLoginData.putString("action", LOGIN_ACTION);
-                pLoginData.putString(LOGIN, loginField.getText().toString());
-				pLoginData.putString(PASS, passField.getText().toString());
+                pLoginData.putString(LOGIN, login);
+                pLoginData.putString(PASS, pass);
                 pLoginData.putString("x", locationPreferences.getString("LAT", ""));
                 pLoginData.putString("y", locationPreferences.getString("LNG", ""));
                 String id = "m-"+UUID.randomUUID().toString();
@@ -88,7 +102,10 @@ public class LoginActivity extends Activity implements Constants {
 					Log.i("REQUESTED SUCCESSFUL",
 							"*************************************************");
 				} catch (IOException e) {
-					Log.e("PROBLEM WITH LOGIN REQUEST",
+                    loginProgress.setVisibility(View.INVISIBLE);
+                    loginButton.setText("Log in");
+                    Toast.makeText(context, "Wrong login or password!", Toast.LENGTH_SHORT);
+                    Log.e("PROBLEM WITH LOGIN REQUEST",
 							"*******************************************************");
 				}
 				return null;
@@ -116,7 +133,9 @@ public class LoginActivity extends Activity implements Constants {
         finish();
     }
 	protected void badRequest(){
-		Toast.makeText(this, "Unauthorized", Toast.LENGTH_SHORT).show();
+        loginProgress.setVisibility(View.INVISIBLE);
+        loginButton.setText("Log in");
+        Toast.makeText(this, "Unauthorized", Toast.LENGTH_SHORT).show();
 	}
 
     public int getAppVersion(Context context) {
