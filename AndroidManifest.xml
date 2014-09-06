@@ -45,6 +45,7 @@
                 android:enabled="true"
                 android:exported="true">
         </service>
+        <service android:name=".controler.services.NotificatorAroundFriendsService"/>
         <service android:name=".controler.services.DataLoadService"/>
         <activity
                 android:name="com.StrapleGroup.around.ui.view.LoginActivity"

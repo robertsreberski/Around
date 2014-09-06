@@ -20,17 +20,16 @@ public class NotificatorAroundFriendsService extends IntentService implements Co
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
      */
-    public NotificatorAroundFriendsService(String name) {
-        super(name);
+    public NotificatorAroundFriendsService() {
+        super("NotificatorAroundFriendsService");
     }
 
     private DataManagerImpl dataManager;
     private Context context;
     private List<FriendsInfo> friendsList;
     private SharedPreferences userPrefs;
+
 
     @Override
     public void onCreate() {

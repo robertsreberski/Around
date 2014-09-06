@@ -26,6 +26,7 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
     private DataManagerImpl dataManager;
     private List<FriendsInfo> friendsList;
     private SharedPreferences userPrefs;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         final GoogleCloudMessaging pGcm = GoogleCloudMessaging.getInstance(context);
@@ -70,7 +71,7 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     context.sendBroadcast(pAddIntent);
                 }
                 if (loginResult.getString(ACTION).equals("FRIENDS")) {
-                    Intent pRefreshIntent = new Intent();
+                    Intent pRefreshIntent = new Intent(context, NotificatorAroundFriendsService.class);
                     SQLiteOpenHelper openHelper = new OpenHelper(context);
                     SQLiteDatabase db = openHelper.getWritableDatabase();
                     FriendsInfoDao dao = new FriendsInfoDao(db);
