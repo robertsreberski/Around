@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -73,6 +74,7 @@ public class AddFriendActivity extends Activity implements Constants {
                 pFriendDataBundle.putString("friend_login", friendLogin.getText().toString());
                 try {
                     googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pFriendDataBundle);
+                    Log.e("SENDED", "ADD_REQUEST_SENDED");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

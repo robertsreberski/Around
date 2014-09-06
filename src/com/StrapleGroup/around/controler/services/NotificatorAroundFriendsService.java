@@ -48,8 +48,11 @@ public class NotificatorAroundFriendsService extends IntentService implements Co
             for (int pCount = 0; pCount < friendsList.size(); pCount++) {
                 int pInteger = pCount + 1;
                 FriendsInfo pFriend = dataManager.getFriendInfo(pInteger);
-                userPrefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-
+//                userPrefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+                Intent pAddMarkerIntent = new Intent(MARKER_LOCAL_ACTION);
+                pAddMarkerIntent.putExtra("LAT", pFriend.getXFriend());
+                pAddMarkerIntent.putExtra("LNG", pFriend.getYFriend());
+                sendBroadcast(pAddMarkerIntent);
             }
         }
     }

@@ -13,7 +13,9 @@ public interface Constants {
     static final String ADD_LOCAL_ACTION = "com.StrapleGroup.around.action.ADD";
     static final String REGISTER_LOCAL_ACTION = "com.StrapleGroup.around.action.REGISTER";
     static final String REGISTER_ACTION = "com.StrapleGroup.gcm.REGISTER";
-    static final String ADD_ACTION = "com.StrapleGroup.gcm.FRIENDADD";
+    static final String ADD_ACTION = "com.StrapleGroup.gcm.REQUEST";
+    static final String ADD_RESPONSE = "com.StrapleGroup.gcm.FRIENDADD";
+    static final String ADD_REQUEST_LOCAL_ACTION = "REQUEST";
     static final String LOGIN_ACTION = "com.StrapleGroup.gcm.LOGIN";
     public static final String KEY_LOGIN = "login";
     public static final String KEY_PASS = "pass";
@@ -25,4 +27,5 @@ public interface Constants {
     static final String REFRESH_ACTION = "com.StrapleGroup.gcm.LOCATION";
     static final String REFRESH_LOCAL_ACTION = "com.StrapleGroup.around.action.REFRESH";
     static final String MSG_ID = "msgId";
+    static final String MARKER_LOCAL_ACTION = "com.StrapleGroup.around.action.MARKER";
 }

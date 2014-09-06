@@ -87,13 +87,13 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
                     pLoginData.putString("action", REFRESH_ACTION);
                     pLoginData.putString(LOGIN, sharedUserInfo.getString(KEY_LOGIN, ""));
                     Location pLastLocation = locationClient.getLastLocation();
+                    if (checkIfLogin() && pLastLocation != null) {
                     pLoginData.putString("x", Double.toString(pLastLocation.getLatitude()));
                     pLoginData.putString("y", Double.toString(pLastLocation.getLongitude()));
                     pLoginData.putString("number", Integer.toString(pNumberFriends));
                     String id = "m-" + UUID.randomUUID().toString();
                     googleCloudMessaging = GoogleCloudMessaging
                             .getInstance(context);
-                    if (checkIfLogin() && pLastLocation != null) {
                         try {
                             googleCloudMessaging.send(SERVER_ID, id, pLoginData);
                             Log.i("REQUESTED SUCCESSFUL", "*************************************************");

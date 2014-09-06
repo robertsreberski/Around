@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,11 +34,13 @@ public class AroundMapFragment extends Fragment implements Constants {
     private LocationReceiver locationReceiver;
     private SupportMapFragment mapFragment;
     private Intent intentLocationService;
+    private RefreshReceiver refreshReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationReceiver = new LocationReceiver();
+        refreshReceiver = new RefreshReceiver();
         context = getActivity().getApplicationContext();
         sharedUserInfo = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
         // creating map
@@ -62,6 +66,8 @@ public class AroundMapFragment extends Fragment implements Constants {
             startActivity(pLoginIntent);
             getActivity().finish();
         }
+        IntentFilter pIntentFilter = new IntentFilter(MARKER_LOCAL_ACTION);
+        getActivity().registerReceiver(refreshReceiver, pIntentFilter);
         super.onStart();
     }
 
@@ -82,6 +88,7 @@ public class AroundMapFragment extends Fragment implements Constants {
     public void onStop() {
         getActivity().unregisterReceiver(locationReceiver);
         getActivity().stopService(intentLocationService);
+        getActivity().unregisterReceiver(refreshReceiver);
         super.onStop();
     }
 
@@ -90,7 +97,7 @@ public class AroundMapFragment extends Fragment implements Constants {
         mapPane.setMyLocationEnabled(true);
         mapPane.setBuildingsEnabled(true);
 //        mapPane.addMarker(new MarkerOptions().flat(true));
-        mapPane.getUiSettings().setAllGesturesEnabled(false);
+//        mapPane.getUiSettings().setAllGesturesEnabled(false);
         mapPane.getUiSettings().setCompassEnabled(false);
         mapPane.getUiSettings().setZoomControlsEnabled(false);
         mapPane.getUiSettings().setMyLocationButtonEnabled(false);
@@ -125,10 +132,28 @@ public class AroundMapFragment extends Fragment implements Constants {
         return pCheck;
     }
 
+    public void addMarker(LatLng latLng) {
+        MarkerOptions pMarkerOptions = new MarkerOptions();
+        pMarkerOptions.position(latLng);
+        mapPane.addMarker(pMarkerOptions);
+    }
+
     private class LocationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             serviceUsing(intent);
+        }
+    }
+
+    private class RefreshReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            double pLat = intent.getDoubleExtra("LAT", 0.00);
+            double pLng = intent.getDoubleExtra("LNG", 0.00);
+            LatLng pLatLng = new LatLng(pLat, pLng);
+            addMarker(pLatLng);
+            Log.e("MARKER_ADD", "****************************************MARKER_ADDED");
         }
     }
 }

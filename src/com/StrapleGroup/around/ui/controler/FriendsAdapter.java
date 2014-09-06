@@ -31,4 +31,11 @@ public class FriendsAdapter extends ArrayAdapter<FriendsInfo> {
         img.setImageResource(R.drawable.nearby_prototyp1);
         return convertView;
     }
+
+    @Override
+    public void add(FriendsInfo object) {
+
+
+        super.add(object);
+    }
 }
