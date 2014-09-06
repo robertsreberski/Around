@@ -101,6 +101,7 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                         @Override
                         protected Void doInBackground(Void... params) {
                             Bundle pResponse = new Bundle();
+                            pResponse.putString(ACTION, ADD_RESPONSE);
                             pResponse.putString(MESSAGE, "accepted");
                             // Lub "unaccepted" ;
                             pResponse.putString("friend_login", userPrefs.getString(LOGIN, ""));
