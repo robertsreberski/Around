@@ -6,8 +6,21 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/request_list_view"/>
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+        <!-- Note that this LinearLayout has the "animateLayoutChanges" property set to true.
+             This tells the framework to automatically animate child views (in this case, rows)
+             as they are added to and removed from the LinearLayout. -->
+        <LinearLayout android:id="@+id/container"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:showDividers="middle"
+                      android:divider="?android:dividerHorizontal"
+                      android:animateLayoutChanges="true"
+                      android:paddingLeft="16dp"
+                      android:paddingRight="16dp"/>
+
+    </ScrollView>
 </LinearLayout>

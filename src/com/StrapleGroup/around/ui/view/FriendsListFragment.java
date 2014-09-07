@@ -37,6 +37,9 @@ public class FriendsListFragment extends ListFragment implements Constants {
     private FriendAddResultReceiver friendAddResultReceiver = new FriendAddResultReceiver();
     private RequestReceiver requestReceiver = new RequestReceiver();
     FriendsAdapter adapter;
+    private ViewGroup container;
+    private LinearLayout requestListLayout;
+    private ViewGroup viewGroup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,7 @@ public class FriendsListFragment extends ListFragment implements Constants {
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
         friendsList = dataManager.getAllFriendsInfo();
-
+        adapter = new FriendsAdapter(context, friendsList);
     }
 
     @Override
@@ -58,11 +61,12 @@ public class FriendsListFragment extends ListFragment implements Constants {
     @Override
     public void onStart() {
         super.onStart();
+        viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.request_list, null);
         IntentFilter addFilter = new IntentFilter(ADD_LOCAL_ACTION);
         IntentFilter requestFilter = new IntentFilter(ADD_REQUEST_LOCAL_ACTION);
         getActivity().registerReceiver(requestReceiver, requestFilter);
         getActivity().registerReceiver(friendAddResultReceiver, addFilter);
-        adapter = new FriendsAdapter(context, friendsList);
+
         this.setListAdapter(adapter);
     }
 
@@ -108,7 +112,7 @@ public class FriendsListFragment extends ListFragment implements Constants {
                         return null;
                     }
                 }.execute(null, null, null);
-                requestList.removeView(newRequest);
+                container.removeView(newRequest);
             }
         });
         newRequest.findViewById(R.id.reject_button).setOnClickListener(new View.OnClickListener() {
@@ -135,18 +139,27 @@ public class FriendsListFragment extends ListFragment implements Constants {
                         return null;
                     }
                 }.execute(null, null, null);
-                requestList.removeView(newRequest);
+                container.removeView(newRequest);
             }
         });
-        requestList.addView(newRequest, 0);
+        container.addView(newRequest, 0);
     }
 
+    public void notifyChanges() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+    }
 
     private class FriendAddResultReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getBooleanExtra(MESSAGE, true)) {
+//            if (intent.getBooleanExtra(MESSAGE, true)) {
                 final FriendsInfo pFriend = new FriendsInfo();
                 userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
                 pFriend.setId(friendsList.size());
@@ -154,24 +167,23 @@ public class FriendsListFragment extends ListFragment implements Constants {
                 pFriend.setYFriend(Double.parseDouble(intent.getStringExtra("LAT")));
                 pFriend.setXFriend(Double.parseDouble(intent.getStringExtra("LNG")));
                 dataManager.saveFriendInfo(pFriend);
-                adapter.notifyDataSetChanged();
-            } else {
-                badRequest();
-            }
+
+//            } else {
+//                badRequest();
+//            }
         }
     }
 
     private class RequestReceiver extends BroadcastReceiver {
-        private LinearLayout container;
-        private LinearLayout requestListLayout;
+
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.request_list, null);
+
+            LinearLayout friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
             requestListLayout = (LinearLayout) viewGroup.findViewById(R.id.request_list);
-            container = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
-            container.addView(requestList, 0);
-            requestList = (ListView) getActivity().findViewById(R.id.request_list_view);
+            container = (ViewGroup) viewGroup.findViewById(R.id.container);
+            friendListLayout.addView(requestListLayout, 0);
             addRequest(intent.getStringExtra("friend_name"));
         }
     }

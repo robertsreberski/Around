@@ -31,6 +31,7 @@ public class FriendsAdapter extends ArrayAdapter<FriendsInfo> {
     public void addItem(final FriendsInfo friend) {
         friendList.add(friend);
     }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
@@ -54,7 +55,6 @@ public class FriendsAdapter extends ArrayAdapter<FriendsInfo> {
                 SQLiteDatabase db = helper.getWritableDatabase();
                 FriendsInfoDao pFriendDao = new FriendsInfoDao(db);
                 pFriendDao.delete(Long.toString(1));
-                getFriendsAdapter().notifyDataSetChanged();
             }
         });
         img.setImageResource(R.drawable.nearby_prototyp1);
