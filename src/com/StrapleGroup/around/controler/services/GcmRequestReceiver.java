@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
@@ -17,9 +16,7 @@ import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
         Constants {
@@ -96,27 +93,11 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     context.startService(pRefreshIntent);
                 }
                 if (loginResult.getString(ACTION).equals("REQUEST")) {
+                    Intent requestIntent = new Intent(ADD_REQUEST_LOCAL_ACTION);
                     userPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
                     final String friendLogin = loginResult.getString("login");
-                    new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-                            Bundle pResponse = new Bundle();
-                            pResponse.putString(ACTION, ADD_RESPONSE);
-                            pResponse.putString(MESSAGE, "accepted");
-                            // Lub "unaccepted" ;
-                            pResponse.putString("friend_login", userPrefs.getString(LOGIN, ""));
-                            pResponse.putString("login", friendLogin);
-                            try {
-                                pGcm.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
-                                Log.i("RESPONSE_SEND", "SSUCCESSFULY");
-                            } catch (IOException e) {
-                                Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
-                                e.printStackTrace();
-                            }
-                            return null;
-                        }
-                    }.execute(null, null, null);
+                    requestIntent.putExtra("friend_name", friendLogin);
+                    context.sendBroadcast(requestIntent);
                 }
             }
         }

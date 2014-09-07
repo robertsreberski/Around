@@ -14,112 +14,111 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsInfoDao implements Dao<FriendsInfo> {
-	private static final String INSERT_ALL = "insert into "
-			+ FriendsInfoTable.TABLE_NAME + "("
-			+ FriendsInfoColumns.LOGIN_FRIEND + " , "
-			+ FriendsInfoColumns.X_FRIEND + " , " + FriendsInfoColumns.Y_FRIEND
-			+ ") values (?, ?, ?)";
-	private SQLiteDatabase db;
-	private SQLiteStatement insertStatement;
+    private static final String INSERT_ALL = "insert into "
+            + FriendsInfoTable.TABLE_NAME + "("
+            + FriendsInfoColumns.LOGIN_FRIEND + " , "
+            + FriendsInfoColumns.X_FRIEND + " , " + FriendsInfoColumns.Y_FRIEND
+            + ") values (?, ?, ?)";
+    private SQLiteDatabase db;
+    private SQLiteStatement insertStatement;
 
-	public FriendsInfoDao(SQLiteDatabase db) {
-		this.db = db;
-		insertStatement = db.compileStatement(INSERT_ALL);
-	}
+    public FriendsInfoDao(SQLiteDatabase db) {
+        this.db = db;
+        insertStatement = db.compileStatement(INSERT_ALL);
+    }
 
-	@Override
-	public long save(FriendsInfo friendsInfo) {
-		insertStatement.clearBindings();
-		insertStatement.bindString(1, friendsInfo.getLoginFriend());
-		insertStatement.bindDouble(2, friendsInfo.getXFriend());
-		insertStatement.bindDouble(3, friendsInfo.getYFriend());
-		return insertStatement.executeInsert();
-	}
+    @Override
+    public long save(FriendsInfo friendsInfo) {
+        insertStatement.clearBindings();
+        insertStatement.bindString(1, friendsInfo.getLoginFriend());
+        insertStatement.bindDouble(2, friendsInfo.getXFriend());
+        insertStatement.bindDouble(3, friendsInfo.getYFriend());
+        return insertStatement.executeInsert();
+    }
 
-	@Override
-	public void update(FriendsInfo friendsInfo) {
-		final ContentValues values = new ContentValues();
-		values.put(FriendsInfoColumns.LOGIN_FRIEND, friendsInfo.getLoginFriend());
-		values.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
-		values.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
-		db.update(FriendsInfoTable.TABLE_NAME, values,
-				BaseColumns._ID + " = ?",
-				new String[] { String.valueOf(friendsInfo.getId()) });
-	}
-	@Override
+    @Override
+    public void update(FriendsInfo friendsInfo) {
+        final ContentValues values = new ContentValues();
+        values.put(FriendsInfoColumns.LOGIN_FRIEND, friendsInfo.getLoginFriend());
+        values.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
+        values.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
+        db.update(FriendsInfoTable.TABLE_NAME, values,
+                BaseColumns._ID + " = ?",
+                new String[]{String.valueOf(friendsInfo.getId())});
+    }
+
+    @Override
     public void updateCoordinates(FriendsInfo friendsInfo, String id) {
         final ContentValues pValues = new ContentValues();
-		pValues.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
-		pValues.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
+        pValues.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
+        pValues.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
         db.update(FriendsInfoTable.TABLE_NAME, pValues, BaseColumns._ID + "=" + id, null);
     }
 
-	@Override
-	public void delete(FriendsInfo friendsInfo) {
-		if (friendsInfo.getId() > 0) {
-			db.delete(FriendsInfoTable.TABLE_NAME, BaseColumns._ID + " =?",
-					new String[] { String.valueOf(friendsInfo.getId()) });
-		}
-	}
+    @Override
+    public void delete(String id) {
+        db.delete(FriendsInfoTable.TABLE_NAME, BaseColumns._ID + " =" + id, null);
+    }
 
-	public FriendsInfo get(long id) {
-		FriendsInfo pFriendsInfo = null;
+    public FriendsInfo get(long id) {
+        FriendsInfo pFriendsInfo = null;
         Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoColumns.LOGIN_FRIEND,
-                        FriendsInfoColumns.X_FRIEND, FriendsInfoColumns.Y_FRIEND },
-				BaseColumns._ID + " =?", new String[] { String.valueOf(id) },
-				null, null, null, "1");
-		if (pCursor.moveToFirst()) {
-			pFriendsInfo = this.buildUserInfoFromCursor(pCursor);
-		}
-		if (!pCursor.isClosed()) {
-			pCursor.close();
-		}
-		return pFriendsInfo;
-	}
-	@Override
-	public List<FriendsInfo> getAll() {
-		List<FriendsInfo> pFriendsList = new ArrayList<FriendsInfo>();
-		Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[] {
-                        FriendsInfoColumns.LOGIN_FRIEND,
-                        FriendsInfoColumns.X_FRIEND, FriendsInfoColumns.Y_FRIEND },
-				null, null, null, null, FriendsInfoColumns.LOGIN_FRIEND, null);
-		if (pCursor.moveToFirst()) {
-			do {
-				FriendsInfo pFriendsInfo = this
-						.buildUserInfoFromCursor(pCursor);
-				if (pFriendsInfo != null) {
-					pFriendsList.add(pFriendsInfo);
-				}
-			} while (pCursor.moveToNext());
-		}
-		if (!pCursor.isClosed()) {
-			pCursor.close();
-		}
-		return pFriendsList;
-	}
+                        FriendsInfoColumns.X_FRIEND, FriendsInfoColumns.Y_FRIEND},
+                BaseColumns._ID + " =?", new String[]{String.valueOf(id)},
+                null, null, null, "1");
+        if (pCursor.moveToFirst()) {
+            pFriendsInfo = this.buildUserInfoFromCursor(pCursor);
+        }
+        if (!pCursor.isClosed()) {
+            pCursor.close();
+        }
+        return pFriendsInfo;
+    }
 
-	private FriendsInfo buildUserInfoFromCursor(Cursor pCursor) {
-		FriendsInfo pFriendsInfo = null;
-		if (pCursor != null) {
-			pFriendsInfo = new FriendsInfo();
-			pFriendsInfo.setId(pCursor.getLong(0));
+    @Override
+    public List<FriendsInfo> getAll() {
+        List<FriendsInfo> pFriendsList = new ArrayList<FriendsInfo>();
+        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{
+                        FriendsInfoColumns.LOGIN_FRIEND,
+                        FriendsInfoColumns.X_FRIEND, FriendsInfoColumns.Y_FRIEND},
+                null, null, null, null, FriendsInfoColumns.LOGIN_FRIEND, null);
+        if (pCursor.moveToFirst()) {
+            do {
+                FriendsInfo pFriendsInfo = this
+                        .buildUserInfoFromCursor(pCursor);
+                if (pFriendsInfo != null) {
+                    pFriendsList.add(pFriendsInfo);
+                }
+            } while (pCursor.moveToNext());
+        }
+        if (!pCursor.isClosed()) {
+            pCursor.close();
+        }
+        return pFriendsList;
+    }
+
+    private FriendsInfo buildUserInfoFromCursor(Cursor pCursor) {
+        FriendsInfo pFriendsInfo = null;
+        if (pCursor != null) {
+            pFriendsInfo = new FriendsInfo();
+            pFriendsInfo.setId(pCursor.getLong(0));
             pFriendsInfo.setLoginFriend(pCursor.getString(0));
             pFriendsInfo.setXFriend(pCursor.getDouble(1));
             pFriendsInfo.setYFriend(pCursor.getDouble(2));
         }
-		return pFriendsInfo;
-	}
+        return pFriendsInfo;
+    }
 
     public long find(String login) {
         long pFriendId = 0L;
-		String sql = "select _id from " + FriendsInfoTable.TABLE_NAME + " where upper(" + FriendsInfoColumns.LOGIN_FRIEND + ") = ? limit 1";
-		Cursor pCursor = db.rawQuery(sql, new String[] { login.toUpperCase()});
-		if(pCursor.moveToFirst()){
-			pFriendId = pCursor.getLong(0);
-		}
-		if(!pCursor.isClosed()){
-			pCursor.close();
-		}
+        String sql = "select _id from " + FriendsInfoTable.TABLE_NAME + " where upper(" + FriendsInfoColumns.LOGIN_FRIEND + ") = ? limit 1";
+        Cursor pCursor = db.rawQuery(sql, new String[]{login.toUpperCase()});
+        if (pCursor.moveToFirst()) {
+            pFriendId = pCursor.getLong(0);
+        }
+        if (!pCursor.isClosed()) {
+            pCursor.close();
+        }
         return pFriendId;
     }
 }

@@ -67,8 +67,7 @@ public class DataManagerImpl implements DataManager {
         boolean result = false;
         try {
             db.beginTransaction();
-            FriendsInfo friendInfo = friendsDao.get(friendId);
-            friendsDao.delete(friendInfo);
+            friendsDao.delete(Long.toString(friendId));
             db.setTransactionSuccessful();
             result = true;
         } catch (SQLException e) {

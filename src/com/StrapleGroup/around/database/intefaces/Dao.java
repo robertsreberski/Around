@@ -9,7 +9,7 @@ public interface Dao<T> {
 
     void updateCoordinates(T type, String id);
 
-    void delete(T type);
+    void delete(String id);
 
     List<T> getAll();
 }

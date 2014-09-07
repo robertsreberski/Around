@@ -15,7 +15,7 @@ public interface Constants {
     static final String REGISTER_ACTION = "com.StrapleGroup.gcm.REGISTER";
     static final String ADD_ACTION = "com.StrapleGroup.gcm.REQUEST";
     static final String ADD_RESPONSE = "com.StrapleGroup.gcm.FRIENDADD";
-    static final String ADD_REQUEST_LOCAL_ACTION = "REQUEST";
+    static final String ADD_REQUEST_LOCAL_ACTION = "com.StrapleGroup.around.action.REQUEST";
     static final String LOGIN_ACTION = "com.StrapleGroup.gcm.LOGIN";
     public static final String KEY_LOGIN = "login";
     public static final String KEY_PASS = "pass";

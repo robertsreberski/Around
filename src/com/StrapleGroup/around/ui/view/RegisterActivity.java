@@ -83,9 +83,10 @@ public class RegisterActivity extends Activity implements Constants {
                         data.putString("password", pass);
                         String pLat = "00.00000";
                         String pLng = "00.00000";
-                        if(latLngPrefs.contains("x") && latLngPrefs.contains("y")){
-                        pLat = latLngPrefs.getString("x","");
-                        pLng = latLngPrefs.getString("y","");}
+                        if (latLngPrefs.contains("LAT") && latLngPrefs.contains("LNG")) {
+                            pLat = latLngPrefs.getString("LAT", "");
+                            pLng = latLngPrefs.getString("LNG", "");
+                        }
                         data.putString("x", latLngPrefs.getString("x",pLat));
                         data.putString("y", latLngPrefs.getString("y", pLng));
                         googleCloudMessaging.send(SERVER_ID, id, 0, data);

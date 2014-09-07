@@ -3,6 +3,7 @@ package com.StrapleGroup.around.ui.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,14 +11,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 /**
@@ -27,15 +30,21 @@ public class SwipeActivities extends FragmentActivity implements Constants {
     private PagerAdapter pagerAdapter;
     private SharedPreferences sharedUserInfo;
     private Context context;
+    private GoogleCloudMessaging googleCloudMessaging;
+    private static EditText friendLogin;
+    private LinearLayout friendBar;
+    private LinearLayout container;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.swipe_activities);
         context = getApplicationContext();
         this.initializePaging();
-
     }
 
+    public static EditText getFriendLogin() {
+        return friendLogin;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater pInflater = getMenuInflater();
@@ -50,7 +59,6 @@ public class SwipeActivities extends FragmentActivity implements Constants {
         this.pagerAdapter = new PagerAdapter(super.getSupportFragmentManager(), fragments);
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setPageTransformer(true, new ZoomOutPageTransformer());
         pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -96,8 +104,41 @@ public class SwipeActivities extends FragmentActivity implements Constants {
     }
 
     private void addFriend() {
-        Intent pAddFriendIntent = new Intent(context, AddFriendActivity.class);
-        startActivity(pAddFriendIntent);
+        if (findViewById(R.id.friend_bar) == null) {
+            ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.friend_add_bar, null);
+            friendBar = (LinearLayout) viewGroup.findViewById(R.id.friend_bar);
+            container = (LinearLayout) findViewById(R.id.friend_list_layout);
+            container.addView(friendBar, 0);
+            friendLogin = (EditText) friendBar.findViewById(R.id.friend_field);
+        }
+//        Intent pAddFriendIntent = new Intent(context, AddFriendActivity.class);
+//        startActivity(pAddFriendIntent);
+    }
+
+    public void add(View view) {
+        sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                if (googleCloudMessaging == null) {
+                    googleCloudMessaging = GoogleCloudMessaging
+                            .getInstance(context);
+                }
+                Bundle pFriendDataBundle = new Bundle();
+                sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+                pFriendDataBundle.putString("action", ADD_ACTION);
+                pFriendDataBundle.putString("login", sharedUserInfo.getString(KEY_LOGIN, ""));
+                pFriendDataBundle.putString("friend_login", friendLogin.getText().toString());
+                try {
+                    googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pFriendDataBundle);
+                    Log.e("SENDED", "ADD_REQUEST_SENDED");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute(null, null, null);
+        container.removeView(friendBar);
     }
 
     private class PagerAdapter extends FragmentStatePagerAdapter {
@@ -116,46 +157,6 @@ public class SwipeActivities extends FragmentActivity implements Constants {
         @Override
         public int getCount() {
             return this.fragments.size();
-        }
-    }
-
-
-    private class ZoomOutPageTransformer implements ViewPager.PageTransformer {
-        private static final float MIN_SCALE = 0.85f;
-        private static final float MIN_ALPHA = 0.5f;
-
-        public void transformPage(View view, float position) {
-            int pageWidth = view.getWidth();
-            int pageHeight = view.getHeight();
-
-            if (position < -1) { // [-Infinity,-1)
-                // This page is way off-screen to the left.
-                view.setAlpha(0);
-
-            } else if (position <= 1) { // [-1,1]
-                // Modify the default slide transition to shrink the page as well
-                float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
-                float vertMargin = pageHeight * (1 - scaleFactor) / 2;
-                float horzMargin = pageWidth * (1 - scaleFactor) / 2;
-                if (position < 0) {
-                    view.setTranslationX(horzMargin - vertMargin / 2);
-                } else {
-                    view.setTranslationX(-horzMargin + vertMargin / 2);
-                }
-
-                // Scale the page down (between MIN_SCALE and 1)
-                view.setScaleX(scaleFactor);
-                view.setScaleY(scaleFactor);
-
-                // Fade the page relative to its size.
-                view.setAlpha(MIN_ALPHA +
-                        (scaleFactor - MIN_SCALE) /
-                                (1 - MIN_SCALE) * (1 - MIN_ALPHA));
-
-            } else { // (1,+Infinity]
-                // This page is way off-screen to the right.
-                view.setAlpha(0);
-            }
         }
     }
 }

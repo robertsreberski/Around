@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:id="@+id/friend_bar"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditText android:layout_width="280dp" android:layout_height="50dp" android:id="@+id/friend_field"
+              android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+              android:layout_alignParentStart="true"/>
+    <Button style="?android:attr/buttonStyleSmall" android:layout_width="match_parent" android:layout_height="50dp"
+            android:text="Add" android:id="@+id/button" android:layout_alignParentRight="true"
+            android:onClick="add"
+            android:layout_alignParentEnd="true" android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/searchFriendField"/>
+</LinearLayout>
