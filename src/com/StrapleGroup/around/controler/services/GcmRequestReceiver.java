@@ -96,7 +96,11 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     Intent requestIntent = new Intent(ADD_REQUEST_LOCAL_ACTION);
                     userPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
                     final String friendLogin = loginResult.getString("login");
+                    String pLat = loginResult.getString("x");
+                    String pLng = loginResult.getString("y");
                     requestIntent.putExtra("friend_name", friendLogin);
+                    requestIntent.putExtra("LAT", pLat);
+                    requestIntent.putExtra("LNG", pLng);
                     context.sendBroadcast(requestIntent);
                 }
             }

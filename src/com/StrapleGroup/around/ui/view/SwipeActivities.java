@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -29,6 +30,7 @@ import java.util.Vector;
 public class SwipeActivities extends FragmentActivity implements Constants {
     private PagerAdapter pagerAdapter;
     private SharedPreferences sharedUserInfo;
+    private SharedPreferences sharedLatLng;
     private Context context;
     private GoogleCloudMessaging googleCloudMessaging;
     private static EditText friendLogin;
@@ -117,6 +119,7 @@ public class SwipeActivities extends FragmentActivity implements Constants {
 
     public void add(View view) {
         sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+        sharedLatLng = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -129,6 +132,8 @@ public class SwipeActivities extends FragmentActivity implements Constants {
                 pFriendDataBundle.putString("action", ADD_ACTION);
                 pFriendDataBundle.putString("login", sharedUserInfo.getString(KEY_LOGIN, ""));
                 pFriendDataBundle.putString("friend_login", friendLogin.getText().toString());
+                pFriendDataBundle.putString("x", sharedLatLng.getString("LAT", ""));
+                pFriendDataBundle.putString("y", sharedLatLng.getString("LNG", ""));
                 try {
                     googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pFriendDataBundle);
                     Log.e("SENDED", "ADD_REQUEST_SENDED");
@@ -138,6 +143,7 @@ public class SwipeActivities extends FragmentActivity implements Constants {
                 return null;
             }
         }.execute(null, null, null);
+        Toast.makeText(context, "Request sended successufuly!", Toast.LENGTH_SHORT);
         container.removeView(friendBar);
     }
 

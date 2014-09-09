@@ -72,7 +72,6 @@ public class FriendsListFragment extends ListFragment implements Constants {
         IntentFilter requestFilter = new IntentFilter(ADD_REQUEST_LOCAL_ACTION);
         getActivity().registerReceiver(requestReceiver, requestFilter);
         getActivity().registerReceiver(friendAddResultReceiver, addFilter);
-
         this.setListAdapter(adapter);
     }
 
@@ -87,11 +86,16 @@ public class FriendsListFragment extends ListFragment implements Constants {
         Toast.makeText(context, "Can't add friend", Toast.LENGTH_SHORT).show();
     }
 
-    public void addRequest(final String aFriendName) {
+    public void addRequest(final String aFriendName, String aLat, String aLng) {
         final ViewGroup newRequest = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.request_item, null);
         ((TextView) newRequest.findViewById(R.id.friend_requesting)).setText(aFriendName);
         userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
         googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
+        final FriendsInfo pRequestingFriend = new FriendsInfo();
+        pRequestingFriend.setId(dataManager.getAllFriendsInfo().size());
+        pRequestingFriend.setLoginFriend(aFriendName);
+        pRequestingFriend.setXFriend(Double.parseDouble(aLat));
+        pRequestingFriend.setYFriend(Double.parseDouble(aLng));
         newRequest.findViewById(R.id.accept_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,12 +108,13 @@ public class FriendsListFragment extends ListFragment implements Constants {
                         Bundle pResponse = new Bundle();
                         pResponse.putString(ACTION, ADD_RESPONSE);
                         pResponse.putString(MESSAGE, "accepted");
-                        // Lub "unaccepted" ;
                         pResponse.putString("friend_login", userInfoPrefs.getString(LOGIN, ""));
                         pResponse.putString("login", aFriendName);
                         try {
                             googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
                             Log.i("RESPONSE_SEND", "SSUCCESSFULY");
+                            dataManager.saveFriendInfo(pRequestingFriend);
+
                         } catch (IOException e) {
                             Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
                             e.printStackTrace();
@@ -152,12 +157,7 @@ public class FriendsListFragment extends ListFragment implements Constants {
     }
 
     public void notifyChanges() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
                 adapter.notifyDataSetChanged();
-            }
-        });
 
     }
 
@@ -173,6 +173,7 @@ public class FriendsListFragment extends ListFragment implements Constants {
                 pFriend.setYFriend(Double.parseDouble(intent.getStringExtra("LAT")));
                 pFriend.setXFriend(Double.parseDouble(intent.getStringExtra("LNG")));
                 dataManager.saveFriendInfo(pFriend);
+            notifyChanges();
 
 //            } else {
 //                badRequest();
@@ -190,7 +191,7 @@ public class FriendsListFragment extends ListFragment implements Constants {
             requestListLayout = (LinearLayout) viewGroup.findViewById(R.id.request_list);
             container = (ViewGroup) viewGroup.findViewById(R.id.container);
             friendListLayout.addView(requestListLayout, 0);
-            addRequest(intent.getStringExtra("friend_name"));
+            addRequest(intent.getStringExtra("friend_name"), intent.getStringExtra("LAT"), intent.getStringExtra("LNG"));
         }
     }
 }
