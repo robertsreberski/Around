@@ -1,6 +1,7 @@
 package com.StrapleGroup.around.ui.view;
 
 import android.content.*;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
@@ -20,7 +21,8 @@ import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.intefaces.DataManager;
-import com.StrapleGroup.around.ui.controler.FriendsAdapter;
+import com.StrapleGroup.around.database.tables.FriendsInfoTable;
+import com.StrapleGroup.around.ui.controler.FriendsCursorAdapter;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
@@ -36,7 +38,7 @@ public class FriendsListFragment extends ListFragment implements Constants {
     private GoogleCloudMessaging googleCloudMessaging;
     private FriendAddResultReceiver friendAddResultReceiver = new FriendAddResultReceiver();
     private RequestReceiver requestReceiver = new RequestReceiver();
-    FriendsAdapter adapter;
+    private FriendsCursorAdapter adapter;
     private ViewGroup container;
     private LinearLayout requestListLayout;
     private ViewGroup viewGroup;
@@ -46,11 +48,15 @@ public class FriendsListFragment extends ListFragment implements Constants {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
         SQLiteOpenHelper openHelper = new OpenHelper(this.context);
-        SQLiteDatabase db = openHelper.getWritableDatabase();
+        SQLiteDatabase db = openHelper.getReadableDatabase();
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
-        friendsList = dataManager.getAllFriendsInfo();
-        adapter = new FriendsAdapter(context, friendsList);
+        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{
+                        FriendsInfoTable.FriendsInfoColumns._ID,
+                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND,
+                        FriendsInfoTable.FriendsInfoColumns.X_FRIEND, FriendsInfoTable.FriendsInfoColumns.Y_FRIEND},
+                null, null, null, null, null, null);
+        adapter = new FriendsCursorAdapter(context, pCursor);
     }
 
     @Override
