@@ -126,10 +126,9 @@ public class LocationService extends Service implements Constants {
             if (isBetterLocation(currentLocation, previousBestLocation)) {
                 currentLocation.getLatitude();
                 currentLocation.getLongitude();
-//	            intent.putExtra("")
                 intent.putExtra("Latitude", currentLocation.getLatitude());
                 intent.putExtra("Longitude", currentLocation.getLongitude());
-            sendBroadcast(intent);
+                sendBroadcast(intent);
             }
         }
 
@@ -144,16 +143,6 @@ public class LocationService extends Service implements Constants {
 
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
-//            if (status == LocationProvider.OUT_OF_SERVICE || status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
-//                locationManager.removeUpdates(this);
-//                Toast.makeText(getApplicationContext(), "Service closed", Toast.LENGTH_SHORT).show();
-//            }
-//            if( status == LocationProvider.AVAILABLE){
-//                Toast.makeText(getApplicationContext(), "Service closed", Toast.LENGTH_SHORT).show();
-//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
-//                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
-//            }
-
         }
 
     }

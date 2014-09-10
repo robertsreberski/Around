@@ -33,7 +33,7 @@
         <meta-data
                 android:name="com.google.android.gms.version"
                 android:value="@integer/google_play_services_version"/>
-        <activity android:name=".ui.view.SwipeActivities"
+        <activity android:name=".ui.view.MainActivity"
                   android:windowSoftInputMode="adjustResize"
                   android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
             <intent-filter>

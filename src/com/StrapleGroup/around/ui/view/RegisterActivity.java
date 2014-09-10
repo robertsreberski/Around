@@ -129,7 +129,7 @@ public class RegisterActivity extends Activity implements Constants {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getBooleanExtra(MESSAGE,true)){
+            if (intent.getBooleanExtra(KEY_MESSAGE, true)) {
                 registrationSuccessful();
             }else{
                 registrationUnsuccessful();

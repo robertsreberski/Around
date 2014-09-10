@@ -38,6 +38,7 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
     private SharedPreferences sharedLocationInfo;
     private Handler serviceHandler;
     private DataManagerImpl dataManager;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -84,16 +85,16 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
                     Bundle pLoginData = new Bundle();
                     int pNumberFriends = dataManager.getAllFriendsInfo().size();
                     sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-                    pLoginData.putString("action", REFRESH_ACTION);
-                    pLoginData.putString(LOGIN, sharedUserInfo.getString(KEY_LOGIN, ""));
+                    pLoginData.putString(KEY_ACTION, REFRESH_ACTION);
+                    pLoginData.putString(KEY_LOGIN, sharedUserInfo.getString(KEY_LOGIN, ""));
                     Location pLastLocation = locationClient.getLastLocation();
                     if (checkIfLogin() && pLastLocation != null) {
-                    pLoginData.putString("x", Double.toString(pLastLocation.getLatitude()));
-                    pLoginData.putString("y", Double.toString(pLastLocation.getLongitude()));
-                    pLoginData.putString("number", Integer.toString(pNumberFriends));
-                    String id = "m-" + UUID.randomUUID().toString();
-                    googleCloudMessaging = GoogleCloudMessaging
-                            .getInstance(context);
+                        pLoginData.putString("x", Double.toString(pLastLocation.getLatitude()));
+                        pLoginData.putString("y", Double.toString(pLastLocation.getLongitude()));
+                        pLoginData.putString("number", Integer.toString(pNumberFriends));
+                        String id = "m-" + UUID.randomUUID().toString();
+                        googleCloudMessaging = GoogleCloudMessaging
+                                .getInstance(context);
                         try {
                             googleCloudMessaging.send(SERVER_ID, id, pLoginData);
                             Log.i("REQUESTED SUCCESSFUL", "*************************************************");
@@ -154,6 +155,6 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
                     sendLocation();
                 }
             });
-    }
+        }
     }
 }

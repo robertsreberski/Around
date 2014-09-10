@@ -43,6 +43,11 @@ public class FriendsListFragment extends ListFragment implements Constants {
     private LinearLayout requestListLayout;
     private ViewGroup viewGroup;
 
+
+    public List<FriendsInfo> getFriendsList() {
+        return friendsList;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +56,7 @@ public class FriendsListFragment extends ListFragment implements Constants {
         SQLiteDatabase db = openHelper.getReadableDatabase();
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
+        friendsList = dataManager.getAllFriendsInfo();
         Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{
                         FriendsInfoTable.FriendsInfoColumns._ID,
                         FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND,
@@ -106,9 +112,9 @@ public class FriendsListFragment extends ListFragment implements Constants {
                         userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
                         googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
                         Bundle pResponse = new Bundle();
-                        pResponse.putString(ACTION, ADD_RESPONSE);
-                        pResponse.putString(MESSAGE, "accepted");
-                        pResponse.putString("friend_login", userInfoPrefs.getString(LOGIN, ""));
+                        pResponse.putString(KEY_ACTION, ADD_RESPONSE);
+                        pResponse.putString(KEY_MESSAGE, "accepted");
+                        pResponse.putString("friend_login", userInfoPrefs.getString(KEY_LOGIN, ""));
                         pResponse.putString("login", aFriendName);
                         try {
                             googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
@@ -136,9 +142,9 @@ public class FriendsListFragment extends ListFragment implements Constants {
                         userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
                         googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
                         Bundle pResponse = new Bundle();
-                        pResponse.putString(ACTION, ADD_RESPONSE);
-                        pResponse.putString(MESSAGE, "unaccepted");
-                        pResponse.putString("friend_login", userInfoPrefs.getString(LOGIN, ""));
+                        pResponse.putString(KEY_ACTION, ADD_RESPONSE);
+                        pResponse.putString(KEY_MESSAGE, "unaccepted");
+                        pResponse.putString("friend_login", userInfoPrefs.getString(KEY_LOGIN, ""));
                         pResponse.putString("login", aFriendName);
                         try {
                             googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
@@ -168,10 +174,10 @@ public class FriendsListFragment extends ListFragment implements Constants {
 //            if (intent.getBooleanExtra(MESSAGE, true)) {
                 final FriendsInfo pFriend = new FriendsInfo();
                 userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-                pFriend.setId(friendsList.size());
-                pFriend.setLoginFriend(SwipeActivities.getFriendLogin().getText().toString());
-                pFriend.setYFriend(Double.parseDouble(intent.getStringExtra("LAT")));
-                pFriend.setXFriend(Double.parseDouble(intent.getStringExtra("LNG")));
+            pFriend.setId(getFriendsList().size());
+            pFriend.setLoginFriend(MainActivity.getFriendLogin().getText().toString());
+            pFriend.setXFriend(Double.parseDouble(intent.getStringExtra("LAT")));
+            pFriend.setYFriend(Double.parseDouble(intent.getStringExtra("LNG")));
                 dataManager.saveFriendInfo(pFriend);
             notifyChanges();
 

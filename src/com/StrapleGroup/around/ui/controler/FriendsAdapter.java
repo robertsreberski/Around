@@ -20,7 +20,7 @@ public class FriendsAdapter extends ArrayAdapter<FriendsInfo> {
     List<FriendsInfo> friendList;
 
     public FriendsAdapter(Context context, List<FriendsInfo> friendsList) {
-        super(context, R.layout.friend_login, friendsList);
+        super(context, R.layout.friend_item, friendsList);
         this.friendList = friendsList;
     }
 
@@ -38,7 +38,7 @@ public class FriendsAdapter extends ArrayAdapter<FriendsInfo> {
         final FriendsInfo friend = friendList.get(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.friend_login, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.friend_item, parent, false);
         }
         TextView friendName = (TextView) convertView.findViewById(R.id.friend_name);
         ImageView img = (ImageView) convertView.findViewById(R.id.imageView);

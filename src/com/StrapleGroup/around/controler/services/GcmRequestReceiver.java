@@ -32,72 +32,72 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
         if (!loginResult.isEmpty()) {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 //				Log.i("GREATEST", "Received: " + loginResult.getString(MESSAGE));
-                if (loginResult.getString(ACTION).equals("LOGIN")) {
+                if (loginResult.getString(KEY_ACTION).equals("LOGIN")) {
                     Intent pLoginIntent = new Intent(LOGIN_LOCAL_ACTION);
-                    if (loginResult.getString(MESSAGE).equals("valid")) {
-                        pLoginIntent.putExtra(MESSAGE, true);
-                    } else if (loginResult.getString(MESSAGE).equals("invalid")) {
+                    if (loginResult.getString(KEY_MESSAGE).equals("valid")) {
+                        pLoginIntent.putExtra(KEY_MESSAGE, true);
+                    } else if (loginResult.getString(KEY_MESSAGE).equals("invalid")) {
                         Toast.makeText(context, "Invalid login or password",
                                 Toast.LENGTH_LONG).show();
-                        pLoginIntent.putExtra(MESSAGE, false);
+                        pLoginIntent.putExtra(KEY_MESSAGE, false);
                     }
                     context.sendBroadcast(pLoginIntent);
                 }
-                if (loginResult.getString(ACTION).equals("REGISTER")) {
+                if (loginResult.getString(KEY_ACTION).equals("REGISTER")) {
                     Intent pRegisterIntent = new Intent(REGISTER_LOCAL_ACTION);
-                    if (loginResult.getString(MESSAGE).equals("completed")) {
-                        pRegisterIntent.putExtra(MESSAGE, true);
+                    if (loginResult.getString(KEY_MESSAGE).equals(COMPLETED)) {
+                        pRegisterIntent.putExtra(KEY_MESSAGE, true);
                     }
-                    if (loginResult.getString(MESSAGE).equals("incompleted")) {
-                        pRegisterIntent.putExtra(MESSAGE, false);
+                    if (loginResult.getString(KEY_MESSAGE).equals(INCOMPLETED)) {
+                        pRegisterIntent.putExtra(KEY_MESSAGE, false);
                     }
                     context.sendBroadcast(pRegisterIntent);
                 }
-                if (loginResult.getString(ACTION).equals("ADD")) {
+                if (loginResult.getString(KEY_ACTION).equals("ADD")) {
                     Intent pAddIntent = new Intent(ADD_LOCAL_ACTION);
-                    if (loginResult.getString(MESSAGE).equals("completed")) {
-                        pAddIntent.putExtra("LAT", loginResult.getString("x"));
-                        pAddIntent.putExtra("LNG", loginResult.getString("y"));
-                        pAddIntent.putExtra(MESSAGE, true);
+                    if (loginResult.getString(KEY_MESSAGE).equals(COMPLETED)) {
+                        pAddIntent.putExtra("LAT", loginResult.getString(LAT_SERVER));
+                        pAddIntent.putExtra("LNG", loginResult.getString(LNG_SERVER));
+                        pAddIntent.putExtra(KEY_MESSAGE, true);
                         Log.e("TAKEN", "ADD_RESPONSE");
-                    } else if (loginResult.getString(MESSAGE).equals("incompleted")) {
-                        pAddIntent.putExtra(MESSAGE, false);
-                    } else if (loginResult.getString(MESSAGE).equals("rejected")) {
+                    } else if (loginResult.getString(KEY_MESSAGE).equals(INCOMPLETED)) {
+                        pAddIntent.putExtra(KEY_MESSAGE, false);
+                    } else if (loginResult.getString(KEY_MESSAGE).equals("rejected")) {
                         Log.i("FRIEND", "ADD_REJECTED");
                     }
                     context.sendBroadcast(pAddIntent);
                 }
-                if (loginResult.getString(ACTION).equals("FRIENDS")) {
+                if (loginResult.getString(KEY_ACTION).equals("FRIENDS")) {
                     Intent pRefreshIntent = new Intent(context, NotificatorAroundFriendsService.class);
                     SQLiteOpenHelper openHelper = new OpenHelper(context);
                     SQLiteDatabase db = openHelper.getWritableDatabase();
                     FriendsInfoDao dao = new FriendsInfoDao(db);
                     dataManager = new DataManagerImpl(context);
                     friendsList = dataManager.getAllFriendsInfo();
-                    if (loginResult.getString(MESSAGE).equals("completed")) {
-                    for (int pCount = 0; pCount < friendsList.size(); pCount++) {
-                        int pInteger = pCount + 1;
-                        FriendsInfo pFriend = dataManager.getFriendInfo(pInteger);
-                        double pLat = Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + "x"));
-                        double pLng = Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + "y"));
-                        pFriend.setXFriend(pLat);
-                        pFriend.setYFriend(pLng);
-                        dao.updateCoordinates(pFriend, Integer.toString(pInteger));
-                        Log.e("REFRESHED", "REFRESH SUCCESSFUL");
-                        pRefreshIntent.putExtra(MESSAGE, true);
-                    }
-                        if (loginResult.get(MESSAGE).equals("incompleted")) {
-                            pRefreshIntent.putExtra(MESSAGE, false);
+                    if (loginResult.getString(KEY_MESSAGE).equals(COMPLETED)) {
+                        for (int pCount = 0; pCount < friendsList.size(); pCount++) {
+                            int pInteger = pCount + 1;
+                            FriendsInfo pFriend = dataManager.getFriendInfo(pInteger);
+                            double pLat = Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + LAT_SERVER));
+                            double pLng = Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + LNG_SERVER));
+                            pFriend.setXFriend(pLat);
+                            pFriend.setYFriend(pLng);
+                            dao.updateCoordinates(pFriend, Integer.toString(pInteger));
+                            Log.e("REFRESHED", "REFRESH SUCCESSFUL");
+                            pRefreshIntent.putExtra(KEY_MESSAGE, true);
+                        }
+                        if (loginResult.get(KEY_MESSAGE).equals(INCOMPLETED)) {
+                            pRefreshIntent.putExtra(KEY_MESSAGE, false);
                         }
                     }
                     context.startService(pRefreshIntent);
                 }
-                if (loginResult.getString(ACTION).equals("REQUEST")) {
+                if (loginResult.getString(KEY_ACTION).equals("REQUEST")) {
                     Intent requestIntent = new Intent(ADD_REQUEST_LOCAL_ACTION);
                     userPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-                    final String friendLogin = loginResult.getString("login");
-                    String pLat = loginResult.getString("x");
-                    String pLng = loginResult.getString("y");
+                    final String friendLogin = loginResult.getString(KEY_LOGIN);
+                    String pLat = loginResult.getString(LAT_SERVER);
+                    String pLng = loginResult.getString(LNG_SERVER);
                     requestIntent.putExtra("friend_name", friendLogin);
                     requestIntent.putExtra("LAT", pLat);
                     requestIntent.putExtra("LNG", pLng);

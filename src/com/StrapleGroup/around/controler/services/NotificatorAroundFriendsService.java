@@ -42,7 +42,7 @@ public class NotificatorAroundFriendsService extends IntentService implements Co
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent.getBooleanExtra(MESSAGE, false) == true) {
+        if (intent.getBooleanExtra(KEY_MESSAGE, false) == true) {
             friendsList = dataManager.getAllFriendsInfo();
             for (int pCount = 0; pCount < friendsList.size(); pCount++) {
                 int pInteger = pCount + 1;

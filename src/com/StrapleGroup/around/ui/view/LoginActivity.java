@@ -91,8 +91,8 @@ public class LoginActivity extends Activity implements Constants {
 				Bundle pLoginData = new Bundle();
                 locationPreferences = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
                 pLoginData.putString("action", LOGIN_ACTION);
-                pLoginData.putString(LOGIN, login);
-                pLoginData.putString(PASS, pass);
+                pLoginData.putString(KEY_LOGIN, login);
+                pLoginData.putString(KEY_PASS, pass);
                 pLoginData.putString("x", locationPreferences.getString("LAT", ""));
                 pLoginData.putString("y", locationPreferences.getString("LNG", ""));
                 String id = "m-"+UUID.randomUUID().toString();
@@ -128,7 +128,7 @@ public class LoginActivity extends Activity implements Constants {
     }
 
 	protected void nextActivity(){
-        Intent pNextActivityIntent = new Intent(this, SwipeActivities.class);
+        Intent pNextActivityIntent = new Intent(this, MainActivity.class);
         startActivity(pNextActivityIntent);
         finish();
     }
@@ -186,14 +186,14 @@ public class LoginActivity extends Activity implements Constants {
         int appVersion = getAppVersion(context);
         Log.i("REGID_SAVED", "Saving regId on app version " + appVersion);
         SharedPreferences.Editor editor = gcmStorage.edit();
-        editor.putString(PROPERTY_REG_ID, regId);
+        editor.putString(REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
         editor.commit();
     }
 
     private String getRegistrationId() {
         gcmStorage = getSharedPreferences(GCM_PREFS, MODE_PRIVATE);
-        String registrationId = gcmStorage.getString(PROPERTY_REG_ID, "");
+        String registrationId = gcmStorage.getString(REG_ID, "");
         if (registrationId.isEmpty()) {
             Log.i("NO_REGID", "Registration not found.");
             return "";
@@ -205,7 +205,7 @@ public class LoginActivity extends Activity implements Constants {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if(intent.getBooleanExtra(MESSAGE, true)){
+            if (intent.getBooleanExtra(KEY_MESSAGE, true)) {
                 userInfoPreferences = getSharedPreferences(USER_PREFS,MODE_PRIVATE);
                 SharedPreferences.Editor pEditor = userInfoPreferences.edit();
                 pEditor.putString(KEY_LOGIN,login);

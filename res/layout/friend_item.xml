@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:background="@android:color/background_light">
+    <ImageView
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:id="@+id/imageView"/>
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/friend_name"
+              android:layout_width="220dp"
+              android:layout_height="wrap_content"
+              android:text="Friend Name"
+              android:textAppearance="?android:attr/textAppearanceMedium"
+              android:textSize="25dp"
+              android:textColor="@color/common_signin_btn_light_text_default" android:layout_toRightOf="@+id/imageView">
+    </TextView>
+    <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/delete"
+            android:background="@drawable/ic_list_remove"
+            android:layout_above="@+id/latView" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    <TextView
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/common_signin_btn_light_text_default"
+            android:id="@+id/latView" android:layout_alignBottom="@+id/imageView"
+            android:layout_toRightOf="@+id/imageView" android:layout_toLeftOf="@+id/lngView"/>
+    <TextView
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/lngView"
+            android:textColor="@color/common_signin_btn_light_text_default"
+            android:layout_below="@+id/textView4" android:layout_alignLeft="@+id/textView4"
+            android:layout_alignStart="@+id/textView4"
+            android:layout_toLeftOf="@+id/imageButton2"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Latitude: "
+            android:id="@+id/textView3" android:layout_below="@+id/friend_name"
+            android:layout_toRightOf="@+id/imageView"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Langtitude: "
+            android:id="@+id/textView4"
+            android:layout_marginRight="19dp" android:layout_below="@+id/friend_name"
+            android:layout_alignRight="@+id/friend_name" android:layout_alignEnd="@+id/friend_name"/>
+</RelativeLayout>

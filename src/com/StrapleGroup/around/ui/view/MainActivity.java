@@ -27,7 +27,7 @@ import java.util.Vector;
 /**
  * Created by Robert on 2014-08-31.
  */
-public class SwipeActivities extends FragmentActivity implements Constants {
+public class MainActivity extends FragmentActivity implements Constants {
     private PagerAdapter pagerAdapter;
     private SharedPreferences sharedUserInfo;
     private SharedPreferences sharedLatLng;
@@ -36,10 +36,11 @@ public class SwipeActivities extends FragmentActivity implements Constants {
     private static EditText friendLogin;
     private LinearLayout friendBar;
     private LinearLayout container;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.swipe_activities);
+        super.setContentView(R.layout.activity_main);
         context = getApplicationContext();
         this.initializePaging();
     }
@@ -47,6 +48,7 @@ public class SwipeActivities extends FragmentActivity implements Constants {
     public static EditText getFriendLogin() {
         return friendLogin;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater pInflater = getMenuInflater();

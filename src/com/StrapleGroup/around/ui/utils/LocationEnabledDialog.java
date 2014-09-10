@@ -1,4 +1,4 @@
-package com.StrapleGroup.around.ui.view;
+package com.StrapleGroup.around.ui.utils;
 
 import android.content.Context;
 import android.location.LocationManager;
