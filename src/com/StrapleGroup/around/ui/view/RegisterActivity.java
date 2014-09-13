@@ -30,9 +30,10 @@ public class RegisterActivity extends Activity implements Constants {
     private RegisterResultReceiver registerResultReceiver;
     private String login;
     private String pass;
-    private  IntentFilter resultFilter;
+    private IntentFilter resultFilter;
     private ProgressBar registerProgress;
     private Button registerButton;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,22 +54,22 @@ public class RegisterActivity extends Activity implements Constants {
 
     }
 
-    public void register(View v){
+    public void register(View v) {
         boolean done = true;
         loginField.setError(null);
         passField.setError(null);
         login = loginField.getText().toString();
         pass = passField.getText().toString();
-        if(TextUtils.isEmpty(login)){
+        if (TextUtils.isEmpty(login)) {
             done = false;
         }
-        if(TextUtils.isEmpty(pass)){
+        if (TextUtils.isEmpty(pass)) {
             done = false;
         }
-        if(done){
+        if (done) {
             registerButton.setText("");
             registerProgress.setVisibility(View.VISIBLE);
-            new AsyncTask<Void, Void, Void>(){
+            new AsyncTask<Void, Void, Void>() {
 
                 @Override
                 protected Void doInBackground(Void... params) {
@@ -76,18 +77,18 @@ public class RegisterActivity extends Activity implements Constants {
                     try {
                         googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
                         Bundle data = new Bundle();
-                        String id = "m-"+ UUID.randomUUID().toString();
-                        latLngPrefs = getSharedPreferences(LATLNG_PREFS,MODE_PRIVATE);
-                        data.putString("action", REGISTER_ACTION);
-                        data.putString("login", login);
-                        data.putString("password", pass);
+                        String id = "m-" + UUID.randomUUID().toString();
+                        latLngPrefs = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
+                        data.putString(KEY_ACTION, REGISTER_ACTION);
+                        data.putString(KEY_LOGIN, login);
+                        data.putString(KEY_SERVER_PASS, pass);
                         String pLat = "00.00000";
                         String pLng = "00.00000";
                         if (latLngPrefs.contains("LAT") && latLngPrefs.contains("LNG")) {
                             pLat = latLngPrefs.getString("LAT", "");
                             pLng = latLngPrefs.getString("LNG", "");
                         }
-                        data.putString("x", latLngPrefs.getString("x",pLat));
+                        data.putString("x", latLngPrefs.getString("x", pLat));
                         data.putString("y", latLngPrefs.getString("y", pLng));
                         googleCloudMessaging.send(SERVER_ID, id, 0, data);
                         Log.e("GOOD", "sth");
@@ -99,7 +100,7 @@ public class RegisterActivity extends Activity implements Constants {
                     }
                     return null;
                 }
-            }.execute(null,null,null);
+            }.execute(null, null, null);
         }
 
     }
@@ -113,25 +114,27 @@ public class RegisterActivity extends Activity implements Constants {
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(registerResultReceiver,resultFilter);
+        registerReceiver(registerResultReceiver, resultFilter);
     }
 
     public void registrationSuccessful() {
-        Toast.makeText(context,"Registration successful!",Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Registration successful!", Toast.LENGTH_SHORT).show();
         Intent returnIntent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(returnIntent);
         finish();
     }
-    public void registrationUnsuccessful(){
+
+    public void registrationUnsuccessful() {
         Toast.makeText(context, "Something go wrong :c", Toast.LENGTH_SHORT).show();
     }
-        private class RegisterResultReceiver extends BroadcastReceiver{
+
+    private class RegisterResultReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getBooleanExtra(KEY_MESSAGE, true)) {
                 registrationSuccessful();
-            }else{
+            } else {
                 registrationUnsuccessful();
             }
         }

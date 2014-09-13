@@ -73,9 +73,8 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     SQLiteDatabase db = openHelper.getWritableDatabase();
                     FriendsInfoDao dao = new FriendsInfoDao(db);
                     dataManager = new DataManagerImpl(context);
-                    friendsList = dataManager.getAllFriendsInfo();
                     if (loginResult.getString(KEY_MESSAGE).equals(COMPLETED)) {
-                        for (int pCount = 0; pCount < friendsList.size(); pCount++) {
+                        for (int pCount = 0; pCount < dataManager.getAllFriendsInfo().size(); pCount++) {
                             int pInteger = pCount + 1;
                             FriendsInfo pFriend = dataManager.getFriendInfo(pInteger);
                             double pLat = Double.parseDouble(loginResult.getString(pFriend.getLoginFriend() + LAT_SERVER));

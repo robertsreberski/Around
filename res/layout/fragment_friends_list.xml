@@ -1,18 +1,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
+              android:background="#2c3e50"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:id="@+id/friend_list_layout"
               android:animateLayoutChanges="true"
               tools:context="${packageName}.${activityClass}">
-    <ListView
-            android:id="@id/android:list"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            >
-    </ListView>
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="match_parent">
+        <LinearLayout android:id="@+id/friend_container"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:showDividers="middle"
+                      android:divider="?android:dividerHorizontal"
+                      android:animateLayoutChanges="true"
+                      android:paddingLeft="16dp"
+                      android:paddingRight="16dp"/>
+
+    </ScrollView>
 
 </LinearLayout>

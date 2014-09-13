@@ -18,11 +18,11 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class LoginActivity extends Activity implements Constants {
-	public static final String USER_PREFS = "userLoginData";
-	private Context context;
-	private EditText loginField;
-	private EditText passField;
-	private LoginResultReceiver loginResultReceiver;
+    public static final String USER_PREFS = "userLoginData";
+    private Context context;
+    private EditText loginField;
+    private EditText passField;
+    private LoginResultReceiver loginResultReceiver;
     private SharedPreferences userInfoPreferences;
     private SharedPreferences locationPreferences;
     private IntentFilter loginResultFilter;
@@ -30,21 +30,22 @@ public class LoginActivity extends Activity implements Constants {
     private String login = null;
     private SharedPreferences gcmStorage;
     private GoogleCloudMessaging googleCloudMessaging = null;
-    private  String pass = null;
+    private String pass = null;
     private Button loginButton = null;
     private ProgressBar loginProgress = null;
     private TextView linkText = null;
-    @Override
-	protected void onCreate(Bundle savedInstanceState) {
 
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
         loginResultReceiver = new LoginResultReceiver();
         loginResultFilter = new IntentFilter(LOGIN_LOCAL_ACTION);
 
-		context = getApplicationContext();
-		loginField = (EditText) findViewById(R.id.loginField);
-		passField = (EditText) findViewById(R.id.passField);
+        context = getApplicationContext();
+        loginField = (EditText) findViewById(R.id.loginField);
+        passField = (EditText) findViewById(R.id.passField);
         loginButton = (Button) findViewById(R.id.loginButton);
         loginProgress = (ProgressBar) findViewById(R.id.loginProgress);
         loginProgress.setVisibility(View.INVISIBLE);
@@ -62,58 +63,59 @@ public class LoginActivity extends Activity implements Constants {
             registerInBackground();
         }
     }
-    public void goRegister(View v){
+
+    public void goRegister(View v) {
         Intent pGoRegister = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(pGoRegister);
     }
-	public void login(View v) {
-		boolean done = true;
-		loginField.setError(null);
-		passField.setError(null);
-		login = loginField.getText().toString();
-		pass = passField.getText().toString();
-		if(TextUtils.isEmpty(login)){
-			loginField.setError("Field required");
-			done = false;
-		}
-		else if(TextUtils.isEmpty(pass)){
-			passField.setError("Field required");
-			done = false;
-		}
-		if(done){
+
+    public void login(View v) {
+        boolean done = true;
+        loginField.setError(null);
+        passField.setError(null);
+        login = loginField.getText().toString();
+        pass = passField.getText().toString();
+        if (TextUtils.isEmpty(login)) {
+            loginField.setError("Field required");
+            done = false;
+        } else if (TextUtils.isEmpty(pass)) {
+            passField.setError("Field required");
+            done = false;
+        }
+        if (done) {
             loginButton.setText("");
             loginProgress.setVisibility(View.VISIBLE);
             new AsyncTask<Void, Void, String>() {
-			@Override
-			protected String doInBackground(Void... params) {
-				googleCloudMessaging = GoogleCloudMessaging
-						.getInstance(context);
-				Bundle pLoginData = new Bundle();
-                locationPreferences = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
-                pLoginData.putString("action", LOGIN_ACTION);
-                pLoginData.putString(KEY_LOGIN, login);
-                pLoginData.putString(KEY_PASS, pass);
-                pLoginData.putString("x", locationPreferences.getString("LAT", ""));
-                pLoginData.putString("y", locationPreferences.getString("LNG", ""));
-                String id = "m-"+UUID.randomUUID().toString();
-				try {
+                @Override
+                protected String doInBackground(Void... params) {
+                    googleCloudMessaging = GoogleCloudMessaging
+                            .getInstance(context);
+                    Bundle pLoginData = new Bundle();
+                    locationPreferences = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
+                    pLoginData.putString("action", LOGIN_ACTION);
+                    pLoginData.putString(KEY_LOGIN, login);
+                    pLoginData.putString(KEY_SERVER_PASS, pass);
+                    pLoginData.putString("x", locationPreferences.getString("LAT", ""));
+                    pLoginData.putString("y", locationPreferences.getString("LNG", ""));
+                    String id = "m-" + UUID.randomUUID().toString();
+                    try {
 
-					googleCloudMessaging.send(SERVER_ID, id, pLoginData);
-					Log.i("REQUESTED SUCCESSFUL",
-							"*************************************************");
-				} catch (IOException e) {
-                    loginProgress.setVisibility(View.INVISIBLE);
-                    loginButton.setText("Log in");
-                    Toast.makeText(context, "Wrong login or password!", Toast.LENGTH_SHORT);
-                    Log.e("PROBLEM WITH LOGIN REQUEST",
-							"*******************************************************");
-				}
-				return null;
-			}
+                        googleCloudMessaging.send(SERVER_ID, id, pLoginData);
+                        Log.i("REQUESTED SUCCESSFUL",
+                                "*************************************************");
+                    } catch (IOException e) {
+                        loginProgress.setVisibility(View.INVISIBLE);
+                        loginButton.setText("Log in");
+                        Toast.makeText(context, "Wrong login or password!", Toast.LENGTH_SHORT);
+                        Log.e("PROBLEM WITH LOGIN REQUEST",
+                                "*******************************************************");
+                    }
+                    return null;
+                }
 
-		}.execute(null, null, null);
-		}
-	}
+            }.execute(null, null, null);
+        }
+    }
 
     @Override
     protected void onPause() {
@@ -127,16 +129,17 @@ public class LoginActivity extends Activity implements Constants {
         registerReceiver(loginResultReceiver, loginResultFilter);
     }
 
-	protected void nextActivity(){
+    protected void nextActivity() {
         Intent pNextActivityIntent = new Intent(this, MainActivity.class);
         startActivity(pNextActivityIntent);
         finish();
     }
-	protected void badRequest(){
+
+    protected void badRequest() {
         loginProgress.setVisibility(View.INVISIBLE);
         loginButton.setText("Log in");
         Toast.makeText(this, "Unauthorized", Toast.LENGTH_SHORT).show();
-	}
+    }
 
     public int getAppVersion(Context context) {
         try {
@@ -203,19 +206,19 @@ public class LoginActivity extends Activity implements Constants {
 
     private class LoginResultReceiver extends BroadcastReceiver {
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             if (intent.getBooleanExtra(KEY_MESSAGE, true)) {
-                userInfoPreferences = getSharedPreferences(USER_PREFS,MODE_PRIVATE);
+                userInfoPreferences = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
                 SharedPreferences.Editor pEditor = userInfoPreferences.edit();
-                pEditor.putString(KEY_LOGIN,login);
-                pEditor.putString(KEY_PASS,pass);
+                pEditor.putString(KEY_LOGIN, login);
+                pEditor.putString(KEY_PASS, pass);
                 pEditor.commit();
-				nextActivity();
-			}else {
+                nextActivity();
+            } else {
                 badRequest();
             }
-		}
+        }
 
-	}
+    }
 }

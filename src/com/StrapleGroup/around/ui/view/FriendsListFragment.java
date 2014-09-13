@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,32 +21,26 @@ import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.intefaces.DataManager;
-import com.StrapleGroup.around.database.tables.FriendsInfoTable;
-import com.StrapleGroup.around.ui.controler.FriendsCursorAdapter;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-public class FriendsListFragment extends ListFragment implements Constants {
+public class FriendsListFragment extends Fragment implements Constants {
     private Context context;
     private DataManager dataManager;
-    private List<FriendsInfo> friendsList;
     private SharedPreferences userInfoPrefs;
     private ListView requestList;
     private GoogleCloudMessaging googleCloudMessaging;
     private FriendAddResultReceiver friendAddResultReceiver = new FriendAddResultReceiver();
     private RequestReceiver requestReceiver = new RequestReceiver();
-    private FriendsCursorAdapter adapter;
-    private ViewGroup container;
+    private ViewGroup requestContainer;
     private LinearLayout requestListLayout;
     private ViewGroup viewGroup;
-
-
-    public List<FriendsInfo> getFriendsList() {
-        return friendsList;
-    }
+    private ViewGroup friendContainer;
+    private Cursor friendCursor;
+    private LinearLayout friendListLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,17 +50,11 @@ public class FriendsListFragment extends ListFragment implements Constants {
         SQLiteDatabase db = openHelper.getReadableDatabase();
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
-        friendsList = dataManager.getAllFriendsInfo();
-        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{
-                        FriendsInfoTable.FriendsInfoColumns._ID,
-                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND,
-                        FriendsInfoTable.FriendsInfoColumns.X_FRIEND, FriendsInfoTable.FriendsInfoColumns.Y_FRIEND},
-                null, null, null, null, null, null);
-        adapter = new FriendsCursorAdapter(context, pCursor);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        doFriendList();
         return inflater.inflate(R.layout.fragment_friends_list, container, false);
     }
 
@@ -78,7 +66,6 @@ public class FriendsListFragment extends ListFragment implements Constants {
         IntentFilter requestFilter = new IntentFilter(ADD_REQUEST_LOCAL_ACTION);
         getActivity().registerReceiver(requestReceiver, requestFilter);
         getActivity().registerReceiver(friendAddResultReceiver, addFilter);
-        this.setListAdapter(adapter);
     }
 
     @Override
@@ -90,6 +77,32 @@ public class FriendsListFragment extends ListFragment implements Constants {
 
     private void badRequest() {
         Toast.makeText(context, "Can't add friend", Toast.LENGTH_SHORT).show();
+    }
+
+    public void doFriendList() {
+        List<FriendsInfo> friendsList = dataManager.getAllFriendsInfo();
+        for (int pCount = 0; pCount < friendsList.size(); pCount++) {
+            int pInteger = pCount + 1;
+            final FriendsInfo pFriend = friendsList.get(pCount);
+            addFriend(pFriend);
+        }
+    }
+
+    public void addFriend(final FriendsInfo aFriend) {
+        friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
+        friendContainer = (ViewGroup) getActivity().findViewById(R.id.friend_container);
+        final ViewGroup newFriend = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.friend_item, null);
+        ((TextView) newFriend.findViewById(R.id.friend_name)).setText(aFriend.getLoginFriend());
+        ((TextView) newFriend.findViewById(R.id.latView)).setText(Double.toString(aFriend.getXFriend()));
+        ((TextView) newFriend.findViewById(R.id.lngView)).setText(Double.toString(aFriend.getYFriend()));
+        newFriend.findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataManager.deleteFriend(aFriend.getId());
+                friendContainer.removeView(newFriend);
+            }
+        });
+        friendContainer.addView(newFriend, 0);
     }
 
     public void addRequest(final String aFriendName, String aLat, String aLng) {
@@ -129,7 +142,7 @@ public class FriendsListFragment extends ListFragment implements Constants {
                         return null;
                     }
                 }.execute(null, null, null);
-                container.removeView(newRequest);
+                requestContainer.removeView(newRequest);
             }
         });
         newRequest.findViewById(R.id.reject_button).setOnClickListener(new View.OnClickListener() {
@@ -156,15 +169,10 @@ public class FriendsListFragment extends ListFragment implements Constants {
                         return null;
                     }
                 }.execute(null, null, null);
-                container.removeView(newRequest);
+                requestContainer.removeView(newRequest);
             }
         });
-        container.addView(newRequest, 0);
-    }
-
-    public void notifyChanges() {
-                adapter.notifyDataSetChanged();
-
+        requestContainer.addView(newRequest, 0);
     }
 
     private class FriendAddResultReceiver extends BroadcastReceiver {
@@ -172,30 +180,23 @@ public class FriendsListFragment extends ListFragment implements Constants {
         @Override
         public void onReceive(Context context, Intent intent) {
 //            if (intent.getBooleanExtra(MESSAGE, true)) {
-                final FriendsInfo pFriend = new FriendsInfo();
-                userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-            pFriend.setId(getFriendsList().size());
+            final FriendsInfo pFriend = new FriendsInfo();
+            userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+            pFriend.setId(dataManager.getAllFriendsInfo().size());
             pFriend.setLoginFriend(MainActivity.getFriendLogin().getText().toString());
             pFriend.setXFriend(Double.parseDouble(intent.getStringExtra("LAT")));
             pFriend.setYFriend(Double.parseDouble(intent.getStringExtra("LNG")));
-                dataManager.saveFriendInfo(pFriend);
-            notifyChanges();
-
-//            } else {
-//                badRequest();
-//            }
+            dataManager.saveFriendInfo(pFriend);
+            addFriend(pFriend);
         }
     }
 
     private class RequestReceiver extends BroadcastReceiver {
-
-
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            LinearLayout friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
+            friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
             requestListLayout = (LinearLayout) viewGroup.findViewById(R.id.request_list);
-            container = (ViewGroup) viewGroup.findViewById(R.id.container);
+            requestContainer = (ViewGroup) viewGroup.findViewById(R.id.request_container);
             friendListLayout.addView(requestListLayout, 0);
             addRequest(intent.getStringExtra("friend_name"), intent.getStringExtra("LAT"), intent.getStringExtra("LNG"));
         }

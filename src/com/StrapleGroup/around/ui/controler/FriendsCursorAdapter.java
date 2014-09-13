@@ -23,6 +23,13 @@ public class FriendsCursorAdapter extends CursorAdapter {
         super(context, c);
     }
 
+
+    @Override
+    protected void onContentChanged() {
+
+        super.onContentChanged();
+    }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         final View view = LayoutInflater.from(context).inflate(R.layout.friend_item, viewGroup, false);
@@ -49,6 +56,7 @@ public class FriendsCursorAdapter extends CursorAdapter {
                 SQLiteDatabase db = helper.getWritableDatabase();
                 FriendsInfoDao pFriendDao = new FriendsInfoDao(db);
                 pFriendDao.delete(Long.toString(1));
+                notifyDataSetChanged();
             }
         });
         img.setImageResource(R.drawable.nearby_prototyp1);

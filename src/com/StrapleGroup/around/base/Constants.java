@@ -19,6 +19,7 @@ public interface Constants {
 
     static final String KEY_LOGIN = "login";
     static final String KEY_PASS = "pass";
+    static final String KEY_SERVER_PASS = "password";
     static final String KEY_ACTION = "action";
     static final String KEY_MESSAGE = "message";
     static final String SENDER_ID = "960206351442";
