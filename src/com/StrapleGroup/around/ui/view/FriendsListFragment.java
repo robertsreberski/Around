@@ -1,9 +1,9 @@
 package com.StrapleGroup.around.ui.view;
 
 import android.content.*;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,8 +39,8 @@ public class FriendsListFragment extends Fragment implements Constants {
     private LinearLayout requestListLayout;
     private ViewGroup viewGroup;
     private ViewGroup friendContainer;
-    private Cursor friendCursor;
     private LinearLayout friendListLayout;
+    private SharedPreferences sharedLocationInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,12 +89,19 @@ public class FriendsListFragment extends Fragment implements Constants {
     }
 
     public void addFriend(final FriendsInfo aFriend) {
+        sharedLocationInfo = getActivity().getSharedPreferences(LATLNG_PREFS, Context.MODE_PRIVATE);
         friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
         friendContainer = (ViewGroup) getActivity().findViewById(R.id.friend_container);
         final ViewGroup newFriend = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.friend_item, null);
         ((TextView) newFriend.findViewById(R.id.friend_name)).setText(aFriend.getLoginFriend());
-        ((TextView) newFriend.findViewById(R.id.latView)).setText(Double.toString(aFriend.getXFriend()));
-        ((TextView) newFriend.findViewById(R.id.lngView)).setText(Double.toString(aFriend.getYFriend()));
+        Location aLocation = new Location("myLoc");
+        aLocation.setLatitude(Double.parseDouble(sharedLocationInfo.getString("LAT", "")));
+        aLocation.setLongitude(Double.parseDouble(sharedLocationInfo.getString("LNG", "")));
+        Location pLocation = new Location("friendLoc");
+        pLocation.setLatitude((double) aFriend.getXFriend());
+        pLocation.setLongitude((double) aFriend.getYFriend());
+        String t = Float.toString(aLocation.distanceTo(pLocation));
+        ((TextView) newFriend.findViewById(R.id.distance)).setText(t);
         newFriend.findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

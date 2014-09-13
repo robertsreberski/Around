@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -34,6 +35,7 @@ public class LoginActivity extends Activity implements Constants {
     private Button loginButton = null;
     private ProgressBar loginProgress = null;
     private TextView linkText = null;
+    private ConnectivityManager connectivityManager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class LoginActivity extends Activity implements Constants {
                 startActivity(pGoRegister);
             }
         });
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         googleCloudMessaging = GoogleCloudMessaging.getInstance(this);
         registrationId = getRegistrationId();
         if (registrationId.isEmpty()) {
@@ -83,37 +86,41 @@ public class LoginActivity extends Activity implements Constants {
             done = false;
         }
         if (done) {
-            loginButton.setText("");
-            loginProgress.setVisibility(View.VISIBLE);
-            new AsyncTask<Void, Void, String>() {
-                @Override
-                protected String doInBackground(Void... params) {
-                    googleCloudMessaging = GoogleCloudMessaging
-                            .getInstance(context);
-                    Bundle pLoginData = new Bundle();
-                    locationPreferences = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
-                    pLoginData.putString("action", LOGIN_ACTION);
-                    pLoginData.putString(KEY_LOGIN, login);
-                    pLoginData.putString(KEY_SERVER_PASS, pass);
-                    pLoginData.putString("x", locationPreferences.getString("LAT", ""));
-                    pLoginData.putString("y", locationPreferences.getString("LNG", ""));
-                    String id = "m-" + UUID.randomUUID().toString();
-                    try {
+            if (connectivityManager.getActiveNetworkInfo().isConnected()) {
+                loginButton.setText("");
+                loginProgress.setVisibility(View.VISIBLE);
+                new AsyncTask<Void, Void, String>() {
+                    @Override
+                    protected String doInBackground(Void... params) {
+                        googleCloudMessaging = GoogleCloudMessaging
+                                .getInstance(context);
+                        Bundle pLoginData = new Bundle();
+                        locationPreferences = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
+                        pLoginData.putString("action", LOGIN_ACTION);
+                        pLoginData.putString(KEY_LOGIN, login);
+                        pLoginData.putString(KEY_SERVER_PASS, pass);
+                        pLoginData.putString("x", locationPreferences.getString("LAT", ""));
+                        pLoginData.putString("y", locationPreferences.getString("LNG", ""));
+                        String id = "m-" + UUID.randomUUID().toString();
+                        try {
 
-                        googleCloudMessaging.send(SERVER_ID, id, pLoginData);
-                        Log.i("REQUESTED SUCCESSFUL",
-                                "*************************************************");
-                    } catch (IOException e) {
-                        loginProgress.setVisibility(View.INVISIBLE);
-                        loginButton.setText("Log in");
-                        Toast.makeText(context, "Wrong login or password!", Toast.LENGTH_SHORT);
-                        Log.e("PROBLEM WITH LOGIN REQUEST",
-                                "*******************************************************");
+                            googleCloudMessaging.send(SERVER_ID, id, pLoginData);
+                            Log.i("REQUESTED SUCCESSFUL",
+                                    "*************************************************");
+                        } catch (IOException e) {
+                            loginProgress.setVisibility(View.INVISIBLE);
+                            loginButton.setText("Log in");
+                            Toast.makeText(context, "Wrong login or password!", Toast.LENGTH_SHORT);
+                            Log.e("PROBLEM WITH LOGIN REQUEST",
+                                    "*******************************************************");
+                        }
+                        return null;
                     }
-                    return null;
-                }
 
-            }.execute(null, null, null);
+                }.execute(null, null, null);
+            } else {
+                noConnection();
+            }
         }
     }
 
@@ -135,6 +142,11 @@ public class LoginActivity extends Activity implements Constants {
         finish();
     }
 
+    private void noConnection() {
+//        loginProgress.setVisibility(View.INVISIBLE);
+//        loginButton.setText("Log in");
+        Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show();
+    }
     protected void badRequest() {
         loginProgress.setVisibility(View.INVISIBLE);
         loginButton.setText("Log in");

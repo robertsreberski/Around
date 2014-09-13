@@ -38,6 +38,7 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
     private SharedPreferences sharedLocationInfo;
     private Handler serviceHandler;
     private DataManagerImpl dataManager;
+    private Location lastLocation;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -77,8 +78,18 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
         super.onDestroy();
     }
 
+    public Location getLastLocation() {
+        return lastLocation;
+    }
+
+    public void setLastLocation(Location lastLocation) {
+        this.lastLocation = lastLocation;
+    }
+
     public void sendLocation() {
         if (locationClient.isConnected()) {
+            lastLocation = locationClient.getLastLocation();
+            setLastLocation(lastLocation);
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
@@ -87,10 +98,9 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
                     sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
                     pLoginData.putString(KEY_ACTION, REFRESH_ACTION);
                     pLoginData.putString(KEY_LOGIN, sharedUserInfo.getString(KEY_LOGIN, ""));
-                    Location pLastLocation = locationClient.getLastLocation();
-                    if (checkIfLogin() && pLastLocation != null) {
-                        pLoginData.putString("x", Double.toString(pLastLocation.getLatitude()));
-                        pLoginData.putString("y", Double.toString(pLastLocation.getLongitude()));
+                    if (checkIfLogin() && lastLocation != null) {
+                        pLoginData.putString("x", Double.toString(lastLocation.getLatitude()));
+                        pLoginData.putString("y", Double.toString(lastLocation.getLongitude()));
                         pLoginData.putString("number", Integer.toString(pNumberFriends));
                         String id = "m-" + UUID.randomUUID().toString();
                         googleCloudMessaging = GoogleCloudMessaging
@@ -104,13 +114,13 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
                                     "*******************************************************");
                         }
                     }
-                    if (pLastLocation != null) {
+                    if (lastLocation != null) {
                         sharedLocationInfo = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
                         SharedPreferences.Editor pEditor = sharedLocationInfo.edit();
-                        Log.e("LATITUDE", Double.toString(pLastLocation.getLatitude()));
-                        Log.e("LONGTITUDE", Double.toString(pLastLocation.getLongitude()));
-                        pEditor.putString("LAT", Double.toString(pLastLocation.getLatitude()));
-                        pEditor.putString("LNG", Double.toString(pLastLocation.getLongitude()));
+                        Log.e("LATITUDE", Double.toString(lastLocation.getLatitude()));
+                        Log.e("LONGTITUDE", Double.toString(lastLocation.getLongitude()));
+                        pEditor.putString("LAT", Double.toString(lastLocation.getLatitude()));
+                        pEditor.putString("LNG", Double.toString(lastLocation.getLongitude()));
                         pEditor.commit();
                     }
                     return null;

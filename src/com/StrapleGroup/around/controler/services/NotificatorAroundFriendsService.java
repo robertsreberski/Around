@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
@@ -49,6 +50,7 @@ public class NotificatorAroundFriendsService extends IntentService implements Co
                 FriendsInfo pFriend = dataManager.getFriendInfo(pInteger);
 //                userPrefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
                 Intent pAddMarkerIntent = new Intent(MARKER_LOCAL_ACTION);
+                Location location = new Location("");
                 pAddMarkerIntent.putExtra("LAT", pFriend.getXFriend());
                 pAddMarkerIntent.putExtra("LNG", pFriend.getYFriend());
                 sendBroadcast(pAddMarkerIntent);

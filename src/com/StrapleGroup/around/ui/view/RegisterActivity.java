@@ -2,6 +2,7 @@ package com.StrapleGroup.around.ui.view;
 
 import android.app.Activity;
 import android.content.*;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ public class RegisterActivity extends Activity implements Constants {
     private IntentFilter resultFilter;
     private ProgressBar registerProgress;
     private Button registerButton;
+    private ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,39 +71,44 @@ public class RegisterActivity extends Activity implements Constants {
         if (done) {
             registerButton.setText("");
             registerProgress.setVisibility(View.VISIBLE);
-            new AsyncTask<Void, Void, Void>() {
+            if (connectivityManager.getActiveNetworkInfo().isConnected()) {
+                new AsyncTask<Void, Void, Void>() {
 
-                @Override
-                protected Void doInBackground(Void... params) {
+                    @Override
+                    protected Void doInBackground(Void... params) {
 
-                    try {
-                        googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
-                        Bundle data = new Bundle();
-                        String id = "m-" + UUID.randomUUID().toString();
-                        latLngPrefs = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
-                        data.putString(KEY_ACTION, REGISTER_ACTION);
-                        data.putString(KEY_LOGIN, login);
-                        data.putString(KEY_SERVER_PASS, pass);
-                        String pLat = "00.00000";
-                        String pLng = "00.00000";
-                        if (latLngPrefs.contains("LAT") && latLngPrefs.contains("LNG")) {
-                            pLat = latLngPrefs.getString("LAT", "");
-                            pLng = latLngPrefs.getString("LNG", "");
+                        try {
+                            googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
+                            Bundle data = new Bundle();
+                            String id = "m-" + UUID.randomUUID().toString();
+                            latLngPrefs = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
+                            data.putString(KEY_ACTION, REGISTER_ACTION);
+                            data.putString(KEY_LOGIN, login);
+                            data.putString(KEY_SERVER_PASS, pass);
+                            String pLat = "00.00000";
+                            String pLng = "00.00000";
+                            if (latLngPrefs.contains("LAT") && latLngPrefs.contains("LNG")) {
+                                pLat = latLngPrefs.getString("LAT", "");
+                                pLng = latLngPrefs.getString("LNG", "");
+                            }
+                            data.putString("x", latLngPrefs.getString("x", pLat));
+                            data.putString("y", latLngPrefs.getString("y", pLng));
+                            googleCloudMessaging.send(SERVER_ID, id, 0, data);
+                            Log.e("GOOD", "sth");
+                        } catch (IOException e) {
+                            registerProgress.setVisibility(View.INVISIBLE);
+                            registerButton.setText("Register");
+                            Log.e("PROBLEM WITH LOGIN REQUEST",
+                                    "*******************************************************");
                         }
-                        data.putString("x", latLngPrefs.getString("x", pLat));
-                        data.putString("y", latLngPrefs.getString("y", pLng));
-                        googleCloudMessaging.send(SERVER_ID, id, 0, data);
-                        Log.e("GOOD", "sth");
-                    } catch (IOException e) {
-                        registerProgress.setVisibility(View.INVISIBLE);
-                        registerButton.setText("Register");
-                        Log.e("PROBLEM WITH LOGIN REQUEST",
-                                "*******************************************************");
+                        return null;
                     }
-                    return null;
-                }
-            }.execute(null, null, null);
+                }.execute(null, null, null);
+            } else {
+                noConnection();
+            }
         }
+
 
     }
 
@@ -109,6 +116,12 @@ public class RegisterActivity extends Activity implements Constants {
     protected void onPause() {
         unregisterReceiver(registerResultReceiver);
         super.onPause();
+    }
+
+    private void noConnection() {
+//        registerProgress.setVisibility(View.INVISIBLE);
+//        registerButton.setText("Register");
+        Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
