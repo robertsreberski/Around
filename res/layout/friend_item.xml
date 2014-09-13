@@ -13,15 +13,20 @@
               android:text="Friend Name"
               android:textAppearance="?android:attr/textAppearanceMedium"
               android:textSize="25dp"
-              android:textColor="@color/common_signin_btn_light_text_default" android:layout_toRightOf="@+id/imageView">
+              android:textColor="@color/common_signin_btn_light_text_default"
+              android:layout_alignBottom="@+id/imageView" android:layout_toRightOf="@+id/imageView"
+              android:layout_marginBottom="15dp">
     </TextView>
     <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/delete"
             android:background="@drawable/ic_list_remove"
-            android:layout_alignBottom="@+id/imageView" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/friend_name"
+            android:layout_above="@+id/textView4"
+            android:layout_toRightOf="@+id/friend_name"/>
     <TextView
             android:layout_width="80dp"
             android:layout_height="20dp"
