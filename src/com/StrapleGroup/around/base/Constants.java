@@ -6,8 +6,9 @@ public interface Constants {
     static final String ADD_RESPONSE = "com.StrapleGroup.gcm.FRIENDADD";
     static final String LOGIN_ACTION = "com.StrapleGroup.gcm.LOGIN";
     static final String REFRESH_ACTION = "com.StrapleGroup.gcm.LOCATION";
+    static final String DELETE_ACTION = "com.StrapleGroup.gcm.DELETE";
 
-
+    static final String DELETE_LOCAL_ACTION = "com.StrapleGroup.around.action.DELETE";
     static final String LOGIN_LOCAL_ACTION = "com.StrapleGroup.around.action.LOGIN";
     static final String REGISTER_LOCAL_ACTION = "com.StrapleGroup.around.action.REGISTER";
     static final String ADD_REQUEST_LOCAL_ACTION = "com.StrapleGroup.around.action.REQUEST";

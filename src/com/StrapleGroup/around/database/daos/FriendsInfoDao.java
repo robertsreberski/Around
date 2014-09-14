@@ -36,6 +36,12 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         return insertStatement.executeInsert();
     }
 
+    public long saveLoginOnly(FriendsInfo friendsInfo) {
+        insertStatement.clearBindings();
+        insertStatement.bindString(1, friendsInfo.getLoginFriend());
+        return insertStatement.executeInsert();
+    }
+
     @Override
     public void update(FriendsInfo friendsInfo) {
         final ContentValues values = new ContentValues();
@@ -110,7 +116,7 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
     }
 
     public long find(String login) {
-        long pFriendId = 0L;
+        long pFriendId = -1;
         String sql = "select _id from " + FriendsInfoTable.TABLE_NAME + " where upper(" + FriendsInfoColumns.LOGIN_FRIEND + ") = ? limit 1";
         Cursor pCursor = db.rawQuery(sql, new String[]{login.toUpperCase()});
         if (pCursor.moveToFirst()) {

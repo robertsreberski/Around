@@ -49,13 +49,6 @@ public class MainActivity extends FragmentActivity implements Constants {
         return friendLogin;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater pInflater = getMenuInflater();
-        pInflater.inflate(R.menu.friends_list_action, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
     private void initializePaging() {
         List<Fragment> fragments = new Vector<Fragment>();
         fragments.add(Fragment.instantiate(this, AroundMapFragment.class.getName()));
@@ -66,10 +59,6 @@ public class MainActivity extends FragmentActivity implements Constants {
         pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                // When changing pages, reset the action bar actions since they are dependent
-                // on which page is currently active. An alternative approach is to have each
-                // fragment expose actions itself (rather than the activity exposing actions),
-                // but for simplicity, the activity provides the actions in this sample.
                 invalidateOptionsMenu();
             }
         });
@@ -77,15 +66,6 @@ public class MainActivity extends FragmentActivity implements Constants {
     }
 
     public void logoff(View v) {
-//        SQLiteOpenHelper openHelper = new OpenHelper(this.context);
-//        SQLiteDatabase db = openHelper.getWritableDatabase();
-//        //dataManager initialization
-//        FriendsInfoDao dao = new FriendsInfoDao(db);
-//        FriendsInfo friend = new FriendsInfo();
-//        friend.setXFriend(0.00);
-//        friend.setYFriend(0.00);
-//        dao.updateCoordinates(friend);
-//        Toast.makeText(context,"DATABASE WORKS! =)",Toast.LENGTH_SHORT).show();
         sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
         sharedUserInfo.edit().clear().commit();
         Log.i("GREAT", "Successfully logged off");
@@ -97,22 +77,13 @@ public class MainActivity extends FragmentActivity implements Constants {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add_friend:
-                addFriend();
-        }
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void addFriend() {
+    public void addFriend(View view) {
         if (findViewById(R.id.friend_bar) == null) {
             ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.friend_add_bar, null);
             friendBar = (LinearLayout) viewGroup.findViewById(R.id.friend_bar);
             container = (LinearLayout) findViewById(R.id.friend_list_layout);
-            container.addView(friendBar, 0);
+            container.addView(friendBar, 1);
             friendLogin = (EditText) friendBar.findViewById(R.id.friend_field);
         }
 //        Intent pAddFriendIntent = new Intent(context, AddFriendActivity.class);

@@ -35,7 +35,8 @@
                 android:value="@integer/google_play_services_version"/>
         <activity android:name=".ui.view.MainActivity"
                   android:windowSoftInputMode="adjustResize"
-                  android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
+                  android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -53,7 +54,6 @@
                 >
         </activity>
         <activity android:name=".ui.view.RegisterActivity"/>
-        <activity android:name=".ui.view.AddFriendActivity"/>
         <receiver
                 android:name=".controler.services.GcmRequestReceiver"
                 android:permission="com.google.android.c2dm.permission.SEND">

@@ -7,5 +7,7 @@
        android:useLevel="false"
         >
     <solid android:color="@android:color/transparent"></solid>
-
+    <stroke
+            android:width="10dp"
+            android:color="#ecf0f1"></stroke>
 </shape>

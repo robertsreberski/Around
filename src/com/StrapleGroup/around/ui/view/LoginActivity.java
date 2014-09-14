@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.*;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.ui.utils.ConnectionUtils;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
@@ -86,7 +87,7 @@ public class LoginActivity extends Activity implements Constants {
             done = false;
         }
         if (done) {
-            if (connectivityManager.getActiveNetworkInfo().isConnected()) {
+            if (ConnectionUtils.hasActiveInternetConnection(context)) {
                 loginButton.setText("");
                 loginProgress.setVisibility(View.VISIBLE);
                 new AsyncTask<Void, Void, String>() {
@@ -103,7 +104,6 @@ public class LoginActivity extends Activity implements Constants {
                         pLoginData.putString("y", locationPreferences.getString("LNG", ""));
                         String id = "m-" + UUID.randomUUID().toString();
                         try {
-
                             googleCloudMessaging.send(SERVER_ID, id, pLoginData);
                             Log.i("REQUESTED SUCCESSFUL",
                                     "*************************************************");

@@ -42,8 +42,7 @@
             android:onClick="login"
             android:text="Log in"
             android:background="@drawable/flat_buttons"
-            android:layout_below="@+id/passField" android:layout_centerHorizontal="true"
-            android:layout_marginTop="220dp"/>
+            android:layout_centerVertical="true" android:layout_centerHorizontal="true"/>
     <!--<Button-->
     <!--android:layout_width="300dp"-->
     <!--android:layout_height="70dp"-->
@@ -58,8 +57,9 @@
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/loginProgress" android:layout_alignTop="@+id/loginButton"
-            android:layout_centerHorizontal="true" android:indeterminate="false"/>
+            android:id="@+id/loginProgress"
+            android:indeterminate="false"
+            android:layout_alignTop="@+id/loginButton" android:layout_centerHorizontal="true"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,8 +67,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Don't have an account? Register "
             android:id="@+id/textView"
-            android:layout_below="@+id/loginProgress" android:layout_alignLeft="@+id/loginButton"
-            android:layout_alignStart="@+id/loginButton" android:layout_marginTop="11dp"/>
+            android:layout_alignStart="@+id/loginButton" android:layout_below="@+id/loginProgress"
+            android:layout_centerHorizontal="true"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,6 +77,7 @@
             android:linksClickable="true"
             android:text="here"
             android:id="@+id/linkText"
-            android:layout_toRightOf="@+id/textView" android:layout_alignTop="@+id/textView"/>
+            android:layout_alignTop="@+id/textView" android:layout_alignRight="@+id/loginButton"
+            android:layout_alignEnd="@+id/loginButton"/>
 
 </RelativeLayout>

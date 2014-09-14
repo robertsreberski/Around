@@ -32,10 +32,30 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
         if (!loginResult.isEmpty()) {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 //				Log.i("GREATEST", "Received: " + loginResult.getString(MESSAGE));
+                SQLiteOpenHelper openHelper = new OpenHelper(context);
+                SQLiteDatabase db = openHelper.getWritableDatabase();
+                FriendsInfoDao dao = new FriendsInfoDao(db);
+                dataManager = new DataManagerImpl(context);
                 if (loginResult.getString(KEY_ACTION).equals("LOGIN")) {
                     Intent pLoginIntent = new Intent(LOGIN_LOCAL_ACTION);
                     if (loginResult.getString(KEY_MESSAGE).equals("valid")) {
                         pLoginIntent.putExtra(KEY_MESSAGE, true);
+                        if (loginResult.getString("refresh").equals("done")) {
+                            for (int i = 1; i <= Integer.parseInt(loginResult.getString("number")); i++) {
+//                                db.close();
+//                                context.deleteDatabase(openHelper.getDatabaseName());
+//                                db = openHelper.getWritableDatabase();
+                                FriendsInfo pFriend = new FriendsInfo();
+                                pFriend.setLoginFriend(loginResult.getString("friend_" + i));
+//                                if(dataManager.findFriend(pFriend.getLoginFriend()) == -1){
+                                dataManager.saveLoginOnly(pFriend);
+//                                }else{
+//                                    Log.e("ERROR","NO FRIEND FOUND");
+//                                }
+                            }
+                        } else {
+                            Log.e("ERROR REFRESHING", "ERROR IN DATABASE");
+                        }
                     } else if (loginResult.getString(KEY_MESSAGE).equals("invalid")) {
                         Toast.makeText(context, "Invalid login or password",
                                 Toast.LENGTH_LONG).show();
@@ -69,10 +89,6 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                 }
                 if (loginResult.getString(KEY_ACTION).equals("FRIENDS")) {
                     Intent pRefreshIntent = new Intent(context, NotificatorAroundFriendsService.class);
-                    SQLiteOpenHelper openHelper = new OpenHelper(context);
-                    SQLiteDatabase db = openHelper.getWritableDatabase();
-                    FriendsInfoDao dao = new FriendsInfoDao(db);
-                    dataManager = new DataManagerImpl(context);
                     if (loginResult.getString(KEY_MESSAGE).equals(COMPLETED)) {
                         for (int pCount = 0; pCount < dataManager.getAllFriendsInfo().size(); pCount++) {
                             int pInteger = pCount + 1;
@@ -102,6 +118,10 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     requestIntent.putExtra("LNG", pLng);
                     context.sendBroadcast(requestIntent);
                 }
+//                if(loginResult.getString(KEY_ACTION).equals("DELETE")){
+//                    Intent deleteIntent = new Intent(DELETE_LOCAL_ACTION);
+//                    context.sendBroadcast(deleteIntent);
+//                }
             }
         }
     }

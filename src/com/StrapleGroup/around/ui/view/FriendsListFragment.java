@@ -54,7 +54,6 @@ public class FriendsListFragment extends Fragment implements Constants {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        doFriendList();
         return inflater.inflate(R.layout.fragment_friends_list, container, false);
     }
 
@@ -62,8 +61,10 @@ public class FriendsListFragment extends Fragment implements Constants {
     public void onStart() {
         super.onStart();
         viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.request_list, null);
+        doFriendList();
         IntentFilter addFilter = new IntentFilter(ADD_LOCAL_ACTION);
         IntentFilter requestFilter = new IntentFilter(ADD_REQUEST_LOCAL_ACTION);
+        IntentFilter deleteFilter = new IntentFilter(DELETE_LOCAL_ACTION);
         getActivity().registerReceiver(requestReceiver, requestFilter);
         getActivity().registerReceiver(friendAddResultReceiver, addFilter);
     }
@@ -105,7 +106,30 @@ public class FriendsListFragment extends Fragment implements Constants {
         newFriend.findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataManager.deleteFriend(aFriend.getId());
+                googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
+                new AsyncTask<Void, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        Bundle pResponse = new Bundle();
+                        userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+                        pResponse.putString(KEY_ACTION, DELETE_ACTION);
+                        pResponse.putString(KEY_LOGIN, userInfoPrefs.getString(KEY_LOGIN, ""));
+                        pResponse.putString("deleted_friend_login", aFriend.getLoginFriend());
+                        pResponse.putString("number", Integer.toString(dataManager.getAllFriendsInfo().size()));
+                        try {
+                            googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
+                            Log.i("RESPONSE_SEND", "SSUCCESSFULY");
+                            dataManager.deleteFriend(aFriend.getId());
+
+
+                        } catch (IOException e) {
+                            Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                }.execute(null, null, null);
                 friendContainer.removeView(newFriend);
             }
         });
@@ -116,7 +140,6 @@ public class FriendsListFragment extends Fragment implements Constants {
         final ViewGroup newRequest = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.request_item, null);
         ((TextView) newRequest.findViewById(R.id.friend_requesting)).setText(aFriendName);
         userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-        googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
         final FriendsInfo pRequestingFriend = new FriendsInfo();
         pRequestingFriend.setId(dataManager.getAllFriendsInfo().size());
         pRequestingFriend.setLoginFriend(aFriendName);
@@ -138,7 +161,7 @@ public class FriendsListFragment extends Fragment implements Constants {
                         pResponse.putString("login", aFriendName);
                         try {
                             googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
-                            Log.i("RESPONSE_SEND", "SSUCCESSFULY");
+                            Log.i("RESPONSE_SEND", "SUCCESSFULY");
                             dataManager.saveFriendInfo(pRequestingFriend);
 
                         } catch (IOException e) {
@@ -204,7 +227,7 @@ public class FriendsListFragment extends Fragment implements Constants {
             friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
             requestListLayout = (LinearLayout) viewGroup.findViewById(R.id.request_list);
             requestContainer = (ViewGroup) viewGroup.findViewById(R.id.request_container);
-            friendListLayout.addView(requestListLayout, 0);
+            friendListLayout.addView(requestListLayout, 1);
             addRequest(intent.getStringExtra("friend_name"), intent.getStringExtra("LAT"), intent.getStringExtra("LNG"));
         }
     }

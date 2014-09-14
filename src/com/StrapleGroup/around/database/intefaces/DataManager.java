@@ -14,6 +14,7 @@ public interface DataManager {
 
     public long saveFriendInfo(FriendsInfo friendInfo);
 
+    long saveLoginOnly(FriendsInfo friendsInfo);
     public boolean deleteFriend(long friendId);
 
 }

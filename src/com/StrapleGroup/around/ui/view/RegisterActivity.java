@@ -2,7 +2,6 @@ package com.StrapleGroup.around.ui.view;
 
 import android.app.Activity;
 import android.content.*;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.ui.utils.ConnectionUtils;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
@@ -34,7 +34,6 @@ public class RegisterActivity extends Activity implements Constants {
     private IntentFilter resultFilter;
     private ProgressBar registerProgress;
     private Button registerButton;
-    private ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,9 +68,9 @@ public class RegisterActivity extends Activity implements Constants {
             done = false;
         }
         if (done) {
-            registerButton.setText("");
-            registerProgress.setVisibility(View.VISIBLE);
-            if (connectivityManager.getActiveNetworkInfo().isConnected()) {
+            if (ConnectionUtils.hasActiveInternetConnection(context)) {
+                registerButton.setText("");
+                registerProgress.setVisibility(View.VISIBLE);
                 new AsyncTask<Void, Void, Void>() {
 
                     @Override
@@ -119,8 +118,6 @@ public class RegisterActivity extends Activity implements Constants {
     }
 
     private void noConnection() {
-//        registerProgress.setVisibility(View.INVISIBLE);
-//        registerButton.setText("Register");
         Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show();
     }
 

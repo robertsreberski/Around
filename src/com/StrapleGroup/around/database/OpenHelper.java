@@ -23,7 +23,6 @@ public class OpenHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         FriendsInfoTable.onUpgrade(db, oldVersion, newVersion);
-
     }
 
 }

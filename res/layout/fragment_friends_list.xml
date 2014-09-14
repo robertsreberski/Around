@@ -7,6 +7,9 @@
               android:id="@+id/friend_list_layout"
               android:animateLayoutChanges="true"
               tools:context="${packageName}.${activityClass}">
+    <include android:layout_width="match_parent"
+             android:layout_height="50dp"
+             layout="@layout/around_action_bar"/>
     <ScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent">
         <LinearLayout android:id="@+id/friend_container"
