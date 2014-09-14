@@ -22,7 +22,6 @@
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="robert"
             android:id="@+id/textView"
             android:layout_alignParentTop="true" android:layout_toRightOf="@+id/imageView"
             android:layout_marginTop="10dp"/>

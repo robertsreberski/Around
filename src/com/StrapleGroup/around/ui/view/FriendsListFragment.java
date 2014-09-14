@@ -41,6 +41,7 @@ public class FriendsListFragment extends Fragment implements Constants {
     private ViewGroup friendContainer;
     private LinearLayout friendListLayout;
     private SharedPreferences sharedLocationInfo;
+    private DeleteReceiver deleteReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class FriendsListFragment extends Fragment implements Constants {
         SQLiteDatabase db = openHelper.getReadableDatabase();
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
+        deleteReceiver = new DeleteReceiver();
     }
 
     @Override
@@ -61,12 +63,21 @@ public class FriendsListFragment extends Fragment implements Constants {
     public void onStart() {
         super.onStart();
         viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.request_list, null);
-        doFriendList();
+        startComps();
+    }
+
+    private void startComps() {
         IntentFilter addFilter = new IntentFilter(ADD_LOCAL_ACTION);
         IntentFilter requestFilter = new IntentFilter(ADD_REQUEST_LOCAL_ACTION);
         IntentFilter deleteFilter = new IntentFilter(DELETE_LOCAL_ACTION);
         getActivity().registerReceiver(requestReceiver, requestFilter);
+        getActivity().registerReceiver(deleteReceiver, deleteFilter);
         getActivity().registerReceiver(friendAddResultReceiver, addFilter);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        doFriendList();
     }
 
     @Override
@@ -89,6 +100,11 @@ public class FriendsListFragment extends Fragment implements Constants {
         }
     }
 
+    public void deleteFriend(String aLogin) {
+        friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
+        friendContainer = (ViewGroup) getActivity().findViewById(R.id.friend_container);
+        friendContainer.removeView(friendContainer.findViewWithTag(aLogin));
+    }
     public void addFriend(final FriendsInfo aFriend) {
         sharedLocationInfo = getActivity().getSharedPreferences(LATLNG_PREFS, Context.MODE_PRIVATE);
         friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
@@ -133,6 +149,7 @@ public class FriendsListFragment extends Fragment implements Constants {
                 friendContainer.removeView(newFriend);
             }
         });
+        newFriend.setTag(aFriend.getLoginFriend());
         friendContainer.addView(newFriend, 0);
     }
 
@@ -229,6 +246,15 @@ public class FriendsListFragment extends Fragment implements Constants {
             requestContainer = (ViewGroup) viewGroup.findViewById(R.id.request_container);
             friendListLayout.addView(requestListLayout, 1);
             addRequest(intent.getStringExtra("friend_name"), intent.getStringExtra("LAT"), intent.getStringExtra("LNG"));
+        }
+    }
+
+    private class DeleteReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String pLoginToDelete = intent.getStringExtra(KEY_LOGIN);
+            deleteFriend(pLoginToDelete);
         }
     }
 }

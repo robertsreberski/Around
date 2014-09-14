@@ -47,11 +47,11 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
 //                                db = openHelper.getWritableDatabase();
                                 FriendsInfo pFriend = new FriendsInfo();
                                 pFriend.setLoginFriend(loginResult.getString("friend_" + i));
-//                                if(dataManager.findFriend(pFriend.getLoginFriend()) == -1){
+                                if (dataManager.findFriend(pFriend.getLoginFriend()) == -1) {
                                 dataManager.saveLoginOnly(pFriend);
-//                                }else{
-//                                    Log.e("ERROR","NO FRIEND FOUND");
-//                                }
+                                } else {
+                                    Log.e("ERROR", "NO FRIEND FOUND");
+                                }
                             }
                         } else {
                             Log.e("ERROR REFRESHING", "ERROR IN DATABASE");
@@ -118,10 +118,11 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     requestIntent.putExtra("LNG", pLng);
                     context.sendBroadcast(requestIntent);
                 }
-//                if(loginResult.getString(KEY_ACTION).equals("DELETE")){
-//                    Intent deleteIntent = new Intent(DELETE_LOCAL_ACTION);
-//                    context.sendBroadcast(deleteIntent);
-//                }
+                if (loginResult.getString(KEY_ACTION).equals("DELETE")) {
+                    Intent deleteIntent = new Intent(DELETE_LOCAL_ACTION);
+                    deleteIntent.putExtra(KEY_LOGIN, loginResult.getString(KEY_LOGIN, ""));
+                    context.sendBroadcast(deleteIntent);
+                }
             }
         }
     }
