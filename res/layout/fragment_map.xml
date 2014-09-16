@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:onClick="logoff"
             android:text="Log off"
-            android:background="#f5d76e"
+            android:background="#FFE7BA"
             android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
     <fragment android:layout_width="300dp"

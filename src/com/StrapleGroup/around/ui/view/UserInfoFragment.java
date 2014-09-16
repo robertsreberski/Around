@@ -15,18 +15,16 @@ import com.StrapleGroup.around.base.Constants;
  * Created by Robert on 2014-09-14.
  */
 public class UserInfoFragment extends Fragment {
+    private View inflatedView = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.user_info_fragment, container, false);
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
+        this.inflatedView = inflater.inflate(R.layout.user_info_fragment, container, false);
         SharedPreferences pUserPrefs = getActivity().getSharedPreferences(Constants.USER_PREFS, Context.MODE_PRIVATE);
         if (pUserPrefs.contains(Constants.KEY_LOGIN)) {
-            ((TextView) getActivity().findViewById(R.id.loginText)).setText(pUserPrefs.getString(Constants.KEY_LOGIN, ""));
+            String test = pUserPrefs.getString(Constants.KEY_LOGIN, "");
+            TextView text = (TextView) inflatedView.findViewById(R.id.login_view);
+            text.setText(pUserPrefs.getString(Constants.KEY_LOGIN, ""));
         }
+        return inflatedView;
     }
 }
