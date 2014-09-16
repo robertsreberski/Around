@@ -36,6 +36,7 @@ public class MainActivity extends FragmentActivity implements Constants {
     private static EditText friendLogin;
     private LinearLayout friendBar;
     private LinearLayout container;
+    private ViewPager pager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class MainActivity extends FragmentActivity implements Constants {
         fragments.add(Fragment.instantiate(this, FriendsListFragment.class.getName()));
         this.pagerAdapter = new PagerAdapter(super.getSupportFragmentManager(), fragments);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager = (ViewPager) findViewById(R.id.pager);
         pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -88,6 +89,10 @@ public class MainActivity extends FragmentActivity implements Constants {
         }
 //        Intent pAddFriendIntent = new Intent(context, AddFriendActivity.class);
 //        startActivity(pAddFriendIntent);
+    }
+
+    public void goFriendList(View view) {
+        pager.setCurrentItem(pager.getChildCount());
     }
 
     public void add(View view) {

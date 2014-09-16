@@ -84,6 +84,7 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                         pAddIntent.putExtra(KEY_MESSAGE, false);
                     } else if (loginResult.getString(KEY_MESSAGE).equals("rejected")) {
                         Log.i("FRIEND", "ADD_REJECTED");
+                        return;
                     }
                     context.sendBroadcast(pAddIntent);
                 }

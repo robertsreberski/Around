@@ -17,19 +17,26 @@
             android:layout_width="1dp"
             android:layout_height="60dp"
             android:background="@color/common_action_bar_splitter"
-            android:id="@+id/view" android:layout_alignParentTop="true" android:layout_toLeftOf="@+id/imageButton"/>
+            android:id="@+id/view"
+            android:layout_alignParentTop="true" android:layout_toLeftOf="@+id/imageButton"/>
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="20dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/textView"
+            android:id="@+id/loginText"
             android:layout_alignParentTop="true" android:layout_toRightOf="@+id/imageView"
             android:layout_marginTop="10dp"/>
     <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/ic_action_settings"
-            android:id="@+id/imageButton" android:layout_alignParentTop="true" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            />
+            android:id="@+id/imageButton"
+            android:layout_alignParentTop="true" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:layout_marginRight="68dp"/>
+    <ImageButton
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/friend_list_button" android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/view" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:onClick="goFriendList"/>
 </RelativeLayout>

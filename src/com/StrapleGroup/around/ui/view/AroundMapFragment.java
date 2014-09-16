@@ -17,9 +17,7 @@ import com.StrapleGroup.around.controler.services.LocationService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,6 +33,7 @@ public class AroundMapFragment extends Fragment implements Constants {
     private SupportMapFragment mapFragment;
     private Intent intentLocationService;
     private RefreshReceiver refreshReceiver;
+    private Marker locMarker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,6 @@ public class AroundMapFragment extends Fragment implements Constants {
 
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_map, container, false);
@@ -60,11 +58,11 @@ public class AroundMapFragment extends Fragment implements Constants {
             mapCustomer();
         }
         initLocationService();
-        if (checkIfLogin() == false) {
-            Intent pLoginIntent = new Intent(this.context, LoginActivity.class);
-            startActivity(pLoginIntent);
-            getActivity().finish();
-        }
+//        if (checkIfLogin() == false) {
+//            Intent pLoginIntent = new Intent(this.context, LoginActivity.class);
+//            startActivity(pLoginIntent);
+//            getActivity().finish();
+//        }
         IntentFilter pIntentFilter = new IntentFilter(MARKER_LOCAL_ACTION);
         getActivity().registerReceiver(refreshReceiver, pIntentFilter);
         super.onStart();
@@ -93,7 +91,7 @@ public class AroundMapFragment extends Fragment implements Constants {
 
 
     public void mapCustomer() {
-        mapPane.setMyLocationEnabled(true);
+        mapPane.setMyLocationEnabled(false);
         mapPane.setBuildingsEnabled(true);
 //        mapPane.addMarker(new MarkerOptions().flat(true));
 //        mapPane.getUiSettings().setAllGesturesEnabled(false);
@@ -117,8 +115,13 @@ public class AroundMapFragment extends Fragment implements Constants {
         final double lat = intent.getDoubleExtra("Latitude", 0.00);
         final double lng = intent.getDoubleExtra("Longitude", 0.00);
         LatLng pLatLng = new LatLng(lat, lng);
+        BitmapDescriptor pMyLocIcon = BitmapDescriptorFactory.fromResource(R.drawable.my_loc_marker);
+        if (locMarker != null) {
+            locMarker.remove();
+        }
+        locMarker = mapPane.addMarker(new MarkerOptions().flat(true).icon(pMyLocIcon).position(pLatLng));
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(pLatLng).zoom(15).tilt(30).build();
+                .target(pLatLng).zoom(15).build();
         mapPane.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
     }

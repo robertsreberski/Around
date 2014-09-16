@@ -74,6 +74,7 @@ public class FriendsListFragment extends Fragment implements Constants {
         getActivity().registerReceiver(deleteReceiver, deleteFilter);
         getActivity().registerReceiver(friendAddResultReceiver, addFilter);
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -84,6 +85,7 @@ public class FriendsListFragment extends Fragment implements Constants {
     public void onDestroy() {
         getActivity().unregisterReceiver(requestReceiver);
         getActivity().unregisterReceiver(friendAddResultReceiver);
+        getActivity().unregisterReceiver(deleteReceiver);
         super.onDestroy();
     }
 
@@ -105,6 +107,7 @@ public class FriendsListFragment extends Fragment implements Constants {
         friendContainer = (ViewGroup) getActivity().findViewById(R.id.friend_container);
         friendContainer.removeView(friendContainer.findViewWithTag(aLogin));
     }
+
     public void addFriend(final FriendsInfo aFriend) {
         sharedLocationInfo = getActivity().getSharedPreferences(LATLNG_PREFS, Context.MODE_PRIVATE);
         friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
@@ -137,8 +140,6 @@ public class FriendsListFragment extends Fragment implements Constants {
                             googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
                             Log.i("RESPONSE_SEND", "SSUCCESSFULY");
                             dataManager.deleteFriend(aFriend.getId());
-
-
                         } catch (IOException e) {
                             Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
                             e.printStackTrace();
