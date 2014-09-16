@@ -2,7 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="${relativePackage}.${activityClass}" android:background="#ffffca">
+                tools:context="${relativePackage}.${activityClass}" android:background="#FFE7BA">
 
     <EditText
             android:id="@+id/loginField"
@@ -14,10 +14,10 @@
             android:layout_height="50dp"
             android:background="@drawable/edit_texts"
             android:ems="10"
-            android:layout_marginTop="163dp"
-            android:layout_alignParentTop="true" android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/passField" android:layout_marginBottom="5dp">
 
-        <requestFocus/>
+    <requestFocus/>
     </EditText>
 
     <EditText
@@ -31,19 +31,18 @@
             android:ems="10"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:layout_marginTop="43dp"
-            android:layout_below="@+id/loginField" android:layout_alignLeft="@+id/loginField"
+            android:layout_centerVertical="true" android:layout_alignLeft="@+id/loginField"
             android:layout_alignStart="@+id/loginField"/>
 
     <Button
             android:id="@+id/loginButton"
-            android:layout_width="300dp"
+            android:layout_width="200dp"
             android:layout_height="70dp"
             android:onClick="login"
             android:text="Log in"
             android:background="@drawable/flat_buttons"
-            android:layout_below="@+id/passField" android:layout_centerHorizontal="true"
-            android:layout_marginTop="39dp"/>
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/passField" android:layout_centerHorizontal="true"/>
     <!--<Button-->
     <!--android:layout_width="300dp"-->
     <!--android:layout_height="70dp"-->
@@ -64,21 +63,14 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#c7c78e"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Don't have an account? Register "
-            android:id="@+id/textView"
-            android:layout_below="@+id/loginProgress" android:layout_alignLeft="@+id/loginButton"
-            android:layout_alignStart="@+id/loginButton"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#7f8c8d"
             android:linksClickable="true"
             android:text="here"
             android:id="@+id/linkText"
-            android:layout_alignTop="@+id/textView" android:layout_alignRight="@+id/loginButton"
-            android:layout_alignEnd="@+id/loginButton"/>
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/loginProgress" android:layout_alignLeft="@+id/loginButton"
+            android:layout_alignStart="@+id/loginButton"/>
 
 </RelativeLayout>
