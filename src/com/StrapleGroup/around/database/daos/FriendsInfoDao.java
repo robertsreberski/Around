@@ -17,8 +17,10 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
     private static final String INSERT_ALL = "insert into "
             + FriendsInfoTable.TABLE_NAME + "("
             + FriendsInfoColumns.LOGIN_FRIEND + " , "
-            + FriendsInfoColumns.X_FRIEND + " , " + FriendsInfoColumns.Y_FRIEND
-            + ") values (?, ?, ?)";
+            + FriendsInfoColumns.PROFILE_PHOTO + " , "
+            + FriendsInfoColumns.X_FRIEND + " , " + FriendsInfoColumns.Y_FRIEND + " , "
+            + FriendsInfoColumns.STATUS + " , " + FriendsInfoColumns.ACTIVITY
+            + ") values (?, ?, ?, ?, ?, ?)";
     private SQLiteDatabase db;
     private SQLiteStatement insertStatement;
 
@@ -31,8 +33,11 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
     public long save(FriendsInfo friendsInfo) {
         insertStatement.clearBindings();
         insertStatement.bindString(1, friendsInfo.getLoginFriend());
+        insertStatement.bindBlob(2, friendsInfo.getProfilePhoto());
         insertStatement.bindDouble(2, friendsInfo.getXFriend());
         insertStatement.bindDouble(3, friendsInfo.getYFriend());
+        insertStatement.bindString(5, friendsInfo.getStatus());
+        insertStatement.bindString(6, friendsInfo.getActivities());
         return insertStatement.executeInsert();
     }
 
@@ -46,8 +51,11 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
     public void update(FriendsInfo friendsInfo) {
         final ContentValues values = new ContentValues();
         values.put(FriendsInfoColumns.LOGIN_FRIEND, friendsInfo.getLoginFriend());
+        values.put(FriendsInfoColumns.PROFILE_PHOTO, friendsInfo.getProfilePhoto());
         values.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
         values.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
+        values.put(FriendsInfoColumns.STATUS, friendsInfo.getStatus());
+        values.put(FriendsInfoColumns.ACTIVITY, friendsInfo.getActivities());
         db.update(FriendsInfoTable.TABLE_NAME, values,
                 BaseColumns._ID + " = ?",
                 new String[]{String.valueOf(friendsInfo.getId())});

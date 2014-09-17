@@ -4,7 +4,17 @@ public class FriendsInfo extends ModelBase {
     private String login_friend;
     private double x_friend;
     private double y_friend;
+    private byte[] profilePhoto;
+    private String activities;
+    private String status;
 
+    public byte[] getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(byte[] profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
 
     public void setLoginFriend(String login_friend) {
         this.login_friend = login_friend;
@@ -28,5 +38,21 @@ public class FriendsInfo extends ModelBase {
 
     public double getYFriend() {
         return y_friend;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getActivities() {
+        return activities;
+    }
+
+    public void setActivities(String activities) {
+        this.activities = activities;
     }
 }

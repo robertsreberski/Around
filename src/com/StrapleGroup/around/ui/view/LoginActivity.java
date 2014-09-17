@@ -52,14 +52,14 @@ public class LoginActivity extends Activity implements Constants {
         loginButton = (Button) findViewById(R.id.loginButton);
         loginProgress = (ProgressBar) findViewById(R.id.loginProgress);
         loginProgress.setVisibility(View.INVISIBLE);
-        linkText = (TextView) findViewById(R.id.linkText);
-        linkText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent pGoRegister = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(pGoRegister);
-            }
-        });
+//        linkText = (TextView) findViewById(R.id.linkText);
+//        linkText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent pGoRegister = new Intent(LoginActivity.this, RegisterActivity.class);
+//                startActivity(pGoRegister);
+//            }
+//        });
         connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         googleCloudMessaging = GoogleCloudMessaging.getInstance(this);
         registrationId = getRegistrationId();

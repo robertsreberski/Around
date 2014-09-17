@@ -2,7 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="${relativePackage}.${activityClass}" android:background="#FFE7BA">
+                tools:context="${relativePackage}.${activityClass}" android:background="#eaeaa8">
 
     <EditText
             android:id="@+id/loginField"
@@ -14,8 +14,7 @@
             android:layout_height="50dp"
             android:background="@drawable/edit_texts"
             android:ems="10"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@+id/passField" android:layout_marginBottom="5dp">
+            android:layout_centerVertical="true" android:layout_centerHorizontal="true">
 
     <requestFocus/>
     </EditText>
@@ -31,8 +30,8 @@
             android:ems="10"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:layout_centerVertical="true" android:layout_alignLeft="@+id/loginField"
-            android:layout_alignStart="@+id/loginField"/>
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/loginField" android:layout_marginTop="5dp"/>
 
     <Button
             android:id="@+id/loginButton"
@@ -41,8 +40,8 @@
             android:onClick="login"
             android:text="Log in"
             android:background="@drawable/flat_buttons"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/passField" android:layout_centerHorizontal="true"/>
+            android:layout_marginTop="25dp" android:layout_below="@+id/passField"
+            android:layout_centerHorizontal="true"/>
     <!--<Button-->
     <!--android:layout_width="300dp"-->
     <!--android:layout_height="70dp"-->
@@ -60,17 +59,25 @@
             android:id="@+id/loginProgress"
             android:indeterminate="false"
             android:layout_alignTop="@+id/loginButton" android:layout_centerHorizontal="true"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#7f8c8d"
-            android:linksClickable="true"
-            android:text="here"
-            android:id="@+id/linkText"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/loginProgress" android:layout_alignLeft="@+id/loginButton"
-            android:layout_alignStart="@+id/loginButton"/>
+    <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@drawable/around_image"
+            android:id="@+id/imageView"
+            android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
+            android:layout_marginTop="31dp"/>
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+    <!--android:textColor="#7f8c8d"-->
+    <!--android:linksClickable="true"-->
+    <!--android:text="here"-->
+    <!--android:id="@+id/linkText"-->
+    <!--android:layout_alignLeft="@+id/loginButton"-->
+    <!--android:layout_alignStart="@+id/loginButton"-->
+    <!--android:layout_below="@+id/loginProgress"-->
+    <!--android:layout_alignRight="@+id/loginButton" android:layout_alignEnd="@+id/loginButton"-->
+    <!--/>-->
 
 </RelativeLayout>
