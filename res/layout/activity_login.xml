@@ -2,7 +2,8 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="${relativePackage}.${activityClass}" android:background="#eaeaa8">
+                tools:context="${relativePackage}.${activityClass}"
+                android:background="@drawable/around_login_background">
 
     <EditText
             android:id="@+id/loginField"
@@ -14,7 +15,8 @@
             android:layout_height="50dp"
             android:background="@drawable/edit_texts"
             android:ems="10"
-            android:layout_centerVertical="true" android:layout_centerHorizontal="true">
+            android:layout_centerVertical="true" android:layout_alignLeft="@+id/passField"
+            android:layout_alignStart="@+id/passField">
 
     <requestFocus/>
     </EditText>
@@ -59,13 +61,6 @@
             android:id="@+id/loginProgress"
             android:indeterminate="false"
             android:layout_alignTop="@+id/loginButton" android:layout_centerHorizontal="true"/>
-    <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@drawable/around_image"
-            android:id="@+id/imageView"
-            android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
-            android:layout_marginTop="31dp"/>
     <!--<TextView-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->
