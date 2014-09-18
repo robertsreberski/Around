@@ -105,7 +105,6 @@ public class RegisterActivity extends Activity implements Constants {
                 }.execute(null, null, null);
             } else {
                 noConnection();
-                noConnection();
             }
         }
 
