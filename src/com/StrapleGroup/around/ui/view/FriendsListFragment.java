@@ -1,9 +1,8 @@
 package com.StrapleGroup.around.ui.view;
 
 import android.content.*;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +20,8 @@ import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.intefaces.DataManager;
+import com.StrapleGroup.around.database.tables.FriendsInfoTable;
+import com.StrapleGroup.around.ui.controler.SmartListAdapter;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
@@ -42,16 +43,24 @@ public class FriendsListFragment extends Fragment implements Constants {
     private LinearLayout friendListLayout;
     private SharedPreferences sharedLocationInfo;
     private DeleteReceiver deleteReceiver;
+    private SmartListAdapter smartListAdapter;
+    private SQLiteDatabase db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
-        SQLiteOpenHelper openHelper = new OpenHelper(this.context);
-        SQLiteDatabase db = openHelper.getReadableDatabase();
+        OpenHelper openHelper = new OpenHelper(this.context);
+        db = openHelper.getReadableDatabase();
         //dataManager initialization
-        dataManager = new DataManagerImpl(this.context);
+
         deleteReceiver = new DeleteReceiver();
+        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
+                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND,
+                        FriendsInfoTable.FriendsInfoColumns.X_FRIEND, FriendsInfoTable.FriendsInfoColumns.Y_FRIEND},
+                null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
+        smartListAdapter = new SmartListAdapter(context, pCursor, 0);
+        dataManager = new DataManagerImpl(this.context);
     }
 
     @Override
@@ -63,6 +72,8 @@ public class FriendsListFragment extends Fragment implements Constants {
     public void onStart() {
         super.onStart();
         viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.request_list, null);
+        ListView listView = (ListView) getActivity().findViewById(R.id.listViewTest);
+        listView.setAdapter(smartListAdapter);
         startComps();
     }
 
@@ -101,57 +112,59 @@ public class FriendsListFragment extends Fragment implements Constants {
             addFriend(pFriend);
         }
     }
-
-    public void deleteFriend(String aLogin) {
-        friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
-        friendContainer = (ViewGroup) getActivity().findViewById(R.id.friend_container);
-        friendContainer.removeView(friendContainer.findViewWithTag(aLogin));
-    }
-
     public void addFriend(final FriendsInfo aFriend) {
-        sharedLocationInfo = getActivity().getSharedPreferences(LATLNG_PREFS, Context.MODE_PRIVATE);
-        friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
-        friendContainer = (ViewGroup) getActivity().findViewById(R.id.friend_container);
-        final ViewGroup newFriend = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.friend_item, null);
-        ((TextView) newFriend.findViewById(R.id.friend_name)).setText(aFriend.getLoginFriend());
-        Location aLocation = new Location("myLoc");
-        aLocation.setLatitude(Double.parseDouble(sharedLocationInfo.getString("LAT", "")));
-        aLocation.setLongitude(Double.parseDouble(sharedLocationInfo.getString("LNG", "")));
-        Location pLocation = new Location("friendLoc");
-        pLocation.setLatitude((double) aFriend.getXFriend());
-        pLocation.setLongitude((double) aFriend.getYFriend());
-        String t = Float.toString(aLocation.distanceTo(pLocation));
-        ((TextView) newFriend.findViewById(R.id.distance)).setText(t);
-        newFriend.findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
-                new AsyncTask<Void, Void, Void>() {
-
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        Bundle pResponse = new Bundle();
-                        userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-                        pResponse.putString(KEY_ACTION, DELETE_ACTION);
-                        pResponse.putString(KEY_LOGIN, userInfoPrefs.getString(KEY_LOGIN, ""));
-                        pResponse.putString("deleted_friend_login", aFriend.getLoginFriend());
-                        pResponse.putString("number", Integer.toString(dataManager.getAllFriendsInfo().size()));
-                        try {
-                            googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
-                            Log.i("RESPONSE_SEND", "SSUCCESSFULY");
-                            dataManager.deleteFriend(aFriend.getId());
-                        } catch (IOException e) {
-                            Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-                }.execute(null, null, null);
-                friendContainer.removeView(newFriend);
-            }
-        });
-        newFriend.setTag(aFriend.getLoginFriend());
-        friendContainer.addView(newFriend, 0);
+//        sharedLocationInfo = getActivity().getSharedPreferences(LATLNG_PREFS, Context.MODE_PRIVATE);
+        FriendsInfo pFriend = new FriendsInfo();
+        pFriend.setLoginFriend("test_friend");
+        dataManager.saveLoginOnly(pFriend);
+        Cursor pAddCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{
+                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND,
+                        FriendsInfoTable.FriendsInfoColumns.X_FRIEND, FriendsInfoTable.FriendsInfoColumns.Y_FRIEND},
+                null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
+        smartListAdapter.swapCursor(pAddCursor);
+//        friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
+//        friendContainer = (ViewGroup) getActivity().findViewById(R.id.friend_container);
+//        final ViewGroup newFriend = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.friend_item, null);
+//        ((TextView) newFriend.findViewById(R.id.friend_name)).setText(aFriend.getLoginFriend());
+//        Location aLocation = new Location("myLoc");
+//        aLocation.setLatitude(Double.parseDouble(sharedLocationInfo.getString("LAT", "")));
+//        aLocation.setLongitude(Double.parseDouble(sharedLocationInfo.getString("LNG", "")));
+//        Location pLocation = new Location("friendLoc");
+//        pLocation.setLatitude((double) aFriend.getXFriend());
+//        pLocation.setLongitude((double) aFriend.getYFriend());
+//        String t = Float.toString(aLocation.distanceTo(pLocation));
+//
+//        ((TextView) newFriend.findViewById(R.id.distance)).setText(t);
+//        newFriend.findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
+//                new AsyncTask<Void, Void, Void>() {
+//
+//                    @Override
+//                    protected Void doInBackground(Void... params) {
+//                        Bundle pResponse = new Bundle();
+//                        userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+//                        pResponse.putString(KEY_ACTION, DELETE_ACTION);
+//                        pResponse.putString(KEY_LOGIN, userInfoPrefs.getString(KEY_LOGIN, ""));
+//                        pResponse.putString("deleted_friend_login", aFriend.getLoginFriend());
+//                        pResponse.putString("number", Integer.toString(dataManager.getAllFriendsInfo().size()));
+//                        try {
+//                            googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
+//                            Log.i("RESPONSE_SEND", "SSUCCESSFULY");
+//                            dataManager.deleteFriend(aFriend.getId());
+//                        } catch (IOException e) {
+//                            Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
+//                            e.printStackTrace();
+//                        }
+//                        return null;
+//                    }
+//                }.execute(null, null, null);
+//                friendContainer.removeView(newFriend);
+//            }
+//        });
+//        newFriend.setTag(aFriend.getLoginFriend());
+//        friendContainer.addView(newFriend, 0);
     }
 
     public void addRequest(final String aFriendName, String aLat, String aLng) {

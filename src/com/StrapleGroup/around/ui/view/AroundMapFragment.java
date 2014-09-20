@@ -58,11 +58,11 @@ public class AroundMapFragment extends Fragment implements Constants {
             mapCustomer();
         }
         initLocationService();
-        if (checkIfLogin() == false) {
-            Intent pLoginIntent = new Intent(this.context, LoginActivity.class);
-            startActivity(pLoginIntent);
-            getActivity().finish();
-        }
+//        if (checkIfLogin() == false) {
+//            Intent pLoginIntent = new Intent(this.context, LoginActivity.class);
+//            startActivity(pLoginIntent);
+//            getActivity().finish();
+//        }
         IntentFilter pIntentFilter = new IntentFilter(MARKER_LOCAL_ACTION);
         getActivity().registerReceiver(refreshReceiver, pIntentFilter);
         super.onStart();
@@ -93,13 +93,12 @@ public class AroundMapFragment extends Fragment implements Constants {
     public void mapCustomer() {
         mapPane.setMyLocationEnabled(false);
         mapPane.setBuildingsEnabled(true);
-//        mapPane.addMarker(new MarkerOptions().flat(true));
-//        mapPane.getUiSettings().setAllGesturesEnabled(false);
+        mapPane.getUiSettings().setAllGesturesEnabled(false);
         mapPane.getUiSettings().setCompassEnabled(false);
         mapPane.getUiSettings().setZoomControlsEnabled(false);
         mapPane.getUiSettings().setMyLocationButtonEnabled(false);
-//        mapPane.getUiSettings().setZoomGesturesEnabled(false);
-//        mapPane.getUiSettings().setScrollGesturesEnabled(false);
+        mapPane.getUiSettings().setZoomGesturesEnabled(false);
+        mapPane.getUiSettings().setScrollGesturesEnabled(false);
     }
 
     private void initLocationService() {

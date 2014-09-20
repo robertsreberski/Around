@@ -76,8 +76,8 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
 
     public FriendsInfo get(long id) {
         FriendsInfo pFriendsInfo = null;
-        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoColumns.LOGIN_FRIEND,
-                        FriendsInfoColumns.X_FRIEND, FriendsInfoColumns.Y_FRIEND},
+        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoColumns.LOGIN_FRIEND, FriendsInfoColumns.PROFILE_PHOTO,
+                        FriendsInfoColumns.X_FRIEND, FriendsInfoColumns.Y_FRIEND, FriendsInfoColumns.STATUS, FriendsInfoColumns.ACTIVITY},
                 BaseColumns._ID + " =?", new String[]{String.valueOf(id)},
                 null, null, null, "1");
         if (pCursor.moveToFirst()) {
@@ -116,9 +116,12 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         if (pCursor != null) {
             pFriendsInfo = new FriendsInfo();
             pFriendsInfo.setId(pCursor.getLong(0));
-            pFriendsInfo.setLoginFriend(pCursor.getString(0));
-            pFriendsInfo.setXFriend(pCursor.getDouble(1));
-            pFriendsInfo.setYFriend(pCursor.getDouble(2));
+            pFriendsInfo.setLoginFriend(pCursor.getString(1));
+            pFriendsInfo.setProfilePhoto(pCursor.getBlob(2));
+            pFriendsInfo.setXFriend(pCursor.getDouble(3));
+            pFriendsInfo.setYFriend(pCursor.getDouble(4));
+            pFriendsInfo.setStatus(pCursor.getString(5));
+            pFriendsInfo.setActivities(pCursor.getString(6));
         }
         return pFriendsInfo;
     }

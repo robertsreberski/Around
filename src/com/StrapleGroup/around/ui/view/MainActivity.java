@@ -3,7 +3,6 @@ package com.StrapleGroup.around.ui.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,17 +10,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 import java.util.Vector;
 
 /**
@@ -95,33 +93,39 @@ public class MainActivity extends FragmentActivity implements Constants {
         pager.setCurrentItem(pager.getChildCount());
     }
 
+    public void settings(View view) {
+        Intent pSettingsIntent = new Intent(context, UserInfoActivity.class);
+        startActivity(pSettingsIntent);
+    }
     public void add(View view) {
-        sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-        sharedLatLng = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                if (googleCloudMessaging == null) {
-                    googleCloudMessaging = GoogleCloudMessaging
-                            .getInstance(context);
-                }
-                Bundle pFriendDataBundle = new Bundle();
-                sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-                pFriendDataBundle.putString("action", ADD_ACTION);
-                pFriendDataBundle.putString("login", sharedUserInfo.getString(KEY_LOGIN, ""));
-                pFriendDataBundle.putString("friend_login", friendLogin.getText().toString());
-                pFriendDataBundle.putString("x", sharedLatLng.getString("LAT", ""));
-                pFriendDataBundle.putString("y", sharedLatLng.getString("LNG", ""));
-                try {
-                    googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pFriendDataBundle);
-                    Log.e("SENDED", "ADD_REQUEST_SENDED");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }.execute(null, null, null);
-        Toast.makeText(context, "Request sended successufuly!", Toast.LENGTH_SHORT);
+//        sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+//        sharedLatLng = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... params) {
+//                if (googleCloudMessaging == null) {
+//                    googleCloudMessaging = GoogleCloudMessaging
+//                            .getInstance(context);
+//                }
+//                Bundle pFriendDataBundle = new Bundle();
+//                sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+//                pFriendDataBundle.putString("action", ADD_ACTION);
+//                pFriendDataBundle.putString("login", sharedUserInfo.getString(KEY_LOGIN, ""));
+//                pFriendDataBundle.putString("friend_login", friendLogin.getText().toString());
+//                pFriendDataBundle.putString("x", sharedLatLng.getString("LAT", ""));
+//                pFriendDataBundle.putString("y", sharedLatLng.getString("LNG", ""));
+//                try {
+//                    googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pFriendDataBundle);
+//                    Log.e("SENDED", "ADD_REQUEST_SENDED");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                return null;
+//            }
+//        }.execute(null, null, null);
+//        Toast.makeText(context, "Request sended successufuly!", Toast.LENGTH_SHORT);
+        Intent pIntent = new Intent(ADD_LOCAL_ACTION);
+        sendBroadcast(pIntent);
         container.removeView(friendBar);
     }
 

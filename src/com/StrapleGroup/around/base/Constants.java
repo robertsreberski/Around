@@ -1,6 +1,7 @@
 package com.StrapleGroup.around.base;
 
 public interface Constants {
+    static final String PHOTO_ACTION = "com.StrapleGroup.gcm.PHOTO";
     static final String REGISTER_ACTION = "com.StrapleGroup.gcm.REGISTER";
     static final String ADD_ACTION = "com.StrapleGroup.gcm.REQUEST";
     static final String ADD_RESPONSE = "com.StrapleGroup.gcm.FRIENDADD";

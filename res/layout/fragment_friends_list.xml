@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:background="#ffffffbe"
+              android:background="#ffffca"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
@@ -8,20 +8,11 @@
               android:animateLayoutChanges="true"
               tools:context="${packageName}.${activityClass}">
     <include android:layout_width="match_parent"
-             android:layout_height="50dp"
+             android:layout_height="60dp"
              layout="@layout/around_action_bar"/>
-    <ScrollView android:layout_width="match_parent"
-                android:layout_height="match_parent">
-        <LinearLayout android:id="@+id/friend_container"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:showDividers="middle"
-                      android:divider="?android:dividerHorizontal"
-                      android:animateLayoutChanges="true"
-                      android:paddingLeft="16dp"
-                      android:paddingRight="16dp"/>
-
-    </ScrollView>
+    <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listViewTest" android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
