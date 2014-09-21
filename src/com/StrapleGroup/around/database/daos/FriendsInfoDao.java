@@ -117,11 +117,11 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
             pFriendsInfo = new FriendsInfo();
             pFriendsInfo.setId(pCursor.getLong(0));
             pFriendsInfo.setLoginFriend(pCursor.getString(1));
-            pFriendsInfo.setProfilePhoto(pCursor.getBlob(2));
-            pFriendsInfo.setXFriend(pCursor.getDouble(3));
-            pFriendsInfo.setYFriend(pCursor.getDouble(4));
-            pFriendsInfo.setStatus(pCursor.getString(5));
-            pFriendsInfo.setActivities(pCursor.getString(6));
+//            pFriendsInfo.setProfilePhoto(pCursor.getBlob(2));
+//            pFriendsInfo.setXFriend(pCursor.getDouble(3));
+//            pFriendsInfo.setYFriend(pCursor.getDouble(4));
+//            pFriendsInfo.setStatus(pCursor.getString(5));
+//            pFriendsInfo.setActivities(pCursor.getString(6));
         }
         return pFriendsInfo;
     }

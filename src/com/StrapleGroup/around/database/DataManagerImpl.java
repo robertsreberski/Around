@@ -1,6 +1,7 @@
 package com.StrapleGroup.around.database;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -8,6 +9,7 @@ import android.util.Log;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.StrapleGroup.around.database.intefaces.DataManager;
+import com.StrapleGroup.around.database.tables.FriendsInfoTable;
 
 import java.util.List;
 
@@ -34,6 +36,13 @@ public class DataManagerImpl implements DataManager {
     public FriendsInfo getFriendInfo(long friendId) {
         FriendsInfo pFriendInfo = friendsDao.get(friendId);
         return pFriendInfo;
+    }
+
+    @Override
+    public Cursor getCompleteCursor() {
+        return db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
+                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND},
+                null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
     }
 
     @Override

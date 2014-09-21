@@ -22,12 +22,5 @@
             android:background="#f5d76e"
             android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
-    <fragment android:layout_width="300dp"
-              android:layout_height="60dp"
-              android:name="com.StrapleGroup.around.ui.view.UserInfoFragment" android:id="@+id/fragment"
-              android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
-              android:layout_alignParentStart="true"
-              tools:layout="@layout/user_info_fragment"
-              android:layout_marginTop="10dp" android:layout_marginLeft="10dp"/>
 
 </RelativeLayout>

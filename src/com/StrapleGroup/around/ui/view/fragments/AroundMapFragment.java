@@ -1,4 +1,4 @@
-package com.StrapleGroup.around.ui.view;
+package com.StrapleGroup.around.ui.view.fragments;
 
 
 import android.content.*;
@@ -58,11 +58,6 @@ public class AroundMapFragment extends Fragment implements Constants {
             mapCustomer();
         }
         initLocationService();
-//        if (checkIfLogin() == false) {
-//            Intent pLoginIntent = new Intent(this.context, LoginActivity.class);
-//            startActivity(pLoginIntent);
-//            getActivity().finish();
-//        }
         IntentFilter pIntentFilter = new IntentFilter(MARKER_LOCAL_ACTION);
         getActivity().registerReceiver(refreshReceiver, pIntentFilter);
         super.onStart();

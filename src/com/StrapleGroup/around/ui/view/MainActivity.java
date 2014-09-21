@@ -3,6 +3,7 @@ package com.StrapleGroup.around.ui.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,11 +16,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.ui.view.fragments.*;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 /**
@@ -50,7 +55,10 @@ public class MainActivity extends FragmentActivity implements Constants {
 
     private void initializePaging() {
         List<Fragment> fragments = new Vector<Fragment>();
+        fragments.add(Fragment.instantiate(this, UserFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, AroundFriendsFragment.class.getName()));
         fragments.add(Fragment.instantiate(this, AroundMapFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, NewsFragment.class.getName()));
         fragments.add(Fragment.instantiate(this, FriendsListFragment.class.getName()));
         this.pagerAdapter = new PagerAdapter(super.getSupportFragmentManager(), fragments);
 
@@ -62,6 +70,8 @@ public class MainActivity extends FragmentActivity implements Constants {
             }
         });
         pager.setAdapter(this.pagerAdapter);
+        pager.setOffscreenPageLimit(4);
+        pager.setCurrentItem(2);
     }
 
     public void logoff(View v) {
@@ -74,6 +84,26 @@ public class MainActivity extends FragmentActivity implements Constants {
             finish();
         }
 
+    }
+
+    public void goToUser(View view) {
+        pager.setCurrentItem(0);
+    }
+
+    public void goToAround(View view) {
+        pager.setCurrentItem(1);
+    }
+
+    public void goToMap(View view) {
+        pager.setCurrentItem(2);
+    }
+
+    public void goToNews(View view) {
+        pager.setCurrentItem(3);
+    }
+
+    public void goToFriendList(View view) {
+        pager.setCurrentItem(4);
     }
 
 
@@ -94,39 +124,38 @@ public class MainActivity extends FragmentActivity implements Constants {
     }
 
     public void settings(View view) {
-        Intent pSettingsIntent = new Intent(context, UserInfoActivity.class);
+        Intent pSettingsIntent = new Intent(context, UserFragment.class);
         startActivity(pSettingsIntent);
     }
+
     public void add(View view) {
-//        sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-//        sharedLatLng = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... params) {
-//                if (googleCloudMessaging == null) {
-//                    googleCloudMessaging = GoogleCloudMessaging
-//                            .getInstance(context);
-//                }
-//                Bundle pFriendDataBundle = new Bundle();
-//                sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-//                pFriendDataBundle.putString("action", ADD_ACTION);
-//                pFriendDataBundle.putString("login", sharedUserInfo.getString(KEY_LOGIN, ""));
-//                pFriendDataBundle.putString("friend_login", friendLogin.getText().toString());
-//                pFriendDataBundle.putString("x", sharedLatLng.getString("LAT", ""));
-//                pFriendDataBundle.putString("y", sharedLatLng.getString("LNG", ""));
-//                try {
-//                    googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pFriendDataBundle);
-//                    Log.e("SENDED", "ADD_REQUEST_SENDED");
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//        }.execute(null, null, null);
-//        Toast.makeText(context, "Request sended successufuly!", Toast.LENGTH_SHORT);
-        Intent pIntent = new Intent(ADD_LOCAL_ACTION);
-        sendBroadcast(pIntent);
-        container.removeView(friendBar);
+        sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+        sharedLatLng = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                if (googleCloudMessaging == null) {
+                    googleCloudMessaging = GoogleCloudMessaging
+                            .getInstance(context);
+                }
+                Bundle pFriendDataBundle = new Bundle();
+                sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+                pFriendDataBundle.putString("action", ADD_ACTION);
+                pFriendDataBundle.putString("login", sharedUserInfo.getString(KEY_LOGIN, ""));
+                pFriendDataBundle.putString("friend_login", friendLogin.getText().toString());
+                pFriendDataBundle.putString("x", sharedLatLng.getString("LAT", ""));
+                pFriendDataBundle.putString("y", sharedLatLng.getString("LNG", ""));
+                try {
+                    googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pFriendDataBundle);
+                    Log.e("SENDED", "ADD_REQUEST_SENDED");
+                    container.removeView(friendBar);
+                    Toast.makeText(context, "Request sended successufuly!", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute(null, null, null);
     }
 
     private class PagerAdapter extends FragmentStatePagerAdapter {

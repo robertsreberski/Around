@@ -1,7 +1,6 @@
-package com.StrapleGroup.around.ui.view;
+package com.StrapleGroup.around.ui.view.fragments;
 
 import android.content.*;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,20 +16,17 @@ import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.DataManagerImpl;
-import com.StrapleGroup.around.database.OpenHelper;
 import com.StrapleGroup.around.database.base.FriendsInfo;
-import com.StrapleGroup.around.database.intefaces.DataManager;
-import com.StrapleGroup.around.database.tables.FriendsInfoTable;
 import com.StrapleGroup.around.ui.controler.SmartListAdapter;
+import com.StrapleGroup.around.ui.view.MainActivity;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 public class FriendsListFragment extends Fragment implements Constants {
     private Context context;
-    private DataManager dataManager;
+    private DataManagerImpl dataManager;
     private SharedPreferences userInfoPrefs;
     private ListView requestList;
     private GoogleCloudMessaging googleCloudMessaging;
@@ -50,17 +46,10 @@ public class FriendsListFragment extends Fragment implements Constants {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
-        OpenHelper openHelper = new OpenHelper(this.context);
-        db = openHelper.getReadableDatabase();
-        //dataManager initialization
-
         deleteReceiver = new DeleteReceiver();
-        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
-                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND,
-                        FriendsInfoTable.FriendsInfoColumns.X_FRIEND, FriendsInfoTable.FriendsInfoColumns.Y_FRIEND},
-                null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
-        smartListAdapter = new SmartListAdapter(context, pCursor, 0);
         dataManager = new DataManagerImpl(this.context);
+        smartListAdapter = new SmartListAdapter(context, dataManager.getCompleteCursor(), 0);
+
     }
 
     @Override
@@ -77,19 +66,9 @@ public class FriendsListFragment extends Fragment implements Constants {
         startComps();
     }
 
-    private void startComps() {
-        IntentFilter addFilter = new IntentFilter(ADD_LOCAL_ACTION);
-        IntentFilter requestFilter = new IntentFilter(ADD_REQUEST_LOCAL_ACTION);
-        IntentFilter deleteFilter = new IntentFilter(DELETE_LOCAL_ACTION);
-        getActivity().registerReceiver(requestReceiver, requestFilter);
-        getActivity().registerReceiver(deleteReceiver, deleteFilter);
-        getActivity().registerReceiver(friendAddResultReceiver, addFilter);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        doFriendList();
     }
 
     @Override
@@ -104,67 +83,17 @@ public class FriendsListFragment extends Fragment implements Constants {
         Toast.makeText(context, "Can't add friend", Toast.LENGTH_SHORT).show();
     }
 
-    public void doFriendList() {
-        List<FriendsInfo> friendsList = dataManager.getAllFriendsInfo();
-        for (int pCount = 0; pCount < friendsList.size(); pCount++) {
-            int pInteger = pCount + 1;
-            final FriendsInfo pFriend = friendsList.get(pCount);
-            addFriend(pFriend);
-        }
-    }
     public void addFriend(final FriendsInfo aFriend) {
-//        sharedLocationInfo = getActivity().getSharedPreferences(LATLNG_PREFS, Context.MODE_PRIVATE);
         FriendsInfo pFriend = new FriendsInfo();
         pFriend.setLoginFriend("test_friend");
-        dataManager.saveLoginOnly(pFriend);
-        Cursor pAddCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{
-                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND,
-                        FriendsInfoTable.FriendsInfoColumns.X_FRIEND, FriendsInfoTable.FriendsInfoColumns.Y_FRIEND},
-                null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
-        smartListAdapter.swapCursor(pAddCursor);
-//        friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
-//        friendContainer = (ViewGroup) getActivity().findViewById(R.id.friend_container);
-//        final ViewGroup newFriend = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.friend_item, null);
-//        ((TextView) newFriend.findViewById(R.id.friend_name)).setText(aFriend.getLoginFriend());
-//        Location aLocation = new Location("myLoc");
-//        aLocation.setLatitude(Double.parseDouble(sharedLocationInfo.getString("LAT", "")));
-//        aLocation.setLongitude(Double.parseDouble(sharedLocationInfo.getString("LNG", "")));
-//        Location pLocation = new Location("friendLoc");
-//        pLocation.setLatitude((double) aFriend.getXFriend());
-//        pLocation.setLongitude((double) aFriend.getYFriend());
-//        String t = Float.toString(aLocation.distanceTo(pLocation));
-//
-//        ((TextView) newFriend.findViewById(R.id.distance)).setText(t);
-//        newFriend.findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
-//                new AsyncTask<Void, Void, Void>() {
-//
-//                    @Override
-//                    protected Void doInBackground(Void... params) {
-//                        Bundle pResponse = new Bundle();
-//                        userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-//                        pResponse.putString(KEY_ACTION, DELETE_ACTION);
-//                        pResponse.putString(KEY_LOGIN, userInfoPrefs.getString(KEY_LOGIN, ""));
-//                        pResponse.putString("deleted_friend_login", aFriend.getLoginFriend());
-//                        pResponse.putString("number", Integer.toString(dataManager.getAllFriendsInfo().size()));
-//                        try {
-//                            googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
-//                            Log.i("RESPONSE_SEND", "SSUCCESSFULY");
-//                            dataManager.deleteFriend(aFriend.getId());
-//                        } catch (IOException e) {
-//                            Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
-//                            e.printStackTrace();
-//                        }
-//                        return null;
-//                    }
-//                }.execute(null, null, null);
-//                friendContainer.removeView(newFriend);
-//            }
-//        });
-//        newFriend.setTag(aFriend.getLoginFriend());
-//        friendContainer.addView(newFriend, 0);
+        dataManager.saveLoginOnly(aFriend);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                smartListAdapter.swapCursor(dataManager.getCompleteCursor());
+                return null;
+            }
+        }.execute(null, null, null);
     }
 
     public void addRequest(final String aFriendName, String aLat, String aLng) {
@@ -194,12 +123,11 @@ public class FriendsListFragment extends Fragment implements Constants {
                             googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
                             Log.i("RESPONSE_SEND", "SUCCESSFULY");
                             dataManager.saveFriendInfo(pRequestingFriend);
-
+                            smartListAdapter.swapCursor(dataManager.getCompleteCursor());
                         } catch (IOException e) {
                             Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
                             e.printStackTrace();
                         }
-
                         return null;
                     }
                 }.execute(null, null, null);
@@ -236,6 +164,16 @@ public class FriendsListFragment extends Fragment implements Constants {
         requestContainer.addView(newRequest, 0);
     }
 
+
+    private void startComps() {
+        IntentFilter addFilter = new IntentFilter(ADD_LOCAL_ACTION);
+        IntentFilter requestFilter = new IntentFilter(ADD_REQUEST_LOCAL_ACTION);
+        IntentFilter deleteFilter = new IntentFilter(DELETE_LOCAL_ACTION);
+        getActivity().registerReceiver(requestReceiver, requestFilter);
+        getActivity().registerReceiver(deleteReceiver, deleteFilter);
+        getActivity().registerReceiver(friendAddResultReceiver, addFilter);
+    }
+
     private class FriendAddResultReceiver extends BroadcastReceiver {
 
         @Override
@@ -268,7 +206,8 @@ public class FriendsListFragment extends Fragment implements Constants {
         @Override
         public void onReceive(Context context, Intent intent) {
             String pLoginToDelete = intent.getStringExtra(KEY_LOGIN);
-            deleteFriend(pLoginToDelete);
+            dataManager.deleteFriend(dataManager.findFriend(pLoginToDelete));
+            smartListAdapter.swapCursor(dataManager.getCompleteCursor());
         }
     }
 }

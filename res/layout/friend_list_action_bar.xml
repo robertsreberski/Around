@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:background="#CC4435">
+
+    <ImageButton
+            android:layout_width="40dp"
+            android:background="@drawable/ic_action_add_person"
+            android:layout_height="40dp"
+            android:id="@+id/imageButton"
+            android:onClick="addFriend"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentTop="true" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:layout_marginTop="10dp" android:layout_marginBottom="5dp"/>
+</RelativeLayout>
