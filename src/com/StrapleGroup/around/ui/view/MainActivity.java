@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.StrapleGroup.around.R;
@@ -47,6 +48,7 @@ public class MainActivity extends FragmentActivity implements Constants {
         super.setContentView(R.layout.activity_main);
         context = getApplicationContext();
         this.initializePaging();
+        setButtons();
     }
 
     public static EditText getFriendLogin() {
@@ -74,6 +76,60 @@ public class MainActivity extends FragmentActivity implements Constants {
         pager.setCurrentItem(2);
     }
 
+    public void setButtons() {
+        final ImageButton pAroundButton = (ImageButton) findViewById(R.id.goToAround);
+        final ImageButton pHomeButton = (ImageButton) findViewById(R.id.goToUser);
+        final ImageButton pLogButton = (ImageButton) findViewById(R.id.goToNews);
+        final ImageButton pFriendListButton = (ImageButton) findViewById(R.id.goToFriendList);
+        pAroundButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!pAroundButton.isSelected()) {
+                    pAroundButton.setSelected(true);
+                    pHomeButton.setSelected(false);
+                    pLogButton.setSelected(false);
+                    pFriendListButton.setSelected(false);
+                    pager.setCurrentItem(1);
+                }
+            }
+        });
+        pHomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!pHomeButton.isSelected()) {
+                    pAroundButton.setSelected(false);
+                    pHomeButton.setSelected(true);
+                    pLogButton.setSelected(false);
+                    pFriendListButton.setSelected(false);
+                    pager.setCurrentItem(0);
+                }
+            }
+        });
+        pLogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!pLogButton.isSelected()) {
+                    pAroundButton.setSelected(false);
+                    pHomeButton.setSelected(false);
+                    pLogButton.setSelected(true);
+                    pFriendListButton.setSelected(false);
+                    pager.setCurrentItem(3);
+                }
+            }
+        });
+        pFriendListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!pFriendListButton.isSelected()) {
+                    pAroundButton.setSelected(false);
+                    pHomeButton.setSelected(false);
+                    pLogButton.setSelected(false);
+                    pFriendListButton.setSelected(true);
+                    pager.setCurrentItem(4);
+                }
+            }
+        });
+    }
     public void logoff(View v) {
         sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
         sharedUserInfo.edit().clear().commit();
@@ -86,26 +142,9 @@ public class MainActivity extends FragmentActivity implements Constants {
 
     }
 
-    public void goToUser(View view) {
-        pager.setCurrentItem(0);
-    }
-
-    public void goToAround(View view) {
-        pager.setCurrentItem(1);
-    }
-
     public void goToMap(View view) {
         pager.setCurrentItem(2);
     }
-
-    public void goToNews(View view) {
-        pager.setCurrentItem(3);
-    }
-
-    public void goToFriendList(View view) {
-        pager.setCurrentItem(4);
-    }
-
 
     public void addFriend(View view) {
         if (findViewById(R.id.friend_bar) == null) {

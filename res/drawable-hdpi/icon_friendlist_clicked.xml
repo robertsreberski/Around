@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/flat_bottom_buttons"></item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#ffcc4435"></solid>
+        </shape>
+    </item>
+    <item android:bottom="5dp" android:drawable="@drawable/flat_bottom_buttons"></item>
     <item android:drawable="@drawable/friendlist"
           android:bottom="15dp"
           android:top="15dp"
