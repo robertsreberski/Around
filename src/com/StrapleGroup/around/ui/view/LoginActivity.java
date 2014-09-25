@@ -52,20 +52,8 @@ public class LoginActivity extends Activity implements Constants {
         loginButton = (Button) findViewById(R.id.loginButton);
         loginProgress = (ProgressBar) findViewById(R.id.loginProgress);
         loginProgress.setVisibility(View.INVISIBLE);
-//        linkText = (TextView) findViewById(R.id.linkText);
-//        linkText.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent pGoRegister = new Intent(LoginActivity.this, RegisterActivity.class);
-//                startActivity(pGoRegister);
-//            }
-//        });
         connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         googleCloudMessaging = GoogleCloudMessaging.getInstance(this);
-        registrationId = getRegistrationId();
-        if (registrationId.isEmpty()) {
-            registerInBackground();
-        }
     }
 
     public void goRegister(View v) {
@@ -90,6 +78,10 @@ public class LoginActivity extends Activity implements Constants {
             if (ConnectionUtils.hasActiveInternetConnection(context)) {
                 loginButton.setText("");
                 loginProgress.setVisibility(View.VISIBLE);
+                registrationId = getRegistrationId();
+                if (registrationId.isEmpty()) {
+                    registerInBackground();
+                }
                 new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... params) {
@@ -147,6 +139,7 @@ public class LoginActivity extends Activity implements Constants {
 //        loginButton.setText("Log in");
         Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show();
     }
+
     protected void badRequest() {
         loginProgress.setVisibility(View.INVISIBLE);
         loginButton.setText("Log in");

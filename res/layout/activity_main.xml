@@ -10,16 +10,16 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true" android:id="@+id/linearLayout">
         <ImageButton
                 android:layout_width="70dp"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:id="@+id/goToUser" android:layout_alignParentLeft="true"
                 android:onClick="goToUser"
                 android:layout_alignParentStart="true"
                 android:layout_alignBottom="@+id/goToMap" android:layout_alignTop="@+id/goToAround"
-                android:background="#ffeaeaa8" android:layout_gravity="bottom|left|right|top"
+                android:background="@drawable/icon_home" android:layout_gravity="bottom|left|right|top"
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp" android:clickable="true" android:focusable="true"/>
         <View
@@ -28,11 +28,11 @@
                 android:background="@android:color/darker_gray"/>
         <ImageButton
                 android:layout_width="70dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:id="@+id/goToAround"
                 android:onClick="goToAround" android:layout_alignBottom="@+id/goToMap"
                 android:layout_toRightOf="@+id/imageButton" android:layout_alignTop="@+id/goToMap"
-                android:background="#ffeaeaa8" android:layout_gravity="bottom|left|right|top"
+                android:background="@drawable/icon_around_you" android:layout_gravity="bottom|left|right|top"
                 android:layout_marginRight="0dp"
                 android:layout_marginLeft="0dp" android:clickable="true" android:focusable="true"/>
         <View
@@ -41,7 +41,7 @@
                 android:background="@android:color/darker_gray"/>
         <ImageButton
                 android:layout_width="80dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:id="@+id/goToMap"
                 android:onClick="goToMap"
                 android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
@@ -55,11 +55,11 @@
                 android:background="@android:color/darker_gray"/>
         <ImageButton
                 android:layout_width="70dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:id="@+id/goToNews"
                 android:onClick="goToNews" android:layout_alignBottom="@+id/goToMap"
                 android:layout_toRightOf="@+id/goToMap" android:layout_alignTop="@+id/goToMap"
-                android:background="#ffeaeaa8" android:layout_gravity="bottom|left|right|top"
+                android:background="@drawable/icon_logs" android:layout_gravity="bottom|left|right|top"
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp" android:clickable="true" android:focusable="true"/>
         <View
@@ -68,13 +68,13 @@
                 android:background="@android:color/darker_gray"/>
         <ImageButton
                 android:layout_width="70dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:id="@+id/goToFriendList"
                 android:onClick="goToFriendList"
                 android:layout_alignTop="@+id/goToNews" android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignBottom="@+id/goToNews"
-                android:background="#ffeaeaa8" android:layout_gravity="bottom|left|right|top"
+                android:background="@drawable/icon_friendlist" android:layout_gravity="bottom|left|right|top"
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp" android:clickable="true" android:focusable="true"/>
     </LinearLayout>

@@ -35,7 +35,7 @@
                 android:value="@integer/google_play_services_version"/>
 
         <activity
-                android:name=".ui.view.AroundMapFragment"
+                android:name=".ui.view.fragments.AroundMapFragment"
                 android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".ui.view.FriendsListFragment"
+                android:name=".ui.view.fragments.FriendsListFragment"
                 android:label="@string/title_activity_friends_list">
         </activity>
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/flat_bottom_buttons"></item>
+    <item android:drawable="@drawable/aroundyou"
+          android:bottom="5dp"
+          android:top="5dp"
+          android:left="10dp"
+          android:right="10dp"></item>
+</layer-list>
