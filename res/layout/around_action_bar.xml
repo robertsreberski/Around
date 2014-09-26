@@ -4,4 +4,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp" android:background="#CC4435">
 
+    <ImageView
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/around"
+            android:id="@+id/imageView"
+            android:layout_alignParentTop="true" android:layout_marginLeft="20dp" android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"/>
 </RelativeLayout>
