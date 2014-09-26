@@ -9,7 +9,7 @@
               tools:context="${packageName}.${activityClass}">
     <include android:layout_width="match_parent"
              android:layout_height="60dp"
-             layout="@layout/friend_list_action_bar"/>
+             layout="@layout/action_bar_friends"/>
     <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
