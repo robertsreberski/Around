@@ -34,7 +34,7 @@
                 android:id="@+id/goToMap"
                 android:onClick="goToMap"
                 android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
-                android:background="#ffcc4435" android:layout_gravity="bottom|left|right|top"
+                android:background="@drawable/main_around" android:layout_gravity="bottom|left|right|top"
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp" android:adjustViewBounds="false" android:clickable="true"
                 android:focusable="true"/>

@@ -21,22 +21,21 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="robert"
             android:id="@+id/textView2"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="13dp"
             android:layout_below="@+id/include" android:layout_toRightOf="@+id/profilePhoto"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-            android:layout_above="@+id/textView" android:layout_marginLeft="15dp"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/textView"
-            android:layout_alignBottom="@+id/profilePhoto" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_marginLeft="15dp"
+            />
     <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/listView"
             android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
             android:layout_below="@+id/profilePhoto"/>
+    <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/online"
+            android:id="@+id/imageView"
+            android:layout_above="@+id/listView" android:layout_alignRight="@+id/profilePhoto"
+            android:layout_alignEnd="@+id/profilePhoto"/>
 </RelativeLayout>
