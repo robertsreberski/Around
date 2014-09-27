@@ -2,4 +2,9 @@
 <resources>
     <string name="key_notifications">notifications</string>
     <string name="name_notifications">Notifications</string>
+    <string-array name="range">
+        <item>1000</item>
+        <item>2000</item>
+        <item>5000</item>
+    </string-array>
 </resources>

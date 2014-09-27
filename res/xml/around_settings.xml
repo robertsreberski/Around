@@ -5,5 +5,9 @@
             android:key="@string/key_notifications"
             android:title="@string/name_notifications"
             android:defaultValue="true"></CheckBoxPreference>
-
+    <ListPreference
+            android:key="around_range"
+            android:title="Range of view"
+            android:entries="@array/range"
+            android:entryValues="@array/range"></ListPreference>
 </PreferenceScreen>
