@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.ui.utils.AroundViewPager;
 import com.StrapleGroup.around.ui.view.fragments.*;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -40,7 +41,7 @@ public class MainActivity extends FragmentActivity implements Constants {
     private static EditText friendLogin;
     private LinearLayout friendBar;
     private LinearLayout container;
-    private ViewPager pager;
+    private AroundViewPager pager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class MainActivity extends FragmentActivity implements Constants {
         fragments.add(Fragment.instantiate(this, FriendsListFragment.class.getName()));
         this.pagerAdapter = new PagerAdapter(super.getSupportFragmentManager(), fragments);
 
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = (AroundViewPager) findViewById(R.id.pager);
         pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -141,6 +142,7 @@ public class MainActivity extends FragmentActivity implements Constants {
             }
         });
     }
+
     public void logoff(View v) {
         sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
         sharedUserInfo.edit().clear().commit();
@@ -222,4 +224,5 @@ public class MainActivity extends FragmentActivity implements Constants {
             return this.fragments.size();
         }
     }
+
 }

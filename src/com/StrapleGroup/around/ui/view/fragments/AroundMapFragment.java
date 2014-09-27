@@ -3,7 +3,6 @@ package com.StrapleGroup.around.ui.view.fragments;
 
 import android.content.*;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -24,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AroundMapFragment extends Fragment implements Constants {
 
 
-    private GoogleMap mapPane = null;
+    private GoogleMap mapPane;
 
     private Context context = null;
     private AtomicInteger msgId = new AtomicInteger();
@@ -44,36 +43,23 @@ public class AroundMapFragment extends Fragment implements Constants {
         sharedUserInfo = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
         // creating map
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map, container, false);
+
+        View pMapView = inflater.inflate(R.layout.fragment_map, container, false);
+        return pMapView;
     }
 
     @Override
     public void onStart() {
-        if (mapPane == null) {
-            mapPane = mapFragment.getMap();
-            mapCustomer();
-        }
+        mapCustomer();
         initLocationService();
         IntentFilter pIntentFilter = new IntentFilter(MARKER_LOCAL_ACTION);
         getActivity().registerReceiver(refreshReceiver, pIntentFilter);
         super.onStart();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        FragmentManager fm = getChildFragmentManager();
-        mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map_create);
-        if (mapFragment == null) {
-            mapFragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.map_create, mapFragment).commit();
-        }
-
-
     }
 
     @Override
@@ -84,8 +70,24 @@ public class AroundMapFragment extends Fragment implements Constants {
         super.onStop();
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FragmentManager fm = getChildFragmentManager();
+        mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map_create);
+        if (mapFragment == null) {
+            mapFragment = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.map_create, mapFragment).commit();
+        }
+    }
 
     public void mapCustomer() {
+        mapPane = mapFragment.getMap();
+        SharedPreferences pLatLngPrefs = getActivity().getSharedPreferences(LATLNG_PREFS, Context.MODE_PRIVATE);
+        CameraPosition pCameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(Double.parseDouble(pLatLngPrefs.getString("LAT", "")), Double.parseDouble(pLatLngPrefs.getString("LNG", "")))).zoom(15).build();
+        mapPane.moveCamera(CameraUpdateFactory
+                .newCameraPosition(pCameraPosition));
         mapPane.setMyLocationEnabled(false);
         mapPane.setBuildingsEnabled(true);
         mapPane.getUiSettings().setAllGesturesEnabled(false);

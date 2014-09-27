@@ -25,17 +25,18 @@
             android:layout_below="@+id/include" android:layout_toRightOf="@+id/profilePhoto"
             android:layout_marginLeft="15dp"
             />
-    <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/listView"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-            android:layout_below="@+id/profilePhoto"/>
     <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/online"
             android:id="@+id/imageView"
-            android:layout_above="@+id/listView" android:layout_alignRight="@+id/profilePhoto"
+            android:layout_alignBottom="@+id/profilePhoto" android:layout_alignRight="@+id/profilePhoto"
             android:layout_alignEnd="@+id/profilePhoto"/>
+    <fragment android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:name="com.StrapleGroup.around.ui.view.fragments.AroundSettingsFragment"
+              android:id="@+id/fragment" android:layout_below="@+id/profilePhoto" android:layout_alignParentLeft="true"
+              android:layout_alignParentStart="true" android:layout_marginTop="27dp"
+              android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+              android:layout_alignParentBottom="true"/>
 </RelativeLayout>
