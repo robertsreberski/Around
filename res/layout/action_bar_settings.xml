@@ -6,19 +6,19 @@
                 android:background="#CC4435">
 
     <ImageView
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
             android:background="@drawable/around"
             android:id="@+id/mainSubView"
-            android:layout_alignParentTop="true" android:layout_marginLeft="20dp" android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_alignParentTop="true" android:layout_marginLeft="20dp" android:layout_marginTop="18dp"
+            android:layout_marginBottom="18dp"/>
     <ImageView
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
             android:id="@+id/imageView"
             android:background="@drawable/sub_settings"
             android:layout_alignParentTop="true" android:layout_toRightOf="@+id/mainSubView"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_alignParentBottom="true" android:layout_marginBottom="6dp"/>
+            android:layout_marginTop="18dp"
+            android:layout_alignParentBottom="true" android:layout_marginBottom="9dp"/>
 </RelativeLayout>

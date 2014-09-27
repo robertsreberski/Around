@@ -81,6 +81,17 @@ public class MainActivity extends FragmentActivity implements Constants {
         final ImageButton pHomeButton = (ImageButton) findViewById(R.id.goToUser);
         final ImageButton pLogButton = (ImageButton) findViewById(R.id.goToNews);
         final ImageButton pFriendListButton = (ImageButton) findViewById(R.id.goToFriendList);
+        final ImageButton pMapButton = (ImageButton) findViewById(R.id.goToMap);
+        pMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pAroundButton.setSelected(false);
+                pHomeButton.setSelected(false);
+                pLogButton.setSelected(false);
+                pFriendListButton.setSelected(false);
+                pager.setCurrentItem(2);
+            }
+        });
         pAroundButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,10 +151,6 @@ public class MainActivity extends FragmentActivity implements Constants {
             finish();
         }
 
-    }
-
-    public void goToMap(View view) {
-        pager.setCurrentItem(2);
     }
 
     public void addFriend(View view) {

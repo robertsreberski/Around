@@ -32,7 +32,6 @@
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:id="@+id/goToMap"
-                android:onClick="goToMap"
                 android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
                 android:background="@drawable/main_around" android:layout_gravity="bottom|left|right|top"
                 android:layout_marginLeft="0dp"
