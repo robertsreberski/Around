@@ -1,7 +1,6 @@
 package com.StrapleGroup.around.ui.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -143,17 +142,6 @@ public class MainActivity extends FragmentActivity implements Constants {
         });
     }
 
-    public void logoff(View v) {
-        sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-        sharedUserInfo.edit().clear().commit();
-        Log.i("GREAT", "Successfully logged off");
-        if (!sharedUserInfo.contains(KEY_LOGIN) && !sharedUserInfo.contains(KEY_PASS)) {
-            Intent logoffSuccessfulIntent = new Intent(this.context, LoginActivity.class);
-            startActivity(logoffSuccessfulIntent);
-            finish();
-        }
-
-    }
 
     public void addFriend(View view) {
         if (findViewById(R.id.friend_bar) == null) {
@@ -163,22 +151,13 @@ public class MainActivity extends FragmentActivity implements Constants {
             container.addView(friendBar, 1);
             friendLogin = (EditText) friendBar.findViewById(R.id.friend_field);
         }
-//        Intent pAddFriendIntent = new Intent(context, AddFriendActivity.class);
-//        startActivity(pAddFriendIntent);
     }
 
-    public void goFriendList(View view) {
-        pager.setCurrentItem(pager.getChildCount());
-    }
-
-    public void settings(View view) {
-        Intent pSettingsIntent = new Intent(context, UserFragment.class);
-        startActivity(pSettingsIntent);
-    }
 
     public void add(View view) {
         sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
         sharedLatLng = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
+        container.removeView(friendBar);
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -195,15 +174,20 @@ public class MainActivity extends FragmentActivity implements Constants {
                 pFriendDataBundle.putString("y", sharedLatLng.getString("LNG", ""));
                 try {
                     googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pFriendDataBundle);
-                    Log.e("SENDED", "ADD_REQUEST_SENDED");
-                    container.removeView(friendBar);
-                    Toast.makeText(context, "Request sended successufuly!", Toast.LENGTH_SHORT).show();
+                    Log.e("SENDED", "ADD_REQUEST_SENT");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 return null;
             }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                Toast.makeText(context, "Request sent successufuly!", Toast.LENGTH_SHORT).show();
+            }
         }.execute(null, null, null);
+
     }
 
     private class PagerAdapter extends FragmentStatePagerAdapter {

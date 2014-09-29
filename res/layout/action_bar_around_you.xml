@@ -10,14 +10,14 @@
             android:layout_height="match_parent"
             android:background="@drawable/around"
             android:id="@+id/mainSubView"
-            android:layout_alignParentTop="true" android:layout_marginLeft="15dp" android:layout_marginTop="18dp"
-            android:layout_marginBottom="18dp"/>
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentBottom="true" android:layout_alignParentTop="true"
+            android:layout_marginTop="16dp" android:layout_marginBottom="18dp"/>
     <ImageView
-            android:layout_width="35dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:id="@+id/imageView"
             android:background="@drawable/sub_you"
-            android:layout_alignParentTop="true" android:layout_toRightOf="@+id/mainSubView"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="18dp" android:layout_marginBottom="18dp"/>
+            android:id="@+id/imageView" android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/mainSubView" android:layout_marginBottom="18dp"
+            android:layout_marginTop="16dp" android:layout_marginLeft="8dp"/>
 </RelativeLayout>

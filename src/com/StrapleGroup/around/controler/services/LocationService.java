@@ -124,8 +124,6 @@ public class LocationService extends Service implements Constants {
             intent = new Intent(LOCATION_ACTION);
             Log.i("**************************************", "Location changed");
             if (isBetterLocation(currentLocation, previousBestLocation)) {
-                currentLocation.getLatitude();
-                currentLocation.getLongitude();
                 intent.putExtra("Latitude", currentLocation.getLatitude());
                 intent.putExtra("Longitude", currentLocation.getLongitude());
                 sendBroadcast(intent);

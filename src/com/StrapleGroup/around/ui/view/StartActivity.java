@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.controler.services.DataRefreshService;
+import com.StrapleGroup.around.controler.services.LocationService;
 
 /**
  * Created by Robert on 2014-09-21.
@@ -15,11 +17,10 @@ public class StartActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        Intent pDataLoadService = new Intent(this, DataRefreshService.class);
+        startService(pDataLoadService);
+        Intent intentLocationService = new Intent(this, LocationService.class);
+        startService(intentLocationService);
 //        if(checkIfLogin() == true){
         Intent pIntent = new Intent(this, MainActivity.class);
         startActivity(pIntent);
@@ -27,7 +28,6 @@ public class StartActivity extends Activity {
 //            Intent pIntent = new Intent(this, LoginActivity.class);
 //            startActivity(pIntent);
 //        }
-
     }
 
     private boolean checkIfLogin() {

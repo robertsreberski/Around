@@ -39,7 +39,6 @@ public class SmartListAdapter extends CursorAdapter {
     public void bindView(View view, final Context context, Cursor cursor) {
         ViewHolder pViewHolder = new ViewHolder();
         pViewHolder.login = (TextView) view.findViewById(R.id.friend_name);
-        pViewHolder.distance = (TextView) view.findViewById(R.id.distance);
         pViewHolder.deleteButton = (ImageButton) view.findViewById(R.id.delete);
         final String pFriendName = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
         pViewHolder.login.setText(pFriendName);

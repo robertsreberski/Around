@@ -134,7 +134,7 @@ public class FriendsListFragment extends Fragment implements Constants {
                 requestContainer.removeView(newRequest);
             }
         });
-        newRequest.findViewById(R.id.reject_button).setOnClickListener(new View.OnClickListener() {
+        newRequest.findViewById(R.id.decline_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new AsyncTask<Void, Void, Void>() {

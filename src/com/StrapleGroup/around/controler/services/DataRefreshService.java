@@ -1,5 +1,6 @@
 package com.StrapleGroup.around.controler.services;
 
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import com.StrapleGroup.around.database.OpenHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.LocationClient;
 
 import java.io.IOException;
@@ -28,7 +30,7 @@ import java.util.UUID;
 /**
  * Created by Robert on 2014-08-30.
  */
-public class DataLoadService extends Service implements Constants, GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class DataRefreshService extends Service implements Constants, GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
     private SendInfoTask sendInfo;
     private Timer looper;
     private Context context;
@@ -39,6 +41,8 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
     private Handler serviceHandler;
     private DataManagerImpl dataManager;
     private Location lastLocation;
+    private ActivityRecognitionClient activityRecognitionClient;
+    private PendingIntent mActivityRecognitionPendingIntent;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -50,6 +54,7 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
         super.onCreate();
         sendInfo = new SendInfoTask();
         looper = new Timer();
+        activityRecognitionClient = new ActivityRecognitionClient(this, this, this);
         locationClient = new LocationClient(this, this, this);
         Log.i("SERVICE_WORKING", "SENDING_DATA");
         context = getApplicationContext();
@@ -60,13 +65,17 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
         looper.scheduleAtFixedRate(sendInfo, 2 * 1000, 60 * 1000);
 
         serviceHandler = new Handler();
+        Intent activityRecognitionIntent = new Intent(
+                context, ActivityRecognitionService.class);
+        mActivityRecognitionPendingIntent =
+                PendingIntent.getService(this, 0, activityRecognitionIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
-        if (!locationClient.isConnected()) {
-            locationClient.connect();
-            Log.e("CONNECTION", "JUST_CONNECTED");
+        if (!activityRecognitionClient.isConnected()) {
+            activityRecognitionClient.connect();
         }
         super.onStart(intent, startId);
     }
@@ -142,12 +151,17 @@ public class DataLoadService extends Service implements Constants, GooglePlaySer
 
     @Override
     public void onConnected(Bundle bundle) {
+        if (!locationClient.isConnected()) {
+            activityRecognitionClient.requestActivityUpdates(1000, mActivityRecognitionPendingIntent);
+            locationClient.connect();
+            Log.e("CONNECTION", "JUST_CONNECTED");
+        }
 
     }
 
     @Override
     public void onDisconnected() {
-
+        activityRecognitionClient = null;
     }
 
     @Override

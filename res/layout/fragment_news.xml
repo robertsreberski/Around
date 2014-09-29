@@ -41,7 +41,7 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:text="Large Text"
-                            android:id="@+id/textView3"/>
+                            android:id="@+id/trial_activity"/>
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>

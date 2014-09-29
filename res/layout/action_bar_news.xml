@@ -10,7 +10,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/around"
             android:id="@+id/mainSubView"
-            android:layout_alignParentTop="true" android:layout_marginLeft="15dp" android:layout_marginTop="18dp"
+            android:layout_alignParentTop="true" android:layout_marginLeft="15dp" android:layout_marginTop="16dp"
             android:layout_marginBottom="18dp"/>
     <ImageView
             android:layout_width="50dp"
@@ -19,5 +19,5 @@
             android:background="@drawable/sub_news"
             android:layout_alignParentTop="true" android:layout_toRightOf="@+id/mainSubView"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="18dp" android:layout_marginBottom="18dp"/>
+            android:layout_marginTop="16dp" android:layout_marginBottom="18dp"/>
 </RelativeLayout>

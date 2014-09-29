@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
-import com.StrapleGroup.around.controler.services.DataLoadService;
-import com.StrapleGroup.around.controler.services.LocationService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -24,7 +22,6 @@ public class AroundMapFragment extends Fragment implements Constants {
 
 
     private GoogleMap mapPane;
-
     private Context context = null;
     private AtomicInteger msgId = new AtomicInteger();
     private SharedPreferences sharedUserInfo;
@@ -57,15 +54,12 @@ public class AroundMapFragment extends Fragment implements Constants {
     public void onStart() {
         mapCustomer();
         initLocationService();
-        IntentFilter pIntentFilter = new IntentFilter(MARKER_LOCAL_ACTION);
-        getActivity().registerReceiver(refreshReceiver, pIntentFilter);
         super.onStart();
     }
 
     @Override
     public void onStop() {
         getActivity().unregisterReceiver(locationReceiver);
-        getActivity().stopService(intentLocationService);
         getActivity().unregisterReceiver(refreshReceiver);
         super.onStop();
     }
@@ -84,10 +78,18 @@ public class AroundMapFragment extends Fragment implements Constants {
     public void mapCustomer() {
         mapPane = mapFragment.getMap();
         SharedPreferences pLatLngPrefs = getActivity().getSharedPreferences(LATLNG_PREFS, Context.MODE_PRIVATE);
-        CameraPosition pCameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(Double.parseDouble(pLatLngPrefs.getString("LAT", "")), Double.parseDouble(pLatLngPrefs.getString("LNG", "")))).zoom(15).build();
-        mapPane.moveCamera(CameraUpdateFactory
-                .newCameraPosition(pCameraPosition));
+        if (pLatLngPrefs.contains("LAT") && pLatLngPrefs.contains("LNG")) {
+            LatLng pLatLng = new LatLng(Double.parseDouble(pLatLngPrefs.getString("LAT", "")), Double.parseDouble(pLatLngPrefs.getString("LNG", "")));
+            BitmapDescriptor pMyLocIcon = BitmapDescriptorFactory.fromResource(R.drawable.my_loc_marker);
+            if (locMarker != null) {
+                locMarker.remove();
+            }
+            locMarker = mapPane.addMarker(new MarkerOptions().flat(true).icon(pMyLocIcon).position(pLatLng));
+            CameraPosition pCameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(Double.parseDouble(pLatLngPrefs.getString("LAT", "")), Double.parseDouble(pLatLngPrefs.getString("LNG", "")))).zoom(15).build();
+            mapPane.moveCamera(CameraUpdateFactory
+                    .newCameraPosition(pCameraPosition));
+        }
         mapPane.setMyLocationEnabled(false);
         mapPane.setBuildingsEnabled(true);
         mapPane.getUiSettings().setAllGesturesEnabled(false);
@@ -99,12 +101,10 @@ public class AroundMapFragment extends Fragment implements Constants {
     }
 
     private void initLocationService() {
-        Intent pDataLoadService = new Intent(context, DataLoadService.class);
-        getActivity().startService(pDataLoadService);
-        intentLocationService = new Intent(context, LocationService.class);
-        getActivity().startService(intentLocationService);
         IntentFilter locationFilter = new IntentFilter(LOCATION_ACTION);
         getActivity().registerReceiver(locationReceiver, locationFilter);
+        IntentFilter pIntentFilter = new IntentFilter(MARKER_LOCAL_ACTION);
+        getActivity().registerReceiver(refreshReceiver, pIntentFilter);
     }
 
     public void serviceUsing(Intent intent) {
