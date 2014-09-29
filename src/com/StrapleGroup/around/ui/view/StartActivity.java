@@ -21,13 +21,13 @@ public class StartActivity extends Activity {
         startService(pDataLoadService);
         Intent intentLocationService = new Intent(this, LocationService.class);
         startService(intentLocationService);
-//        if(checkIfLogin() == true){
+        if (checkIfLogin() == true) {
         Intent pIntent = new Intent(this, MainActivity.class);
         startActivity(pIntent);
-//        } else {
-//            Intent pIntent = new Intent(this, LoginActivity.class);
-//            startActivity(pIntent);
-//        }
+        } else {
+            Intent pIntent = new Intent(this, LoginActivity.class);
+            startActivity(pIntent);
+        }
     }
 
     private boolean checkIfLogin() {
