@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.database.DataManagerImpl;
@@ -42,7 +41,7 @@ public class SmartListAdapter extends CursorAdapter {
         pViewHolder.deleteButton = (ImageButton) view.findViewById(R.id.delete);
         final String pFriendName = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
         pViewHolder.login.setText(pFriendName);
-        pViewHolder.distance.setText("323");
+//        pViewHolder.distance.setText("323");
         pViewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,8 +68,6 @@ public class SmartListAdapter extends CursorAdapter {
 
     static class ViewHolder {
         TextView login;
-        ImageView image;
-        TextView distance;
         ImageButton deleteButton;
 
     }

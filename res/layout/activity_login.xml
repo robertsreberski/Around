@@ -61,6 +61,12 @@
             android:id="@+id/loginProgress"
             android:indeterminate="false"
             android:layout_alignTop="@+id/loginButton" android:layout_centerHorizontal="true"/>
+    <ImageButton
+            android:layout_width="300dp"
+            android:layout_height="90dp"
+            android:onClick="goRegister"
+            android:id="@+id/go_register" android:layout_below="@+id/loginProgress"
+            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
     <!--<TextView-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->
