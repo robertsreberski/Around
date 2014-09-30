@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,7 +124,6 @@ public class FriendsListFragment extends Fragment implements Constants {
                             googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
                             Log.i("RESPONSE_SEND", "SUCCESSFULY");
                             dataManager.saveFriendInfo(pRequestingFriend);
-                            smartListAdapter.swapCursor(dataManager.getCompleteCursor());
                         } catch (IOException e) {
                             Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
                             e.printStackTrace();
@@ -131,6 +131,7 @@ public class FriendsListFragment extends Fragment implements Constants {
                         return null;
                     }
                 }.execute(null, null, null);
+                smartListAdapter.swapCursor(dataManager.getCompleteCursor());
                 requestContainer.removeView(newRequest);
             }
         });
@@ -174,7 +175,7 @@ public class FriendsListFragment extends Fragment implements Constants {
         getActivity().registerReceiver(friendAddResultReceiver, addFilter);
     }
 
-    private class FriendAddResultReceiver extends BroadcastReceiver {
+    private class FriendAddResultReceiver extends WakefulBroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -190,7 +191,7 @@ public class FriendsListFragment extends Fragment implements Constants {
         }
     }
 
-    private class RequestReceiver extends BroadcastReceiver {
+    private class RequestReceiver extends WakefulBroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             friendListLayout = (LinearLayout) getActivity().findViewById(R.id.friend_list_layout);
@@ -201,7 +202,7 @@ public class FriendsListFragment extends Fragment implements Constants {
         }
     }
 
-    private class DeleteReceiver extends BroadcastReceiver {
+    private class DeleteReceiver extends WakefulBroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

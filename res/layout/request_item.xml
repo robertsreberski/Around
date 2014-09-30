@@ -15,19 +15,21 @@
             android:textSize="30dp"
             android:text="spajki"
             android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:layout_marginTop="10dp" android:layout_marginLeft="20dp"/>
+            android:layout_alignParentStart="true" android:layout_marginTop="10dp"/>
     <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/accept"
             android:id="@+id/accept_button"
-            android:layout_alignParentTop="true" android:layout_toLeftOf="@+id/decline_button"/>
+            android:layout_toStartOf="@+id/decline_button"
+            android:layout_alignBottom="@+id/decline_button" android:layout_toLeftOf="@+id/decline_button"
+            android:layout_marginRight="8dp"/>
     <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/decline"
             android:id="@+id/decline_button"
             android:layout_alignTop="@+id/imageButton"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true" android:layout_marginTop="5dp" android:layout_marginRight="5dp"/>
 </RelativeLayout>
