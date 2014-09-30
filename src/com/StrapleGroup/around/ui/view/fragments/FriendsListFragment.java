@@ -123,7 +123,6 @@ public class FriendsListFragment extends Fragment implements Constants {
                         try {
                             googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
                             Log.i("RESPONSE_SEND", "SUCCESSFULY");
-                            dataManager.saveFriendInfo(pRequestingFriend);
                         } catch (IOException e) {
                             Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
                             e.printStackTrace();
@@ -131,6 +130,7 @@ public class FriendsListFragment extends Fragment implements Constants {
                         return null;
                     }
                 }.execute(null, null, null);
+                dataManager.saveFriendInfo(pRequestingFriend);
                 smartListAdapter.swapCursor(dataManager.getCompleteCursor());
                 requestContainer.removeView(newRequest);
             }
