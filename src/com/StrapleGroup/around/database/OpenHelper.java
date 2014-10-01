@@ -25,4 +25,7 @@ public class OpenHelper extends SQLiteOpenHelper {
         FriendsInfoTable.onUpgrade(db, oldVersion, newVersion);
     }
 
+    public void deleteDb(SQLiteDatabase db) {
+        db.delete(DATABASE_NAME, null, null);
+    }
 }

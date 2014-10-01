@@ -41,17 +41,10 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     if (loginResult.getString(KEY_MESSAGE).equals("valid")) {
                         pLoginIntent.putExtra(KEY_MESSAGE, true);
                         if (loginResult.getString("refresh").equals("done")) {
+                            db.delete(openHelper.getDatabaseName(), null, null);
                             for (int i = 1; i <= Integer.parseInt(loginResult.getString("number")); i++) {
-//                                db.close();
-//                                context.deleteDatabase(openHelper.getDatabaseName());
-//                                db = openHelper.getWritableDatabase();
                                 FriendsInfo pFriend = new FriendsInfo();
                                 pFriend.setLoginFriend(loginResult.getString("friend_" + i));
-                                if (dataManager.findFriend(pFriend.getLoginFriend()) == -1) {
-                                dataManager.saveLoginOnly(pFriend);
-                                } else {
-                                    Log.e("ERROR", "NO FRIEND FOUND");
-                                }
                             }
                         } else {
                             Log.e("ERROR REFRESHING", "ERROR IN DATABASE");
@@ -62,7 +55,7 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                         pLoginIntent.putExtra(KEY_MESSAGE, false);
                     }
                     context.sendBroadcast(pLoginIntent);
-                }
+                    }
                 if (loginResult.getString(KEY_ACTION).equals("REGISTER")) {
                     Intent pRegisterIntent = new Intent(REGISTER_LOCAL_ACTION);
                     if (loginResult.getString(KEY_MESSAGE).equals(COMPLETED)) {
@@ -72,7 +65,7 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                         pRegisterIntent.putExtra(KEY_MESSAGE, false);
                     }
                     context.sendBroadcast(pRegisterIntent);
-                }
+                    }
                 if (loginResult.getString(KEY_ACTION).equals("ADD")) {
                     Intent pAddIntent = new Intent(ADD_LOCAL_ACTION);
                     if (loginResult.getString(KEY_MESSAGE).equals(COMPLETED)) {
@@ -87,7 +80,7 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                         return;
                     }
                     context.sendBroadcast(pAddIntent);
-                }
+                    }
                 if (loginResult.getString(KEY_ACTION).equals("FRIENDS")) {
                     Intent pRefreshIntent = new Intent(context, NotificatorAroundFriendsService.class);
                     if (loginResult.getString(KEY_MESSAGE).equals(COMPLETED)) {
@@ -105,9 +98,9 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                         if (loginResult.get(KEY_MESSAGE).equals(INCOMPLETED)) {
                             pRefreshIntent.putExtra(KEY_MESSAGE, false);
                         }
-                    }
+                        }
                     context.startService(pRefreshIntent);
-                }
+                    }
                 if (loginResult.getString(KEY_ACTION).equals("REQUEST")) {
                     Intent requestIntent = new Intent(ADD_REQUEST_LOCAL_ACTION);
                     userPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
@@ -123,6 +116,7 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     Intent deleteIntent = new Intent(DELETE_LOCAL_ACTION);
                     deleteIntent.putExtra(KEY_LOGIN, loginResult.getString(KEY_LOGIN, ""));
                     context.sendBroadcast(deleteIntent);
+                }
                 }
             }
         }

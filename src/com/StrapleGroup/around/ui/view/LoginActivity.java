@@ -169,7 +169,6 @@ public class LoginActivity extends Activity implements Constants {
                                 .getInstance(context);
                     }
                     registrationId = googleCloudMessaging.register(SENDER_ID);
-                    Log.e("HURRAY", "Registration Works");
                     sendRegistrationIdToBackend();
                     storeRegistrationId(context, registrationId);
                 } catch (IOException ex) {
