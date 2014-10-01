@@ -14,6 +14,7 @@ import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
+import com.StrapleGroup.around.database.tables.FriendsInfoTable;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.List;
@@ -41,7 +42,9 @@ public class GcmRequestReceiver extends WakefulBroadcastReceiver implements
                     if (loginResult.getString(KEY_MESSAGE).equals("valid")) {
                         pLoginIntent.putExtra(KEY_MESSAGE, true);
                         if (loginResult.getString("refresh").equals("done")) {
-                            db.delete(openHelper.getDatabaseName(), null, null);
+                            if (db != null) {
+                                db.delete(FriendsInfoTable.TABLE_NAME, null, null);
+                            }
                             for (int i = 1; i <= Integer.parseInt(loginResult.getString("number")); i++) {
                                 FriendsInfo pFriend = new FriendsInfo();
                                 pFriend.setLoginFriend(loginResult.getString("friend_" + i));
