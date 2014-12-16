@@ -15,7 +15,7 @@ import com.StrapleGroup.around.base.Constants;
 public class LocationService extends Service implements Constants {
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     public LocationManager locationManager;
-    public NearbyLocationListener listener;
+    public AroundLocationListener listener;
     public Location previousBestLocation = null;
     Intent intent;
     int counter = 0;
@@ -33,7 +33,7 @@ public class LocationService extends Service implements Constants {
     @Override
     public void onStart(Intent intent, int startId) {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        listener = new NearbyLocationListener();
+        listener = new AroundLocationListener();
 //        locationManager.re
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 40, listener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 40, listener);
@@ -118,12 +118,15 @@ public class LocationService extends Service implements Constants {
         return t;
     }
 
-    private class NearbyLocationListener implements LocationListener {
+    private class AroundLocationListener implements LocationListener {
 
         public void onLocationChanged(Location currentLocation) {
             intent = new Intent(LOCATION_ACTION);
             Log.i("**************************************", "Location changed");
             if (isBetterLocation(currentLocation, previousBestLocation)) {
+//                SharedPreferences.Editor pPrefsEditor = getApplicationContext().getSharedPreferences(Constants.USER_PREFS,MODE_PRIVATE).edit();
+//                pPrefsEditor.putString(KEY_X, Double.toString(currentLocation.getLatitude()));
+//                pPrefsEditor.putString(KEY_Y, Double.toString(currentLocation.getLongitude()));
                 intent.putExtra("Latitude", currentLocation.getLatitude());
                 intent.putExtra("Longitude", currentLocation.getLongitude());
                 sendBroadcast(intent);

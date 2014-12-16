@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:background="#ecf0f1"
               android:layout_width="match_parent"
@@ -9,10 +9,21 @@
               tools:context="${packageName}.${activityClass}">
     <include android:layout_width="match_parent"
              android:layout_height="60dp"
-             layout="@layout/action_bar_friends"/>
+             layout="@layout/action_bar_friends" android:id="@+id/include2"/>
     <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/listViewTest" android:layout_gravity="center_horizontal"/>
+            android:layout_height="452dp"
+            android:id="@+id/listViewTest" android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true" android:layout_below="@+id/include2"/>
+    <ImageButton
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:src="@drawable/pic_add_friend"
+            android:onClick="addFriend"
+            android:background="@drawable/circle_background"
+            android:id="@+id/button2" android:layout_gravity="right"
+            android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:elevation="8dp" android:layout_marginRight="17dp"
+            android:layout_marginBottom="17dp"/>
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,50 +1,41 @@
 package com.StrapleGroup.around.ui.view;
 
 import android.app.Activity;
-import android.content.*;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.ui.utils.ConnectionUtils;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import java.io.IOException;
-import java.util.UUID;
+import com.StrapleGroup.around.ui.utils.ImageCompressor;
 
 public class LoginActivity extends Activity implements Constants {
-    public static final String USER_PREFS = "userLoginData";
     private Context context;
     private EditText loginField;
     private EditText passField;
-    private LoginResultReceiver loginResultReceiver;
-    private SharedPreferences userInfoPreferences;
-    private SharedPreferences locationPreferences;
-    private IntentFilter loginResultFilter;
-    private String registrationId = null;
+    private SharedPreferences prefs;
     private String login = null;
-    private SharedPreferences gcmStorage;
-    private GoogleCloudMessaging googleCloudMessaging = null;
     private String pass = null;
     private Button loginButton = null;
     private ProgressBar loginProgress = null;
-    private TextView linkText = null;
-    private ConnectivityManager connectivityManager = null;
+//    private ConnectivityManager connectivityManager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginResultReceiver = new LoginResultReceiver();
-        loginResultFilter = new IntentFilter(LOGIN_LOCAL_ACTION);
 
         context = getApplicationContext();
         loginField = (EditText) findViewById(R.id.loginField);
@@ -52,8 +43,8 @@ public class LoginActivity extends Activity implements Constants {
         loginButton = (Button) findViewById(R.id.loginButton);
         loginProgress = (ProgressBar) findViewById(R.id.loginProgress);
         loginProgress.setVisibility(View.INVISIBLE);
-        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        googleCloudMessaging = GoogleCloudMessaging.getInstance(this);
+//        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
     }
 
     public void goRegister(View v) {
@@ -78,54 +69,46 @@ public class LoginActivity extends Activity implements Constants {
             if (ConnectionUtils.hasActiveInternetConnection(context)) {
                 loginButton.setText("");
                 loginProgress.setVisibility(View.VISIBLE);
-                registrationId = getRegistrationId();
-                if (registrationId.isEmpty()) {
-                    registerInBackground();
+                ImageCompressor pImageCompressor = new ImageCompressor();
+                prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+                SharedPreferences.Editor pPrefsEditor = prefs.edit();
+                pPrefsEditor.putString(KEY_LOGIN, login);
+                pPrefsEditor.putString(KEY_PASS, pass);
+                pPrefsEditor.putString(KEY_STATUS, STATUS_ONLINE);
+                pPrefsEditor.putString(KEY_PHOTO, pImageCompressor.encodeImage(BitmapFactory.decodeResource(getResources(), R.drawable.facebook_example)));
+                pPrefsEditor.apply();
+                try {
+                    int aSet = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
+                    Log.i("LOC", String.valueOf(aSet));
+                } catch (Settings.SettingNotFoundException e) {
+                    e.printStackTrace();
                 }
-                new AsyncTask<Void, Void, String>() {
+                new AsyncTask<Void, Void, Void>() {
+
                     @Override
-                    protected String doInBackground(Void... params) {
-                        googleCloudMessaging = GoogleCloudMessaging
-                                .getInstance(context);
-                        Bundle pLoginData = new Bundle();
-                        locationPreferences = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
-                        pLoginData.putString("action", LOGIN_ACTION);
-                        pLoginData.putString(KEY_LOGIN, login);
-                        pLoginData.putString(KEY_SERVER_PASS, pass);
-                        pLoginData.putString("x", locationPreferences.getString("LAT", ""));
-                        pLoginData.putString("y", locationPreferences.getString("LNG", ""));
-                        String id = "m-" + UUID.randomUUID().toString();
-                        try {
-                            googleCloudMessaging.send(SERVER_ID, id, pLoginData);
-                            Log.i("REQUESTED SUCCESSFUL",
-                                    "*************************************************");
-                        } catch (IOException e) {
-                            loginProgress.setVisibility(View.INVISIBLE);
-                            loginButton.setText("Log in");
-                            Toast.makeText(context, "Wrong login or password!", Toast.LENGTH_SHORT);
-                            Log.e("PROBLEM WITH LOGIN REQUEST",
-                                    "*******************************************************");
-                        }
+                    protected Void doInBackground(Void... params) {
+
+                        Log.e("DID IT", "Lets done");
                         return null;
                     }
-
-                }.execute(null, null, null);
+                };
+                /*
+                Space for RESTful
+                 */
+                nextActivity();
             } else {
                 noConnection();
             }
         }
     }
-
     @Override
     protected void onPause() {
-        unregisterReceiver(loginResultReceiver);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(loginResultReceiver, loginResultFilter);
     }
 
     protected void nextActivity() {
@@ -135,8 +118,8 @@ public class LoginActivity extends Activity implements Constants {
     }
 
     private void noConnection() {
-//        loginProgress.setVisibility(View.INVISIBLE);
-//        loginButton.setText("Log in");
+        loginProgress.setVisibility(View.INVISIBLE);
+        loginButton.setText("Log in");
         Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show();
     }
 
@@ -146,83 +129,4 @@ public class LoginActivity extends Activity implements Constants {
         Toast.makeText(this, "Unauthorized", Toast.LENGTH_SHORT).show();
     }
 
-    public int getAppVersion(Context context) {
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(
-                    context.getPackageName(), PackageManager.GET_META_DATA);
-            return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
-        }
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private void registerInBackground() {
-        new AsyncTask() {
-            @Override
-            protected String doInBackground(Object... params) {
-                String msg = "";
-                try {
-                    if (googleCloudMessaging == null) {
-                        googleCloudMessaging = GoogleCloudMessaging
-                                .getInstance(context);
-                    }
-                    registrationId = googleCloudMessaging.register(SENDER_ID);
-                    sendRegistrationIdToBackend();
-                    storeRegistrationId(context, registrationId);
-                } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
-                }
-                return msg;
-            }
-        }.execute(null, null, null);
-    }
-
-    private void sendRegistrationIdToBackend() throws IOException {
-        String msg = "";
-        Bundle data = new Bundle();
-        data.putString("my_action", "com.StrapleGroup.around.REGISTER");
-        String id = UUID.randomUUID().toString();
-        googleCloudMessaging.send(SENDER_ID + "@gcm.googleapis.com", "m-" + id, data);
-        Log.e("HURRAY", "Registration Works");
-    }
-
-    private void storeRegistrationId(Context context, String regId) {
-        gcmStorage = getSharedPreferences(GCM_PREFS, MODE_PRIVATE);
-        int appVersion = getAppVersion(context);
-        Log.i("REGID_SAVED", "Saving regId on app version " + appVersion);
-        SharedPreferences.Editor editor = gcmStorage.edit();
-        editor.putString(REG_ID, regId);
-        editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.commit();
-    }
-
-    private String getRegistrationId() {
-        gcmStorage = getSharedPreferences(GCM_PREFS, MODE_PRIVATE);
-        String registrationId = gcmStorage.getString(REG_ID, "");
-        if (registrationId.isEmpty()) {
-            Log.i("NO_REGID", "Registration not found.");
-            return "";
-        }
-        return registrationId;
-    }
-
-    private class LoginResultReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getBooleanExtra(KEY_MESSAGE, true)) {
-                userInfoPreferences = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-                SharedPreferences.Editor pEditor = userInfoPreferences.edit();
-                pEditor.putString(KEY_LOGIN, login);
-                pEditor.putString(KEY_PASS, pass);
-                pEditor.commit();
-                nextActivity();
-            } else {
-                badRequest();
-            }
-        }
-
-    }
 }

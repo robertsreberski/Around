@@ -22,8 +22,14 @@ public interface Constants {
 
 
     static final String KEY_ACTIVITY = "activity_name";
+    static final String KEY_PHOTO = "photo";
     static final String KEY_LOGIN = "login";
     static final String KEY_PASS = "pass";
+    static final String KEY_X = "x";
+    static final String KEY_Y = "y";
+    static final String KEY_STATUS = "status";
+    static final String STATUS_ONLINE = "online";
+    static final String STATUS_OFFLINE = "offline";
     static final String KEY_SERVER_PASS = "password";
     static final String KEY_ACTION = "action";
     static final String KEY_MESSAGE = "message";
@@ -36,7 +42,5 @@ public interface Constants {
     static final String COMPLETED = "completed";
     static final String INCOMPLETED = "incompleted";
 
-    static final String USER_PREFS = "userLoginData";
-    static final String LATLNG_PREFS = "latLngData";
-    static final String GCM_PREFS = "gcmStorage";
+    static final String USER_PREFS = "user_data";
 }

@@ -1,6 +1,9 @@
 package com.StrapleGroup.around.ui.view.fragments;
 
-import android.content.*;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,9 +24,6 @@ import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.ui.controler.SmartListAdapter;
 import com.StrapleGroup.around.ui.view.MainActivity;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import java.io.IOException;
-import java.util.UUID;
 
 public class FriendsListFragment extends Fragment implements Constants {
     private Context context;
@@ -86,8 +86,11 @@ public class FriendsListFragment extends Fragment implements Constants {
 
     public void addFriend(final FriendsInfo aFriend) {
         FriendsInfo pFriend = new FriendsInfo();
+        /*
+        Space for RESTful
+         */
         pFriend.setLoginFriend("test_friend");
-        dataManager.saveLoginOnly(aFriend);
+        dataManager.saveFriendInfo(aFriend);
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -114,21 +117,13 @@ public class FriendsListFragment extends Fragment implements Constants {
                     @Override
                     protected Void doInBackground(Void... params) {
                         userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-                        googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
-                        Bundle pResponse = new Bundle();
-                        pResponse.putString(KEY_ACTION, ADD_RESPONSE);
-                        pResponse.putString(KEY_MESSAGE, "accepted");
-                        pResponse.putString("friend_login", userInfoPrefs.getString(KEY_LOGIN, ""));
-                        pResponse.putString("login", aFriendName);
-                        try {
-                            googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
-                            dataManager.saveLoginOnly(pRequestingFriend);
+                         /*
+                        Space for RESTful
+                            */
+                        dataManager.saveFriendInfo(pRequestingFriend);
                             smartListAdapter.swapCursor(dataManager.getCompleteCursor());
                             Log.i("RESPONSE_SEND", "SUCCESSFULY");
-                        } catch (IOException e) {
                             Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
-                            e.printStackTrace();
-                        }
                         return null;
                     }
                 }.execute(null, null, null);
@@ -138,27 +133,6 @@ public class FriendsListFragment extends Fragment implements Constants {
         newRequest.findViewById(R.id.decline_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AsyncTask<Void, Void, Void>() {
-
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-                        googleCloudMessaging = GoogleCloudMessaging.getInstance(context);
-                        Bundle pResponse = new Bundle();
-                        pResponse.putString(KEY_ACTION, ADD_RESPONSE);
-                        pResponse.putString(KEY_MESSAGE, "unaccepted");
-                        pResponse.putString("friend_login", userInfoPrefs.getString(KEY_LOGIN, ""));
-                        pResponse.putString("login", aFriendName);
-                        try {
-                            googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pResponse);
-                            Log.i("RESPONSE_SEND", "SSUCCESSFULY");
-                        } catch (IOException e) {
-                            Log.i("RESPONSE_SEND", "UNSSUCCESSFULY");
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-                }.execute(null, null, null);
                 requestContainer.removeView(newRequest);
             }
         });

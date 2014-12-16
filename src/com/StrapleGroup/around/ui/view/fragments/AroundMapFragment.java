@@ -77,16 +77,16 @@ public class AroundMapFragment extends Fragment implements Constants {
 
     public void mapCustomer() {
         mapPane = mapFragment.getMap();
-        SharedPreferences pLatLngPrefs = getActivity().getSharedPreferences(LATLNG_PREFS, Context.MODE_PRIVATE);
-        if (pLatLngPrefs.contains("LAT") && pLatLngPrefs.contains("LNG")) {
-            LatLng pLatLng = new LatLng(Double.parseDouble(pLatLngPrefs.getString("LAT", "")), Double.parseDouble(pLatLngPrefs.getString("LNG", "")));
+        SharedPreferences pLatLngPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+        if (pLatLngPrefs.contains(KEY_X) && pLatLngPrefs.contains(KEY_Y)) {
+            LatLng pLatLng = new LatLng(Double.parseDouble(pLatLngPrefs.getString(KEY_X, "")), Double.parseDouble(pLatLngPrefs.getString(KEY_Y, "")));
             BitmapDescriptor pMyLocIcon = BitmapDescriptorFactory.fromResource(R.drawable.my_loc_marker);
             if (locMarker != null) {
                 locMarker.remove();
             }
             locMarker = mapPane.addMarker(new MarkerOptions().flat(true).icon(pMyLocIcon).position(pLatLng));
             CameraPosition pCameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(Double.parseDouble(pLatLngPrefs.getString("LAT", "")), Double.parseDouble(pLatLngPrefs.getString("LNG", "")))).zoom(15).build();
+                    .target(new LatLng(Double.parseDouble(pLatLngPrefs.getString(KEY_X, "")), Double.parseDouble(pLatLngPrefs.getString(KEY_Y, "")))).zoom(15).build();
             mapPane.moveCamera(CameraUpdateFactory
                     .newCameraPosition(pCameraPosition));
         }
@@ -120,14 +120,6 @@ public class AroundMapFragment extends Fragment implements Constants {
                 .target(pLatLng).zoom(15).build();
         mapPane.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
-    }
-
-    private boolean checkIfLogin() {
-        boolean pCheck = false;
-        if (sharedUserInfo.contains(KEY_LOGIN) && sharedUserInfo.contains(KEY_PASS)) {
-            pCheck = true;
-        }
-        return pCheck;
     }
 
     public void addMarker(LatLng latLng) {

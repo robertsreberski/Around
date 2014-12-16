@@ -22,10 +22,8 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.LocationClient;
 
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 
 /**
  * Created by Robert on 2014-08-30.
@@ -102,34 +100,35 @@ public class DataRefreshService extends Service implements Constants, GooglePlay
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    Bundle pLoginData = new Bundle();
-                    int pNumberFriends = dataManager.getAllFriendsInfo().size();
-                    sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-                    pLoginData.putString(KEY_ACTION, REFRESH_ACTION);
-                    pLoginData.putString(KEY_LOGIN, sharedUserInfo.getString(KEY_LOGIN, ""));
-                    if (checkIfLogin() && lastLocation != null) {
-                        pLoginData.putString("x", Double.toString(lastLocation.getLatitude()));
-                        pLoginData.putString("y", Double.toString(lastLocation.getLongitude()));
-                        pLoginData.putString("number", Integer.toString(pNumberFriends));
-                        String id = "m-" + UUID.randomUUID().toString();
-                        googleCloudMessaging = GoogleCloudMessaging
-                                .getInstance(context);
-                        try {
-                            googleCloudMessaging.send(SERVER_ID, id, pLoginData);
-                            Log.i("REQUESTED SUCCESSFUL", "*************************************************");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Log.e("PROBLEM WITH LOGIN REQUEST",
-                                    "*******************************************************");
-                        }
-                    }
+//                    Bundle pLoginData = new Bundle();
+//                    int pNumberFriends = dataManager.getAllFriendsInfo().size();
+//                    sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+//                    pLoginData.putString(KEY_ACTION, REFRESH_ACTION);
+//                    pLoginData.putString(KEY_LOGIN, sharedUserInfo.getString(KEY_LOGIN, ""));
+//                    if (checkIfLogin() && lastLocation != null) {
+//                        pLoginData.putString("x", Double.toString(lastLocation.getLatitude()));
+//                        pLoginData.putString("y", Double.toString(lastLocation.getLongitude()));
+//                        pLoginData.putString("number", Integer.toString(pNumberFriends));
+//                        String id = "m-" + UUID.randomUUID().toString();
+//                        googleCloudMessaging = GoogleCloudMessaging
+//                                .getInstance(context);
+//                        try {
+//                            googleCloudMessaging.send(SERVER_ID, id, pLoginData);
+//                            Log.i("REQUESTED SUCCESSFUL", "*************************************************");
+
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                            Log.e("PROBLEM WITH LOGIN REQUEST",
+//                                    "*******************************************************");
+//                        }
+//                    }
                     if (lastLocation != null) {
-                        sharedLocationInfo = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
+                        sharedLocationInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
                         SharedPreferences.Editor pEditor = sharedLocationInfo.edit();
                         Log.e("LATITUDE", Double.toString(lastLocation.getLatitude()));
                         Log.e("LONGTITUDE", Double.toString(lastLocation.getLongitude()));
-                        pEditor.putString("LAT", Double.toString(lastLocation.getLatitude()));
-                        pEditor.putString("LNG", Double.toString(lastLocation.getLongitude()));
+                        pEditor.putString(Constants.KEY_X, Double.toString(lastLocation.getLatitude()));
+                        pEditor.putString(Constants.KEY_Y, Double.toString(lastLocation.getLongitude()));
                         pEditor.commit();
                     }
                     return null;

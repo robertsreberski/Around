@@ -41,11 +41,11 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         return insertStatement.executeInsert();
     }
 
-    public long saveLoginOnly(FriendsInfo friendsInfo) {
-        insertStatement.clearBindings();
-        insertStatement.bindString(1, friendsInfo.getLoginFriend());
-        return insertStatement.executeInsert();
-    }
+//    public long saveLoginOnly(FriendsInfo friendsInfo) {
+//        insertStatement.clearBindings();
+//        insertStatement.bindString(1, friendsInfo.getLoginFriend());
+//        return insertStatement.executeInsert();
+//    }
 
     @Override
     public void update(FriendsInfo friendsInfo) {
@@ -64,6 +64,8 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
     @Override
     public void updateCoordinates(FriendsInfo friendsInfo, String id) {
         final ContentValues pValues = new ContentValues();
+        pValues.put(FriendsInfoColumns.STATUS, friendsInfo.getStatus());
+        pValues.put(FriendsInfoColumns.ACTIVITY, friendsInfo.getActivities());
         pValues.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
         pValues.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
         db.update(FriendsInfoTable.TABLE_NAME, pValues, BaseColumns._ID + "=" + id, null);
@@ -117,11 +119,11 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
             pFriendsInfo = new FriendsInfo();
             pFriendsInfo.setId(pCursor.getLong(0));
             pFriendsInfo.setLoginFriend(pCursor.getString(1));
-//            pFriendsInfo.setProfilePhoto(pCursor.getBlob(2));
-//            pFriendsInfo.setXFriend(pCursor.getDouble(3));
-//            pFriendsInfo.setYFriend(pCursor.getDouble(4));
-//            pFriendsInfo.setStatus(pCursor.getString(5));
-//            pFriendsInfo.setActivities(pCursor.getString(6));
+            pFriendsInfo.setProfilePhoto(pCursor.getBlob(2));
+            pFriendsInfo.setXFriend(pCursor.getDouble(3));
+            pFriendsInfo.setYFriend(pCursor.getDouble(4));
+            pFriendsInfo.setStatus(pCursor.getString(5));
+            pFriendsInfo.setActivities(pCursor.getString(6));
         }
         return pFriendsInfo;
     }

@@ -15,18 +15,9 @@
     <ImageView
             android:layout_width="75dp"
             android:layout_height="match_parent"
-            android:id="@+id/imageView"
+            android:id="@+id/photo"
             android:background="@drawable/sub_friends"
             android:layout_alignParentTop="true" android:layout_toRightOf="@+id/mainSubView"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp" android:layout_marginBottom="18dp"/>
-    <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButton"
-            android:background="@drawable/pic_add_friend"
-            android:onClick="addFriend"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true" android:layout_alignParentTop="true"
-            android:layout_marginRight="7dp" android:layout_marginTop="11dp" android:layout_marginBottom="11dp"/>
 </RelativeLayout>

@@ -15,7 +15,7 @@ public interface DataManager {
 
     public long saveFriendInfo(FriendsInfo friendInfo);
 
-    long saveLoginOnly(FriendsInfo friendsInfo);
+//    long saveLoginOnly(FriendsInfo friendsInfo);
 
     Cursor getCompleteCursor();
 

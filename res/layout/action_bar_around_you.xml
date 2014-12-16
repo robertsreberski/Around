@@ -17,7 +17,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:background="@drawable/sub_you"
-            android:id="@+id/imageView" android:layout_alignParentBottom="true"
+            android:id="@+id/photo" android:layout_alignParentBottom="true"
             android:layout_toRightOf="@+id/mainSubView" android:layout_marginBottom="18dp"
             android:layout_marginTop="16dp" android:layout_marginLeft="8dp"/>
 </RelativeLayout>

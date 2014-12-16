@@ -66,7 +66,8 @@
             android:layout_height="90dp"
             android:onClick="goRegister"
             android:id="@+id/go_register" android:layout_below="@+id/loginProgress"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
+            android:layout_alignRight="@+id/passField" android:layout_alignEnd="@+id/passField"
+            android:layout_alignLeft="@+id/passField" android:layout_alignStart="@+id/passField"/>
     <!--<TextView-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->
