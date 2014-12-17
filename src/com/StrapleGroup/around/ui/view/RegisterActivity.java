@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.ui.utils.ConnectionUtils;
-import com.StrapleGroup.around.ui.utils.ImageCompressor;
+import com.StrapleGroup.around.ui.utils.ImageHelper;
 
 /**
  * Created by Robert on 2014-08-27.
@@ -68,12 +68,12 @@ public class RegisterActivity extends Activity implements Constants {
 
                     @Override
                     protected Void doInBackground(Void... params) {
-                        ImageCompressor pImageCompressor = new ImageCompressor();
+                        ImageHelper pImageHelper = new ImageHelper();
                         SharedPreferences.Editor pPrefsEditor = getSharedPreferences(USER_PREFS, MODE_PRIVATE).edit();
                         pPrefsEditor.putString(KEY_LOGIN, login);
                         pPrefsEditor.putString(KEY_PASS, pass);
                         pPrefsEditor.putString(KEY_STATUS, STATUS_ONLINE);
-                        pPrefsEditor.putString(KEY_PHOTO, pImageCompressor.encodeImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example)));
+                        pPrefsEditor.putString(KEY_PHOTO, pImageHelper.encodeImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example)));
                         return null;
                     }
                 }.execute(null, null, null);

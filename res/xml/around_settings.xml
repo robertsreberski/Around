@@ -7,8 +7,8 @@
     <Preference android:title="Change Status"></Preference>
     <Preference android:title="Update_Photo"
                 android:key="update_photo"></Preference>
-    <Preference android:title="Change Photo">
-        <intent android:action="android.media.action.IMAGE_CAPTURE"/>
+    <Preference android:title="Change Photo"
+                android:key="change_photo">
     </Preference>
     <PreferenceCategory android:title="Application Options">
         <CheckBoxPreference

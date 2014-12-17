@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.ui.utils.ConnectionUtils;
-import com.StrapleGroup.around.ui.utils.ImageCompressor;
+import com.StrapleGroup.around.ui.utils.ImageHelper;
 
 public class LoginActivity extends Activity implements Constants {
     private Context context;
@@ -69,13 +69,13 @@ public class LoginActivity extends Activity implements Constants {
             if (ConnectionUtils.hasActiveInternetConnection(context)) {
                 loginButton.setText("");
                 loginProgress.setVisibility(View.VISIBLE);
-                ImageCompressor pImageCompressor = new ImageCompressor();
+                ImageHelper pImageHelper = new ImageHelper();
                 prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
                 SharedPreferences.Editor pPrefsEditor = prefs.edit();
                 pPrefsEditor.putString(KEY_LOGIN, login);
                 pPrefsEditor.putString(KEY_PASS, pass);
                 pPrefsEditor.putString(KEY_STATUS, STATUS_ONLINE);
-                pPrefsEditor.putString(KEY_PHOTO, pImageCompressor.encodeImage(BitmapFactory.decodeResource(getResources(), R.drawable.facebook_example)));
+                pPrefsEditor.putString(KEY_PHOTO, pImageHelper.encodeImage(BitmapFactory.decodeResource(getResources(), R.drawable.facebook_example)));
                 pPrefsEditor.apply();
                 try {
                     int aSet = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);

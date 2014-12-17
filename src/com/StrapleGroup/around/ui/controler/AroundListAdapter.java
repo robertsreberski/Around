@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
-import com.StrapleGroup.around.ui.utils.ImageCompressor;
+import com.StrapleGroup.around.ui.utils.ImageHelper;
 import com.google.android.gms.location.DetectedActivity;
 
 /**
@@ -32,7 +32,7 @@ public class AroundListAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        ImageCompressor pImageCompressor = new ImageCompressor();
+        ImageHelper pImageHelper = new ImageHelper();
         final double pLat = cursor.getDouble(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.X_FRIEND));
         final double pLng = cursor.getDouble(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.Y_FRIEND));
         Location pMyLocation = new Location("Me");
@@ -48,7 +48,7 @@ public class AroundListAdapter extends CursorAdapter {
             final String pLogin = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
             pViewHolder.login.setText(pLogin);
             pViewHolder.photo = (ImageView) view.findViewById(R.id.photo);
-            pViewHolder.photo.setImageBitmap(pImageCompressor.decodeImageFromBytes(cursor.getBlob(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO))));
+            pViewHolder.photo.setImageBitmap(pImageHelper.decodeImageFromBytes(cursor.getBlob(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO))));
             pViewHolder.distance = (TextView) view.findViewById(R.id.distance_view);
             pViewHolder.distance.setText((int) pMyLocation.distanceTo(pFriendLocation));
             pViewHolder.activity = (ImageView) view.findViewById(R.id.activity_view);

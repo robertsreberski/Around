@@ -9,6 +9,7 @@ public interface Constants {
     static final String REFRESH_ACTION = "com.StrapleGroup.gcm.LOCATION";
     static final String DELETE_ACTION = "com.StrapleGroup.gcm.DELETE";
 
+    static final String PHOTO_LOCAL_ACTION = "com.StrapleGroup.around.action.PHOTO";
     static final String DELETE_LOCAL_ACTION = "com.StrapleGroup.around.action.DELETE";
     static final String LOGIN_LOCAL_ACTION = "com.StrapleGroup.around.action.LOGIN";
     static final String REGISTER_LOCAL_ACTION = "com.StrapleGroup.around.action.REGISTER";
