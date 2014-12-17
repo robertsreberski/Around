@@ -3,6 +3,7 @@ package com.StrapleGroup.around.controler.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -46,35 +47,27 @@ public class LocationService extends Service implements Constants {
 
     protected boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
-            // A new location is always better than no location
             return true;
         }
-        // Check whether the new location fix is newer or older
         long timeDelta = location.getTime() - currentBestLocation.getTime();
         boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
         boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
         boolean isNewer = timeDelta > 0;
 
-        // If it's been more than two minutes since the current location, use the new location
-        // because the user has likely moved
         if (isSignificantlyNewer) {
             return true;
-            // If the new location is more than two minutes older, it must be worse
         } else if (isSignificantlyOlder) {
             return false;
         }
 
-        // Check whether the new location fix is more or less accurate
         int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
         boolean isLessAccurate = accuracyDelta > 0;
         boolean isMoreAccurate = accuracyDelta < 0;
         boolean isSignificantlyLessAccurate = accuracyDelta > 100;
 
-        // Check if the old and new location are from the same provider
         boolean isFromSameProvider = isSameProvider(location.getProvider(),
                 currentBestLocation.getProvider());
 
-        // Determine location quality using a combination of timeliness and accuracy
         if (isMoreAccurate) {
             return true;
         } else if (isNewer && !isLessAccurate) {
@@ -85,9 +78,6 @@ public class LocationService extends Service implements Constants {
         return false;
     }
 
-    /**
-     * Checks whether two providers are the same
-     */
     private boolean isSameProvider(String provider1, String provider2) {
         if (provider1 == null) {
             return provider2 == null;
@@ -97,7 +87,7 @@ public class LocationService extends Service implements Constants {
 
     @Override
     public void onDestroy() {
-        // handler.removeCallbacks(sendUpdatesToUI);
+//        handler.removeCallbacks(sendUpdatesToUI);
         super.onDestroy();
         Log.v("STOP_SERVICE", "DONE");
         locationManager.removeUpdates(listener);
@@ -124,9 +114,12 @@ public class LocationService extends Service implements Constants {
             intent = new Intent(LOCATION_ACTION);
             Log.i("**************************************", "Location changed");
             if (isBetterLocation(currentLocation, previousBestLocation)) {
-//                SharedPreferences.Editor pPrefsEditor = getApplicationContext().getSharedPreferences(Constants.USER_PREFS,MODE_PRIVATE).edit();
+                SharedPreferences.Editor pPrefsEditor = getApplicationContext().getSharedPreferences(Constants.USER_PREFS, MODE_PRIVATE).edit();
 //                pPrefsEditor.putString(KEY_X, Double.toString(currentLocation.getLatitude()));
 //                pPrefsEditor.putString(KEY_Y, Double.toString(currentLocation.getLongitude()));
+//                pPrefsEditor.commit();
+//                Log.e("LATITUDE", Double.toString(currentLocation.getLatitude()));
+//                Log.e("LONGTITUDE", Double.toString(currentLocation.getLongitude()));
                 intent.putExtra("Latitude", currentLocation.getLatitude());
                 intent.putExtra("Longitude", currentLocation.getLongitude());
                 sendBroadcast(intent);

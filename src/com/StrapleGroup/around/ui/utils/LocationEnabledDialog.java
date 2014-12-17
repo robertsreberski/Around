@@ -3,6 +3,7 @@ package com.StrapleGroup.around.ui.utils;
 import android.content.Context;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,20 +29,24 @@ public class LocationEnabledDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_location_enabled, container, false);
+        View pView = inflater.inflate(R.layout.fragment_location_enabled, container, false);
+
+        return pView;
 
     }
 
-    public int checkProviders() {
+    public void checkActiveMode() throws Settings.SettingNotFoundException {
         int answer = 0;
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        switch (Settings.Secure.getInt(getActivity().getContentResolver(), Settings.Secure.LOCATION_MODE)) {
+            case Settings.Secure.LOCATION_MODE_OFF:
 
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            case Settings.Secure.LOCATION_MODE_SENSORS_ONLY:
+
+            case Settings.Secure.LOCATION_MODE_BATTERY_SAVING:
+
+            case Settings.Secure.LOCATION_MODE_HIGH_ACCURACY:
 
         }
-
-        return answer;
     }
 }
-
 

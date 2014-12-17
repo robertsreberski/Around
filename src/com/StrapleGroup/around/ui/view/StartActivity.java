@@ -24,6 +24,7 @@ public class StartActivity extends FragmentActivity implements NetworkDialog.Not
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+//        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this).addApi().build()
         checkInternetConn();
     }
 

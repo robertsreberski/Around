@@ -162,6 +162,7 @@ public class FriendsListFragment extends Fragment implements Constants {
             pFriend.setYFriend(Double.parseDouble(intent.getStringExtra("LNG")));
             dataManager.saveFriendInfo(pFriend);
             addFriend(pFriend);
+
         }
     }
 

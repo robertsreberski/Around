@@ -17,10 +17,9 @@ import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.location.ActivityRecognitionClient;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,19 +27,18 @@ import java.util.TimerTask;
 /**
  * Created by Robert on 2014-08-30.
  */
-public class DataRefreshService extends Service implements Constants, GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class DataRefreshService extends Service implements Constants, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
     private SendInfoTask sendInfo;
     private Timer looper;
     private Context context;
-    private GoogleCloudMessaging googleCloudMessaging;
-    private LocationClient locationClient;
     private SharedPreferences sharedUserInfo;
     private SharedPreferences sharedLocationInfo;
     private Handler serviceHandler;
+    private GoogleApiClient googleApiClient;
     private DataManagerImpl dataManager;
     private Location lastLocation;
-    private ActivityRecognitionClient activityRecognitionClient;
     private PendingIntent mActivityRecognitionPendingIntent;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -52,8 +50,6 @@ public class DataRefreshService extends Service implements Constants, GooglePlay
         super.onCreate();
         sendInfo = new SendInfoTask();
         looper = new Timer();
-        activityRecognitionClient = new ActivityRecognitionClient(this, this, this);
-        locationClient = new LocationClient(this, this, this);
         Log.i("SERVICE_WORKING", "SENDING_DATA");
         context = getApplicationContext();
         SQLiteOpenHelper openHelper = new OpenHelper(this.context);
@@ -61,19 +57,20 @@ public class DataRefreshService extends Service implements Constants, GooglePlay
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
         looper.scheduleAtFixedRate(sendInfo, 2 * 1000, 60 * 1000);
-
         serviceHandler = new Handler();
+        googleApiClient = new GoogleApiClient.Builder(this).addApi(ActivityRecognition.API).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
         Intent activityRecognitionIntent = new Intent(
                 context, ActivityRecognitionService.class);
         mActivityRecognitionPendingIntent =
                 PendingIntent.getService(this, 0, activityRecognitionIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
+
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
-        if (!activityRecognitionClient.isConnected()) {
-            activityRecognitionClient.connect();
+        if (!googleApiClient.isConnected()) {
+            googleApiClient.connect();
         }
         super.onStart(intent, startId);
     }
@@ -94,8 +91,8 @@ public class DataRefreshService extends Service implements Constants, GooglePlay
     }
 
     public void sendLocation() {
-        if (locationClient.isConnected()) {
-            lastLocation = locationClient.getLastLocation();
+        if (googleApiClient.isConnected()) {
+            lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             setLastLocation(lastLocation);
             new AsyncTask<Void, Void, Void>() {
                 @Override
@@ -150,17 +147,14 @@ public class DataRefreshService extends Service implements Constants, GooglePlay
 
     @Override
     public void onConnected(Bundle bundle) {
-        if (!locationClient.isConnected()) {
-            activityRecognitionClient.requestActivityUpdates(1000, mActivityRecognitionPendingIntent);
-            locationClient.connect();
+//            ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 1000, mActivityRecognitionPendingIntent);
             Log.e("CONNECTION", "JUST_CONNECTED");
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 1000, mActivityRecognitionPendingIntent);
         }
 
-    }
-
     @Override
-    public void onDisconnected() {
-        activityRecognitionClient = null;
+    public void onConnectionSuspended(int i) {
+
     }
 
     @Override
