@@ -2,6 +2,7 @@ package com.StrapleGroup.around.ui.view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,7 +17,10 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.database.DataManagerImpl;
+import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.ui.utils.AroundViewPager;
+import com.StrapleGroup.around.ui.utils.ImageHelper;
 import com.StrapleGroup.around.ui.view.fragments.*;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -149,41 +153,21 @@ public class MainActivity extends FragmentActivity implements Constants {
     }
 //
 //
-//    public void add(View view) {
-//        sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-//        sharedLatLng = getSharedPreferences(LATLNG_PREFS, MODE_PRIVATE);
-//        container.removeView(friendBar);
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... params) {
-//                if (googleCloudMessaging == null) {
-//                    googleCloudMessaging = GoogleCloudMessaging
-//                            .getInstance(context);
-//                }
-//                Bundle pFriendDataBundle = new Bundle();
-//                sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-//                pFriendDataBundle.putString("action", ADD_ACTION);
-//                pFriendDataBundle.putString("login", sharedUserInfo.getString(KEY_LOGIN, ""));
-//                pFriendDataBundle.putString("friend_login", friendLogin.getText().toString());
-//                pFriendDataBundle.putString("x", sharedLatLng.getString("LAT", ""));
-//                pFriendDataBundle.putString("y", sharedLatLng.getString("LNG", ""));
-//                try {
-//                    googleCloudMessaging.send(SERVER_ID, "m-" + UUID.randomUUID().toString(), pFriendDataBundle);
-//                    Log.e("SENDED", "ADD_REQUEST_SENT");
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                super.onPostExecute(aVoid);
-//                Toast.makeText(context, "Request sent successufuly!", Toast.LENGTH_SHORT).show();
-//            }
-//        }.execute(null, null, null);
-//
-//    }
+public void add(View view) {
+    sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+    container.removeView(friendBar);
+    ImageHelper pImageHelper = new ImageHelper();
+    DataManagerImpl pDataManager = new DataManagerImpl(context);
+    FriendsInfo pFriend = new FriendsInfo();
+    pFriend.setId(0);
+    pFriend.setLoginFriend(friendLogin.getText().toString());
+    pFriend.setActivities(Integer.toString(1));
+    pFriend.setProfilePhoto(pImageHelper.encodeImage(BitmapFactory.decodeResource(getResources(), R.drawable.facebook_example)));
+    pFriend.setStatus(STATUS_ONLINE);
+    pFriend.setXFriend(32.1231);
+    pFriend.setYFriend(32.5345);
+    pDataManager.saveFriendInfo(pFriend);
+}
 
     private class PagerAdapter extends FragmentStatePagerAdapter {
         private List<Fragment> fragments;

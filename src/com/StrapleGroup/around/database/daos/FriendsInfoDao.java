@@ -33,7 +33,7 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
     public long save(FriendsInfo friendsInfo) {
         insertStatement.clearBindings();
         insertStatement.bindString(1, friendsInfo.getLoginFriend());
-        insertStatement.bindBlob(2, friendsInfo.getProfilePhoto());
+        insertStatement.bindString(2, friendsInfo.getProfilePhoto());
         insertStatement.bindDouble(2, friendsInfo.getXFriend());
         insertStatement.bindDouble(3, friendsInfo.getYFriend());
         insertStatement.bindString(5, friendsInfo.getStatus());
@@ -119,7 +119,7 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
             pFriendsInfo = new FriendsInfo();
             pFriendsInfo.setId(pCursor.getLong(0));
             pFriendsInfo.setLoginFriend(pCursor.getString(1));
-            pFriendsInfo.setProfilePhoto(pCursor.getBlob(2));
+            pFriendsInfo.setProfilePhoto(pCursor.getString(2));
             pFriendsInfo.setXFriend(pCursor.getDouble(3));
             pFriendsInfo.setYFriend(pCursor.getDouble(4));
             pFriendsInfo.setStatus(pCursor.getString(5));

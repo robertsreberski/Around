@@ -3,7 +3,6 @@ package com.StrapleGroup.around.controler.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -114,12 +113,6 @@ public class LocationService extends Service implements Constants {
             intent = new Intent(LOCATION_ACTION);
             Log.i("**************************************", "Location changed");
             if (isBetterLocation(currentLocation, previousBestLocation)) {
-                SharedPreferences.Editor pPrefsEditor = getApplicationContext().getSharedPreferences(Constants.USER_PREFS, MODE_PRIVATE).edit();
-//                pPrefsEditor.putString(KEY_X, Double.toString(currentLocation.getLatitude()));
-//                pPrefsEditor.putString(KEY_Y, Double.toString(currentLocation.getLongitude()));
-//                pPrefsEditor.commit();
-//                Log.e("LATITUDE", Double.toString(currentLocation.getLatitude()));
-//                Log.e("LONGTITUDE", Double.toString(currentLocation.getLongitude()));
                 intent.putExtra("Latitude", currentLocation.getLatitude());
                 intent.putExtra("Longitude", currentLocation.getLongitude());
                 sendBroadcast(intent);

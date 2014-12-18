@@ -56,14 +56,14 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
         SQLiteDatabase db = openHelper.getWritableDatabase();
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
-        looper.scheduleAtFixedRate(sendInfo, 2 * 1000, 60 * 1000);
-        serviceHandler = new Handler();
         googleApiClient = new GoogleApiClient.Builder(this).addApi(ActivityRecognition.API).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
         Intent activityRecognitionIntent = new Intent(
                 context, ActivityRecognitionService.class);
         mActivityRecognitionPendingIntent =
                 PendingIntent.getService(this, 0, activityRecognitionIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
+        looper.scheduleAtFixedRate(sendInfo, 2 * 1000, 60 * 1000);
+        serviceHandler = new Handler();
 
     }
 
@@ -97,28 +97,6 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-//                    Bundle pLoginData = new Bundle();
-//                    int pNumberFriends = dataManager.getAllFriendsInfo().size();
-//                    sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-//                    pLoginData.putString(KEY_ACTION, REFRESH_ACTION);
-//                    pLoginData.putString(KEY_LOGIN, sharedUserInfo.getString(KEY_LOGIN, ""));
-//                    if (checkIfLogin() && lastLocation != null) {
-//                        pLoginData.putString("x", Double.toString(lastLocation.getLatitude()));
-//                        pLoginData.putString("y", Double.toString(lastLocation.getLongitude()));
-//                        pLoginData.putString("number", Integer.toString(pNumberFriends));
-//                        String id = "m-" + UUID.randomUUID().toString();
-//                        googleCloudMessaging = GoogleCloudMessaging
-//                                .getInstance(context);
-//                        try {
-//                            googleCloudMessaging.send(SERVER_ID, id, pLoginData);
-//                            Log.i("REQUESTED SUCCESSFUL", "*************************************************");
-
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                            Log.e("PROBLEM WITH LOGIN REQUEST",
-//                                    "*******************************************************");
-//                        }
-//                    }
                     if (lastLocation != null) {
                         sharedLocationInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
                         SharedPreferences.Editor pEditor = sharedLocationInfo.edit();
@@ -147,7 +125,6 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
 
     @Override
     public void onConnected(Bundle bundle) {
-//            ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 1000, mActivityRecognitionPendingIntent);
             Log.e("CONNECTION", "JUST_CONNECTED");
         ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 1000, mActivityRecognitionPendingIntent);
         }

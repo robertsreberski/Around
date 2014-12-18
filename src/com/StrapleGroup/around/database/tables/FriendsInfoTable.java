@@ -21,7 +21,7 @@ public class FriendsInfoTable {
         build.append("CREATE TABLE " + FriendsInfoTable.TABLE_NAME + " (");
         build.append(BaseColumns._ID + " INTEGER PRIMARY KEY, ");
         build.append(FriendsInfoColumns.LOGIN_FRIEND + " TEXT NOT NULL UNIQUE, ");
-        build.append(FriendsInfoColumns.PROFILE_PHOTO + " MEDIUMBLOB, ");
+        build.append(FriendsInfoColumns.PROFILE_PHOTO + " TEXT, ");
         build.append(FriendsInfoColumns.X_FRIEND + " DOUBLE, ");
         build.append(FriendsInfoColumns.Y_FRIEND + " DOUBLE, ");
         build.append(FriendsInfoColumns.STATUS + " TEXT, ");

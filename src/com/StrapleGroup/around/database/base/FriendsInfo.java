@@ -4,15 +4,15 @@ public class FriendsInfo extends ModelBase {
     private String login_friend;
     private double x_friend;
     private double y_friend;
-    private byte[] profilePhoto;
+    private String profilePhoto;
     private String activities;
     private String status;
 
-    public byte[] getProfilePhoto() {
+    public String getProfilePhoto() {
         return profilePhoto;
     }
 
-    public void setProfilePhoto(byte[] profilePhoto) {
+    public void setProfilePhoto(String profilePhoto) {
         this.profilePhoto = profilePhoto;
     }
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.DataManagerImpl;
+import com.StrapleGroup.around.database.OpenHelper;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.ui.controler.SmartListAdapter;
 import com.StrapleGroup.around.ui.view.MainActivity;
@@ -48,6 +50,8 @@ public class FriendsListFragment extends Fragment implements Constants {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
         deleteReceiver = new DeleteReceiver();
+        SQLiteOpenHelper openHelper = new OpenHelper(context);
+        SQLiteDatabase sqLiteDatabase = openHelper.getWritableDatabase();
         dataManager = new DataManagerImpl(this.context);
         smartListAdapter = new SmartListAdapter(context, dataManager.getCompleteCursor(), 0);
 
