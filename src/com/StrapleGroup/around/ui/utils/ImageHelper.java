@@ -2,8 +2,6 @@ package com.StrapleGroup.around.ui.utils;
 
 import android.content.Context;
 import android.graphics.*;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.ImageView;
 import com.StrapleGroup.around.base.Constants;
@@ -35,20 +33,14 @@ public class ImageHelper implements Constants {
     public Bitmap decodeImage(String aEncodedImg) {
         byte[] b = Base64.decode(aEncodedImg, 0);
         Bitmap pBitmapImg = BitmapFactory.decodeByteArray(b, 0, b.length);
-        return pBitmapImg;
+        return getCroppedBitmap(pBitmapImg);
     }
 
     public Bitmap decodeImageFromBytes(byte[] aBytes) {
         Bitmap pBitmapImg = BitmapFactory.decodeByteArray(aBytes, 0, aBytes.length);
-        return pBitmapImg;
+        return getCroppedBitmap(pBitmapImg);
     }
 
-    public Uri getImageUri(Context aContext, Bitmap aImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        aImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(aContext.getContentResolver(), aImage, "Title", null);
-        return Uri.parse(path);
-    }
 
     public Bitmap getCroppedBitmap(Bitmap bitmap) {
         Bitmap dstBmp;
@@ -76,22 +68,6 @@ public class ImageHelper implements Constants {
     }
 
     public void setImg(Context context, ImageView imageView, Bitmap aBitmap) {
-//        ImageLoader imageLoader = ImageLoader.getInstance();
-//        imageLoader.init(new ImageLoaderConfiguration.Builder(context).build());
-//        DisplayImageOptions pOptions = new DisplayImageOptions.Builder().displayer(new RoundedBitmapDisplayer(330)).cacheInMemory(true).cacheOnDisk(true).build();
-//        imageLoader.displayImage(getImageUri(context, getCroppedBitmap(aBitmap)).toString(), imageView, pOptions);
-//        imageLoader.destroy();
-//        BitmapShader shader;
-//        Canvas canvas = new Canvas();
-//        shader = new BitmapShader(aBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-//        Paint paint = new Paint();
-//        paint.setAntiAlias(true);
-//        paint.setShader(shader);
-//        RectF rect = new RectF(0.0f, 0.0f, aBitmap.getWidth(), aBitmap.getHeight());
-//// rect contains the bounds of the shape
-//// radius is the radius in pixels of the rounded corners
-//// paint contains the shader that will texture the shape
-//        canvas.drawRoundRect(rect, 330, 330, paint);
         Bitmap sbmp;
         if (aBitmap.getWidth() != 330 || aBitmap.getHeight() != 330)
             sbmp = Bitmap.createScaledBitmap(aBitmap, 330, 330, false);

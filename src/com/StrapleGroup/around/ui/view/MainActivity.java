@@ -1,19 +1,15 @@
 package com.StrapleGroup.around.ui.view;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.ui.utils.AroundViewPager;
 import com.StrapleGroup.around.ui.view.fragments.*;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.List;
 import java.util.Vector;
@@ -23,13 +19,7 @@ import java.util.Vector;
  */
 public class MainActivity extends FragmentActivity implements Constants {
     private PagerAdapter pagerAdapter;
-    private SharedPreferences sharedUserInfo;
-    private SharedPreferences sharedLatLng;
     private Context context;
-    private GoogleCloudMessaging googleCloudMessaging;
-    private static EditText friendLogin;
-    private RelativeLayout friendBar;
-    private RelativeLayout container;
     private AroundViewPager pager;
     private Fragment navDrawer;
     private ImageButton drawer;
@@ -42,9 +32,6 @@ public class MainActivity extends FragmentActivity implements Constants {
         this.initializePaging();
     }
 
-    public static EditText getFriendLogin() {
-        return friendLogin;
-    }
 
     private void initializePaging() {
         drawer = (ImageButton) findViewById(R.id.drawer);
@@ -69,22 +56,14 @@ public class MainActivity extends FragmentActivity implements Constants {
     }
 
 
-//        sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-//        ImageHelper pImageHelper = new ImageHelper();
-//        DataManagerImpl pDataManager = new DataManagerImpl(context);
-//        pFriend.setId(0);
-//        pFriend.setActivities(Integer.toString(1));
-//        pFriend.setProfilePhoto(pImageHelper.encodeImageForDB(pImageHelper.getCroppedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.facebook_example))));
-//        pFriend.setStatus(STATUS_ONLINE);
-//        pFriend.setXFriend(32.1231);
-//        pFriend.setYFriend(32.5345);
-//        pDataManager.saveFriendInfo(pFriend);
-
     public void menu(View view) {
         if (findViewById(R.id.nav_drawer) == null) {
             navDrawer = new NavDrawer();
             FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
             pTransaction.add(R.id.main_container, navDrawer).addToBackStack("NavDraw").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+        } else {
+            FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
+            pTransaction.remove(navDrawer).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
         }
     }
 
