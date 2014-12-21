@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context="${relativePackage}.${activityClass}"
-                android:background="@drawable/around_login_background">
+                android:background="@drawable/login_screen">
 
     <EditText
             android:id="@+id/loginField"
@@ -65,9 +65,10 @@
             android:layout_width="300dp"
             android:layout_height="90dp"
             android:onClick="goRegister"
-            android:id="@+id/go_register" android:layout_below="@+id/loginProgress"
-            android:layout_alignRight="@+id/passField" android:layout_alignEnd="@+id/passField"
-            android:layout_alignLeft="@+id/passField" android:layout_alignStart="@+id/passField"/>
+            android:id="@+id/go_register"
+            android:layout_alignRight="@+id/loginButton"
+            android:layout_alignEnd="@+id/loginButton" android:layout_toRightOf="@+id/loginProgress"
+            android:layout_toEndOf="@+id/loginProgress" android:layout_alignParentBottom="true"/>
     <!--<TextView-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->
