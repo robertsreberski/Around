@@ -22,26 +22,20 @@ public interface Constants {
     static final String LOG_OUT_LOCAL_ACTION = "com.StrapleGroup.around.action.LOG_OUT";
 
 
-    static final String KEY_ACTIVITY = "activity_name";
+    static final String KEY_ACTIVITY = "activity";
+    static final String KEY_FRIEND_LIST = "friend_list";
     static final String KEY_PHOTO = "photo";
     static final String KEY_LOGIN = "login";
-    static final String KEY_PASS = "pass";
+    static final String KEY_PASS = "password";
     static final String KEY_X = "x";
     static final String KEY_Y = "y";
     static final String KEY_STATUS = "status";
     static final String STATUS_ONLINE = "online";
     static final String STATUS_OFFLINE = "offline";
-    static final String KEY_SERVER_PASS = "password";
+    static final String STATUS_BUSY = "busy";
     static final String KEY_ACTION = "action";
     static final String KEY_MESSAGE = "message";
-    static final String SENDER_ID = "960206351442";
-    static final String SERVER_ID = SENDER_ID + "@gcm.googleapis.com";
-    static final String REG_ID = "registration_id";
     static final String PROPERTY_APP_VERSION = "appVersion";
-    static final String LAT_SERVER = "x";
-    static final String LNG_SERVER = "y";
-    static final String COMPLETED = "completed";
-    static final String INCOMPLETED = "incompleted";
 
     static final String USER_PREFS = "user_data";
 }
