@@ -41,7 +41,8 @@ public class DataManagerImpl implements DataManager {
     @Override
     public Cursor getCompleteCursor() {
         return db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
-                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND},
+                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO, FriendsInfoTable.FriendsInfoColumns.X_FRIEND,
+                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY},
                 null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
     }
 

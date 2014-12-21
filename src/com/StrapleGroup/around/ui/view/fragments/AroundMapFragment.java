@@ -24,10 +24,8 @@ public class AroundMapFragment extends Fragment implements Constants {
     private GoogleMap mapPane;
     private Context context = null;
     private AtomicInteger msgId = new AtomicInteger();
-    private SharedPreferences sharedUserInfo;
     private LocationReceiver locationReceiver;
     private SupportMapFragment mapFragment;
-    private Intent intentLocationService;
     private RefreshReceiver refreshReceiver;
     private Marker locMarker;
 
@@ -37,7 +35,6 @@ public class AroundMapFragment extends Fragment implements Constants {
         locationReceiver = new LocationReceiver();
         refreshReceiver = new RefreshReceiver();
         context = getActivity().getApplicationContext();
-        sharedUserInfo = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
         // creating map
 
 

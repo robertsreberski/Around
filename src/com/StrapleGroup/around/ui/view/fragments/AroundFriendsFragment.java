@@ -20,7 +20,6 @@ public class AroundFriendsFragment extends Fragment {
     private DataManagerImpl dataManager;
     private ViewGroup viewGroup;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

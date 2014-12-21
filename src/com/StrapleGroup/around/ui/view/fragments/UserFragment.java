@@ -14,10 +14,6 @@ import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.ui.utils.ImageHelper;
 import com.StrapleGroup.around.ui.view.LoginActivity;
 import com.google.android.gms.location.DetectedActivity;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 
 /**
@@ -41,11 +37,8 @@ public class UserFragment extends Fragment implements Constants {
     }
 
     public void changePhoto() {
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.init(new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext()).build());
-        DisplayImageOptions pOptions = new DisplayImageOptions.Builder().displayer(new RoundedBitmapDisplayer(330)).build();
         ImageView pProfileView = (ImageView) view.findViewById(R.id.profilePhoto);
-        imageLoader.displayImage(imageHelper.getImageUri(getActivity().getApplicationContext(), imageHelper.getCroppedBitmap(imageHelper.decodeImage(prefs.getString(KEY_PHOTO, "")))).toString(), pProfileView, pOptions);
+        imageHelper.setImg(getActivity().getApplicationContext(), pProfileView, imageHelper.decodeImage(prefs.getString(KEY_PHOTO, "")));
     }
 
     @Override

@@ -4,23 +4,6 @@
         android:layout_width="fill_parent"
         android:id="@+id/friend_bar"
         android:layout_height="fill_parent"
-        android:background="@drawable/card_ui"
+        android:background="@android:color/transparent"
         xmlns:android="http://schemas.android.com/apk/res/android">
-        <Button style="?android:attr/buttonStyleSmall" android:layout_width="43dp" android:layout_height="43dp"
-                android:id="@+id/button" android:layout_alignParentRight="true"
-            android:onClick="add"
-                android:background="@drawable/add"
-            android:layout_alignParentEnd="true" android:layout_alignParentTop="true"
-                android:layout_marginTop="7dp" android:layout_marginBottom="5dp" android:layout_marginRight="2dp"
-                />
-        <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="Name"
-                android:ems="10"
-                android:id="@+id/friend_field" android:layout_alignBottom="@+id/button"
-                android:layout_toLeftOf="@+id/button"
-                android:layout_toStartOf="@+id/button" android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" android:layout_marginLeft="5dp"/>
 </RelativeLayout>

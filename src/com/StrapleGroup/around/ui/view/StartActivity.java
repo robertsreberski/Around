@@ -1,7 +1,9 @@
 package com.StrapleGroup.around.ui.view;
 
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -14,12 +16,14 @@ import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.services.DataRefreshService;
 import com.StrapleGroup.around.controler.services.LocationService;
 import com.StrapleGroup.around.ui.utils.NetworkDialog;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 /**
  * Created by Robert on 2014-09-21.
  */
 public class StartActivity extends FragmentActivity implements NetworkDialog.NoticeDialogListener {
-    private static int SPLASH_TIME_OUT = 2500;
+    private static int SPLASH_TIME_OUT = 1250;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +58,22 @@ public class StartActivity extends FragmentActivity implements NetworkDialog.Not
         NetworkInfo pWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         NetworkInfo pMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         if (pWifi.isConnected() || pMobile.isConnected()) {
-            initiateApp();
+            final int pServicesStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+            if (pServicesStatus == ConnectionResult.SUCCESS) {
+                initiateApp();
+            } else {
+                if (GooglePlayServicesUtil.isUserRecoverableError(pServicesStatus)) {
+                    Dialog pDialog = GooglePlayServicesUtil.getErrorDialog(pServicesStatus, getParent(), GooglePlayServicesUtil.GOOGLE_PLAY_SERVICES_VERSION_CODE);
+                    if (pDialog != null) {
+                        pDialog.show();
+                        pDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            public void onDismiss(DialogInterface dialog) {
+                                if (ConnectionResult.SERVICE_INVALID == pServicesStatus) getParent().finish();
+                            }
+                        });
+                    }
+                }
+            }
         } else if (!pWifi.isConnected() && !pMobile.isConnected()) {
             DialogFragment pNetworkDialog = new NetworkDialog();
             pNetworkDialog.show(getFragmentManager(), "NetworkDialog");

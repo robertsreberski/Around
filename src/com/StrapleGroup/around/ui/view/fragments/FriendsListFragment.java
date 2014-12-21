@@ -24,7 +24,6 @@ import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.OpenHelper;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.ui.controler.SmartListAdapter;
-import com.StrapleGroup.around.ui.view.MainActivity;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class FriendsListFragment extends Fragment implements Constants {
@@ -157,16 +156,7 @@ public class FriendsListFragment extends Fragment implements Constants {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-//            if (intent.getBooleanExtra(MESSAGE, true)) {
-            final FriendsInfo pFriend = new FriendsInfo();
-            userInfoPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-            pFriend.setId(dataManager.getAllFriendsInfo().size());
-            pFriend.setLoginFriend(MainActivity.getFriendLogin().getText().toString());
-            pFriend.setXFriend(Double.parseDouble(intent.getStringExtra("LAT")));
-            pFriend.setYFriend(Double.parseDouble(intent.getStringExtra("LNG")));
-            dataManager.saveFriendInfo(pFriend);
-            addFriend(pFriend);
-
+            smartListAdapter.swapCursor(dataManager.getCompleteCursor());
         }
     }
 

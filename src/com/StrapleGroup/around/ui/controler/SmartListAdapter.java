@@ -2,6 +2,8 @@ package com.StrapleGroup.around.ui.controler;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +11,17 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.StrapleGroup.around.R;
+import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
+import com.StrapleGroup.around.ui.utils.ImageHelper;
 
 import java.util.List;
 
 /**
  * Created by Robert on 2014-09-20.
  */
-public class SmartListAdapter extends CursorAdapter {
+public class SmartListAdapter extends CursorAdapter implements Constants {
 
 
     private List<FriendsInfo> friendsInfoList;
@@ -33,35 +37,31 @@ public class SmartListAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
         ViewHolder pViewHolder = new ViewHolder();
         pViewHolder.login = (TextView) view.findViewById(R.id.friend_name);
         final String pFriendName = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
         pViewHolder.login.setText(pFriendName);
         pViewHolder.photo = (ImageView) view.findViewById(R.id.photo);
+        new AsyncTask<ViewHolder, Void, Bitmap>() {
+            private ViewHolder viewHolder;
+            private ImageHelper imageHelper;
 
-//        pViewHolder.distance.setText("323");
-//        pViewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                new AsyncTask<Void, Void, Void>() {
-//
-//                    @Override
-//                    protected Void doInBackground(Void... params) {
-//                        DataManagerImpl dataManager = new DataManagerImpl(context);
-//                        dataManager.deleteFriend(dataManager.findFriend(pFriendName));
-//                        OpenHelper pOpenHelper = new OpenHelper(context);
-//                        SQLiteDatabase db = pOpenHelper.getReadableDatabase();
-//                        Cursor pNewCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
-//                                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND,
-//                                        FriendsInfoTable.FriendsInfoColumns.X_FRIEND, FriendsInfoTable.FriendsInfoColumns.Y_FRIEND},
-//                                null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
-//                        swapCursor(pNewCursor);
-//                        return null;
-//                    }
-//                }.execute(null, null, null);
-//            }
-//        });
+            @Override
+            protected Bitmap doInBackground(ViewHolder... params) {
+                viewHolder = params[0];
+                imageHelper = new ImageHelper();
+                Bitmap fBitmap = imageHelper.decodeImageFromBytes(cursor.getBlob(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO)));
+                return fBitmap;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap result) {
+                super.onPostExecute(result);
+                imageHelper.setImg(context, viewHolder.photo, result);
+            }
+        }.execute(pViewHolder);
+        view.setTag(pViewHolder);
     }
 
 
