@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.ui.utils.ConnectionUtils;
+import com.StrapleGroup.around.ui.utils.ImageHelper;
 import com.google.android.gms.location.DetectedActivity;
 
 public class LoginActivity extends Activity implements Constants {
@@ -71,16 +73,17 @@ public class LoginActivity extends Activity implements Constants {
 
                     @Override
                     protected Boolean doInBackground(Void... params) {
-                        ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
-                        Double pLat = 0.000;
-                        Double pLng = 0.000;
-                        int pActivity = DetectedActivity.UNKNOWN;
-                        if (prefs.contains(KEY_X) && prefs.contains(KEY_Y)) {
-                            pLat = Double.parseDouble(prefs.getString(KEY_X, ""));
-                            pLng = Double.parseDouble(prefs.getString(KEY_Y, ""));
-                        }
-                        if (prefs.contains(KEY_ACTIVITY)) pActivity = prefs.getInt(KEY_ACTIVITY, 4);
-                        return pConnectionHelper.loginToApp(login, pass, pLat, pLng, pActivity);
+//                        ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
+//                        Double pLat = 0.000;
+//                        Double pLng = 0.000;
+//                        int pActivity = DetectedActivity.UNKNOWN;
+//                        if (prefs.contains(KEY_X) && prefs.contains(KEY_Y)) {
+//                            pLat = Double.parseDouble(prefs.getString(KEY_X, ""));
+//                            pLng = Double.parseDouble(prefs.getString(KEY_Y, ""));
+//                        }
+//                        if (prefs.contains(KEY_ACTIVITY)) pActivity = prefs.getInt(KEY_ACTIVITY, 4);
+//                        return pConnectionHelper.loginToApp(login, pass, pLat, pLng, pActivity);
+                        return true;
                     }
 
                     @Override
@@ -91,6 +94,9 @@ public class LoginActivity extends Activity implements Constants {
                             pEditor.putString(KEY_LOGIN, login);
                             pEditor.putString(KEY_PASS, pass);
                             pEditor.putString(KEY_STATUS, STATUS_ONLINE);
+                            ImageHelper pImageHelper = new ImageHelper();
+                            String photoString = pImageHelper.encodeImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example));
+                            pEditor.putString(KEY_PHOTO, photoString);
                             pEditor.commit();
                             nextActivity();
                         } else badRequest();
