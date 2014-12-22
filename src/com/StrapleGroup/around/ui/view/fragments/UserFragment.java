@@ -21,6 +21,7 @@ import com.google.android.gms.location.DetectedActivity;
  */
 public class UserFragment extends Fragment implements Constants {
     private ActivityReceiver activityReceiver = new ActivityReceiver();
+    private RefreshReceiver refreshReceiver = new RefreshReceiver();
     private LogoutRequestReceiver logoutRequestReceiver = new LogoutRequestReceiver();
     private ImageHelper imageHelper = new ImageHelper();
     private SharedPreferences prefs;
@@ -45,17 +46,26 @@ public class UserFragment extends Fragment implements Constants {
     public void onStart() {
         super.onStart();
         changePhoto();
+        getActivity().registerReceiver(refreshReceiver, new IntentFilter(Constants.REFRESH_SETTINGS_LOCAL_ACTION));
         getActivity().registerReceiver(logoutRequestReceiver, new IntentFilter(Constants.LOG_OUT_LOCAL_ACTION));
         getActivity().registerReceiver(activityReceiver, new IntentFilter(Constants.ACTIVITY_RECOGNITION_LOCAL_ACTION));
     }
 
     @Override
     public void onStop() {
+        getActivity().unregisterReceiver(refreshReceiver);
         getActivity().unregisterReceiver(logoutRequestReceiver);
         getActivity().unregisterReceiver(activityReceiver);
         super.onStop();
     }
 
+    private class RefreshReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            changePhoto();
+        }
+    }
     private class ActivityReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

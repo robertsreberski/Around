@@ -115,6 +115,7 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
                         SharedPreferences.Editor pPrefsEdit = prefs.edit();
                         pPrefsEdit.putString(Constants.KEY_PHOTO, pPhotoString);
                         pPrefsEdit.commit();
+                        getActivity().sendBroadcast(new Intent(REFRESH_SETTINGS_LOCAL_ACTION));
                     }
                 }
             }.execute(null, null, null);

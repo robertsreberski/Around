@@ -101,7 +101,7 @@ public class LoginActivity extends Activity implements Constants {
                             nextActivity();
                         } else badRequest();
                     }
-                };
+                }.execute(null, null, null);
             } else noConnection();
         }
     }

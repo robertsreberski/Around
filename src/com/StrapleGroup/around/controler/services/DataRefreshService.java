@@ -36,7 +36,7 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
     private SendInfoTask sendInfo;
     private Timer looper;
     private Context context;
-    private SharedPreferences prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+    private SharedPreferences prefs;
     private Handler serviceHandler;
     private GoogleApiClient googleApiClient;
     private DataManagerImpl dataManager;
@@ -52,10 +52,10 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
     @Override
     public void onCreate() {
         super.onCreate();
-        sendInfo = new SendInfoTask();
-        looper = new Timer();
+
         Log.i("SERVICE_WORKING", "SENDING_DATA");
         context = getApplicationContext();
+        prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
         googleApiClient = new GoogleApiClient.Builder(this).addApi(ActivityRecognition.API).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
@@ -64,8 +64,6 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
         mActivityRecognitionPendingIntent =
                 PendingIntent.getService(this, 0, activityRecognitionIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
-        looper.scheduleAtFixedRate(sendInfo, 2 * 1000, 60 * 1000);
-        serviceHandler = new Handler();
 
     }
 
@@ -149,6 +147,10 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
 
     @Override
     public void onConnected(Bundle bundle) {
+        sendInfo = new SendInfoTask();
+        looper = new Timer();
+        looper.scheduleAtFixedRate(sendInfo, 2 * 1000, 60 * 1000);
+        serviceHandler = new Handler();
         Log.e("CONNECTION", "JUST_CONNECTED");
         ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 1000, mActivityRecognitionPendingIntent);
     }

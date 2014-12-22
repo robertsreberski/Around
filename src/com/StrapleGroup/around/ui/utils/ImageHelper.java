@@ -71,8 +71,7 @@ public class ImageHelper implements Constants {
         Bitmap sbmp;
         if (aBitmap.getWidth() != 330 || aBitmap.getHeight() != 330)
             sbmp = Bitmap.createScaledBitmap(aBitmap, 330, 330, false);
-        else
-            sbmp = aBitmap;
+        else sbmp = aBitmap;
         Bitmap output = Bitmap.createBitmap(sbmp.getWidth(),
                 sbmp.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);

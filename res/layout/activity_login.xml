@@ -67,8 +67,11 @@
             android:onClick="goRegister"
             android:id="@+id/go_register"
             android:layout_alignRight="@+id/loginButton"
-            android:layout_alignEnd="@+id/loginButton" android:layout_toRightOf="@+id/loginProgress"
-            android:layout_toEndOf="@+id/loginProgress" android:layout_alignParentBottom="true"/>
+        android:layout_alignEnd="@+id/loginButton"
+        android:layout_toEndOf="@+id/loginProgress"
+        android:layout_alignLeft="@+id/loginButton"
+        android:layout_alignStart="@+id/loginButton"
+        android:layout_alignParentBottom="true" />
     <!--<TextView-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->

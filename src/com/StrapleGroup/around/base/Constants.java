@@ -15,7 +15,8 @@ public interface Constants {
     static final String REGISTER_LOCAL_ACTION = "com.StrapleGroup.around.action.REGISTER";
     static final String ADD_REQUEST_LOCAL_ACTION = "com.StrapleGroup.around.action.REQUEST";
     static final String LOCATION_ACTION = "com.StrapleGroup.around.action.LOCATION_INFO";
-    static final String REFRESH_FRIEND_LIST_LOCAL_ACTION = "com.StrapleGroup.around.action.REFRESH";
+    static final String REFRESH_FRIEND_LIST_LOCAL_ACTION = "com.StrapleGroup.around.action.REFRESH_FRIEND_LIST";
+    static final String REFRESH_SETTINGS_LOCAL_ACTION = "com.StrapleGroup.around.action.REFRESH_SETTINGS";
     static final String MARKER_LOCAL_ACTION = "com.StrapleGroup.around.action.MARKER";
     static final String ACTIVITY_RECOGNITION_LOCAL_ACTION = "com.StrapleGroup.around.action.ACTIVITY_RECOGNITION";
     static final String LOG_OUT_LOCAL_ACTION = "com.StrapleGroup.around.action.LOG_OUT";
