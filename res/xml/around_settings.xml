@@ -5,37 +5,33 @@
 
     </PreferenceCategory>
     <Preference android:title="Change Status"></Preference>
-    <Preference android:title="Update_Photo"
-                android:key="update_photo"></Preference>
-    <Preference android:title="Change Photo"
-                android:key="change_photo">
-    </Preference>
+    <Preference
+        android:title="Change Photo"
+        android:key="change_photo"></Preference>
     <PreferenceCategory android:title="Application Options">
         <CheckBoxPreference
-                android:key="@string/key_notifications"
-                android:title="@string/name_notifications"
-                android:defaultValue="true"></CheckBoxPreference>
+            android:key="@string/key_notifications"
+            android:title="@string/name_notifications"
+            android:defaultValue="true"></CheckBoxPreference>
         <ListPreference
-                android:key="around_range"
-                android:title="Range of view"
-                android:entries="@array/range"
-                android:entryValues="@array/range"></ListPreference>
+            android:key="around_range"
+            android:title="Range of view"
+            android:entries="@array/range"
+            android:entryValues="@array/range"></ListPreference>
         <CheckBoxPreference
-                android:key="inapp_sounds"
-                android:title="Inapp sounds"
-                android:defaultValue="true"></CheckBoxPreference>
+            android:key="inapp_sounds"
+            android:title="Inapp sounds"
+            android:defaultValue="true"></CheckBoxPreference>
     </PreferenceCategory>
     <PreferenceCategory
-            android:title="More informations"
-            android:key="more_info">
-        <Preference
-                android:title="Support"></Preference>
-        <Preference
-                android:title="Privacy Policy"></Preference>
+        android:title="More informations"
+        android:key="more_info">
+        <Preference android:title="Support"></Preference>
+        <Preference android:title="Privacy Policy"></Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="Advanced Actions">
         <Preference
-                android:title="Log Out" android:key="log_out">
-        </Preference>
+            android:title="Log Out"
+            android:key="log_out"></Preference>
     </PreferenceCategory>
 </PreferenceScreen>
