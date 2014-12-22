@@ -124,7 +124,7 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                                     pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
                                     pDataManager.saveFriendInfo(pFriend);
                                     /*
-                                    Will create notifications here
+                                    Will create notifications here :1
                                      */
                                 }
                                 sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
