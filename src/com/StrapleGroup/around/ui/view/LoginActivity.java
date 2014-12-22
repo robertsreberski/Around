@@ -4,21 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.ui.utils.ConnectionUtils;
-import com.StrapleGroup.around.ui.utils.ImageHelper;
+import com.google.android.gms.location.DetectedActivity;
 
 public class LoginActivity extends Activity implements Constants {
     private Context context;
@@ -29,7 +28,6 @@ public class LoginActivity extends Activity implements Constants {
     private String pass = null;
     private Button loginButton = null;
     private ProgressBar loginProgress = null;
-//    private ConnectivityManager connectivityManager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +41,6 @@ public class LoginActivity extends Activity implements Constants {
         loginButton = (Button) findViewById(R.id.loginButton);
         loginProgress = (ProgressBar) findViewById(R.id.loginProgress);
         loginProgress.setVisibility(View.INVISIBLE);
-//        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
     }
 
     public void goRegister(View v) {
@@ -69,46 +65,39 @@ public class LoginActivity extends Activity implements Constants {
             if (ConnectionUtils.hasActiveInternetConnection(context)) {
                 loginButton.setText("");
                 loginProgress.setVisibility(View.VISIBLE);
-                ImageHelper pImageHelper = new ImageHelper();
                 prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-                SharedPreferences.Editor pPrefsEditor = prefs.edit();
-                pPrefsEditor.putString(KEY_LOGIN, login);
-                pPrefsEditor.putString(KEY_PASS, pass);
-                pPrefsEditor.putString(KEY_STATUS, STATUS_ONLINE);
-                pPrefsEditor.putString(KEY_PHOTO, pImageHelper.encodeImage(BitmapFactory.decodeResource(getResources(), R.drawable.facebook_example)));
-                pPrefsEditor.apply();
-                try {
-                    int aSet = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
-                    Log.i("LOC", String.valueOf(aSet));
-                } catch (Settings.SettingNotFoundException e) {
-                    e.printStackTrace();
-                }
-                new AsyncTask<Void, Void, Void>() {
+
+                new AsyncTask<Void, Void, Boolean>() {
 
                     @Override
-                    protected Void doInBackground(Void... params) {
+                    protected Boolean doInBackground(Void... params) {
+                        ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
+                        Double pLat = 0.000;
+                        Double pLng = 0.000;
+                        int pActivity = DetectedActivity.UNKNOWN;
+                        if (prefs.contains(KEY_X) && prefs.contains(KEY_Y)) {
+                            pLat = Double.parseDouble(prefs.getString(KEY_X, ""));
+                            pLng = Double.parseDouble(prefs.getString(KEY_Y, ""));
+                        }
+                        if (prefs.contains(KEY_ACTIVITY)) pActivity = prefs.getInt(KEY_ACTIVITY, 4);
+                        return pConnectionHelper.loginToApp(login, pass, pLat, pLng, pActivity);
+                    }
 
-                        Log.e("DID IT", "Lets done");
-                        return null;
+                    @Override
+                    protected void onPostExecute(Boolean aBool) {
+                        super.onPostExecute(aBool);
+                        if (aBool) {
+                            SharedPreferences.Editor pEditor = prefs.edit();
+                            pEditor.putString(KEY_LOGIN, login);
+                            pEditor.putString(KEY_PASS, pass);
+                            pEditor.putString(KEY_STATUS, STATUS_ONLINE);
+                            pEditor.commit();
+                            nextActivity();
+                        } else badRequest();
                     }
                 };
-                /*
-                Space for RESTful
-                 */
-                nextActivity();
-            } else {
-                noConnection();
-            }
+            } else noConnection();
         }
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     protected void nextActivity() {

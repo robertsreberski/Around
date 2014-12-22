@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
@@ -37,8 +38,8 @@ public class AroundListAdapter extends CursorAdapter {
         final double pLng = cursor.getDouble(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.Y_FRIEND));
         Location pMyLocation = new Location("Me");
         SharedPreferences pPrefs = context.getSharedPreferences(Constants.USER_PREFS, Context.MODE_PRIVATE);
-        pMyLocation.setLatitude(Double.parseDouble(pPrefs.getString(Constants.LAT_SERVER, "")));
-        pMyLocation.setLongitude(Double.parseDouble(pPrefs.getString(Constants.LNG_SERVER, "")));
+        pMyLocation.setLatitude(Double.parseDouble(pPrefs.getString(Constants.KEY_X, "")));
+        pMyLocation.setLongitude(Double.parseDouble(pPrefs.getString(Constants.KEY_Y, "")));
         Location pFriendLocation = new Location("Friend");
         pFriendLocation.setLatitude(pLat);
         pFriendLocation.setLongitude(pLng);

@@ -13,10 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.ui.utils.ConnectionUtils;
 import com.StrapleGroup.around.ui.utils.ImageHelper;
+import com.google.android.gms.location.DetectedActivity;
 
 /**
  * Created by Robert on 2014-08-27.
@@ -64,20 +67,42 @@ public class RegisterActivity extends Activity implements Constants {
             if (ConnectionUtils.hasActiveInternetConnection(context)) {
                 registerButton.setText("");
                 registerProgress.setVisibility(View.VISIBLE);
-                new AsyncTask<Void, Void, Void>() {
+                new AsyncTask<Void, Void, Boolean>() {
+                    private String photoString;
+                    private SharedPreferences prefs;
 
                     @Override
-                    protected Void doInBackground(Void... params) {
+                    protected Boolean doInBackground(Void... params) {
+                        prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
                         ImageHelper pImageHelper = new ImageHelper();
-                        SharedPreferences.Editor pPrefsEditor = getSharedPreferences(USER_PREFS, MODE_PRIVATE).edit();
-                        pPrefsEditor.putString(KEY_LOGIN, login);
-                        pPrefsEditor.putString(KEY_PASS, pass);
-                        pPrefsEditor.putString(KEY_STATUS, STATUS_ONLINE);
-                        pPrefsEditor.putString(KEY_PHOTO, pImageHelper.encodeImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example)));
-                        return null;
+                        ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
+                        photoString = pImageHelper.encodeImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example));
+                        Double pLat = 0.000;
+                        Double pLng = 0.000;
+                        int pActivity = DetectedActivity.UNKNOWN;
+                        if (prefs.contains(KEY_X) && prefs.contains(KEY_Y)) {
+                            pLat = Double.parseDouble(prefs.getString(KEY_X, ""));
+                            pLng = Double.parseDouble(prefs.getString(KEY_Y, ""));
+                        }
+                        if (prefs.contains(KEY_ACTIVITY)) pActivity = prefs.getInt(KEY_ACTIVITY, 4);
+                        return pConnectionHelper.registerToApp(login, pass, pLat, pLng, photoString, pActivity);
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean aBoolean) {
+                        super.onPostExecute(aBoolean);
+                        if (aBoolean) {
+                            SharedPreferences.Editor pPrefsEditor = prefs.edit();
+                            pPrefsEditor.putString(KEY_LOGIN, login);
+                            pPrefsEditor.putString(KEY_PASS, pass);
+                            pPrefsEditor.putString(KEY_STATUS, STATUS_ONLINE);
+                            pPrefsEditor.putString(KEY_PHOTO, photoString);
+                            pPrefsEditor.commit();
+                            registrationSuccessful();
+                        } else registrationUnsuccessful();
+
                     }
                 }.execute(null, null, null);
-                registrationSuccessful();
             } else {
                 noConnection();
             }

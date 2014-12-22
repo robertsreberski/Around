@@ -31,7 +31,7 @@ public class FriendsListFragment extends Fragment implements Constants {
     private SharedPreferences userInfoPrefs;
     private ListView requestList;
     private GoogleCloudMessaging googleCloudMessaging;
-    private FriendAddResultReceiver friendAddResultReceiver = new FriendAddResultReceiver();
+    private RefreshReceiver refreshReceiver = new RefreshReceiver();
     private RequestReceiver requestReceiver = new RequestReceiver();
     private ViewGroup requestContainer;
     private LinearLayout requestListLayout;
@@ -75,7 +75,7 @@ public class FriendsListFragment extends Fragment implements Constants {
     @Override
     public void onDestroy() {
         getActivity().unregisterReceiver(requestReceiver);
-        getActivity().unregisterReceiver(friendAddResultReceiver);
+        getActivity().unregisterReceiver(refreshReceiver);
         getActivity().unregisterReceiver(deleteReceiver);
         super.onDestroy();
     }
@@ -141,15 +141,15 @@ public class FriendsListFragment extends Fragment implements Constants {
 
 
     private void startComps() {
-        IntentFilter addFilter = new IntentFilter(ADD_LOCAL_ACTION);
+        IntentFilter addFilter = new IntentFilter(REFRESH_FRIEND_LIST_LOCAL_ACTION);
         IntentFilter requestFilter = new IntentFilter(ADD_REQUEST_LOCAL_ACTION);
         IntentFilter deleteFilter = new IntentFilter(DELETE_LOCAL_ACTION);
         getActivity().registerReceiver(requestReceiver, requestFilter);
         getActivity().registerReceiver(deleteReceiver, deleteFilter);
-        getActivity().registerReceiver(friendAddResultReceiver, addFilter);
+        getActivity().registerReceiver(refreshReceiver, addFilter);
     }
 
-    private class FriendAddResultReceiver extends WakefulBroadcastReceiver {
+    private class RefreshReceiver extends WakefulBroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

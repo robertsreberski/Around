@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.provider.BaseColumns;
+
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.intefaces.Dao;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
@@ -37,7 +38,7 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         insertStatement.bindDouble(3, friendsInfo.getXFriend());
         insertStatement.bindDouble(4, friendsInfo.getYFriend());
         insertStatement.bindString(5, friendsInfo.getStatus());
-        insertStatement.bindString(6, friendsInfo.getActivities());
+        insertStatement.bindDouble(6, friendsInfo.getActivities());
         return insertStatement.executeInsert();
     }
 
@@ -123,7 +124,7 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
             pFriendsInfo.setXFriend(pCursor.getDouble(3));
             pFriendsInfo.setYFriend(pCursor.getDouble(4));
             pFriendsInfo.setStatus(pCursor.getString(5));
-            pFriendsInfo.setActivities(pCursor.getString(6));
+            pFriendsInfo.setActivities(pCursor.getInt(6));
         }
         return pFriendsInfo;
     }

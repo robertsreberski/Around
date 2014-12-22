@@ -18,9 +18,12 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.ui.utils.ImageHelper;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -43,28 +46,18 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
     static final int REQUEST_IMAGE_CAPTURE = 1;
     File photoFile;
     String currentPhotoPath;
+    SharedPreferences prefs;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.around_settings);
+        prefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
         ((Preference) findPreference("log_out")).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Intent pLogOutIntent = new Intent(Constants.LOG_OUT_LOCAL_ACTION);
                 getActivity().sendBroadcast(pLogOutIntent);
                 return true;
-            }
-        });
-        ((Preference) findPreference("update_photo")).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Toast.makeText(getActivity().getApplicationContext(), "Photo updated", Toast.LENGTH_SHORT).show();
-                try {
-                    updatePhoto();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return false;
             }
         });
         ((Preference) findPreference("change_photo")).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -96,7 +89,6 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
             getActivity().getContentResolver().notifyChange(Uri.fromFile(photoFile), null);
             ContentResolver cr = getActivity().getContentResolver();
             ImageHelper pImageHelper = new ImageHelper();
-
             Bitmap imageBitmap = null;
             Matrix matrix = new Matrix();
             try {
@@ -106,9 +98,25 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
                 e.printStackTrace();
             }
             Bitmap rotatedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
-            SharedPreferences.Editor pPrefsEdit = getActivity().getSharedPreferences(Constants.USER_PREFS, Context.MODE_PRIVATE).edit();
-            pPrefsEdit.putString(Constants.KEY_PHOTO, pImageHelper.encodeImage(rotatedBitmap));
-            pPrefsEdit.commit();
+            final String pPhotoString = pImageHelper.encodeImage(rotatedBitmap);
+            new AsyncTask<Void, Void, Boolean>() {
+
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    ConnectionHelper pConnectionHelper = new ConnectionHelper(getActivity().getApplicationContext());
+                    return pConnectionHelper.updatePhoto(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""), pPhotoString);
+                }
+
+                @Override
+                protected void onPostExecute(Boolean aBoolean) {
+                    super.onPostExecute(aBoolean);
+                    if (aBoolean) {
+                        SharedPreferences.Editor pPrefsEdit = prefs.edit();
+                        pPrefsEdit.putString(Constants.KEY_PHOTO, pPhotoString);
+                        pPrefsEdit.commit();
+                    }
+                }
+            }.execute(null, null, null);
         }
 
     }
@@ -138,33 +146,5 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
         currentPhotoPath = "file:" + pImage.getAbsolutePath();
         return pImage;
     }
-    private void updatePhoto() throws IOException {
-        Context context = getActivity().getApplicationContext();
-        Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] b = baos.toByteArray();
-        String encodedPhoto = Base64.encodeToString(b, 0);
-        final HttpClient httpclient = new DefaultHttpClient();
-        final HttpPost httppost = new HttpPost("http://89.71.164.245/straple/image");
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair(Constants.KEY_LOGIN, "robert"));
-        nameValuePairs.add(new BasicNameValuePair("photo", encodedPhoto));
-        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                HttpResponse pResponse = null;
-                try {
-                    Log.e("Start", "HttpResponse");
-                    pResponse = httpclient.execute(httppost);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Log.e("HTTPRESPONSE", "not working yet");
-                return null;
-            }
-        }.execute(null, null, null);
 
-    }
 }

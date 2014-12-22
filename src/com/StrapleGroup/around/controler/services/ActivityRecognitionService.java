@@ -3,6 +3,7 @@ package com.StrapleGroup.around.controler.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
+
 import com.StrapleGroup.around.base.Constants;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
@@ -18,14 +19,11 @@ public class ActivityRecognitionService extends IntentService implements Constan
     @Override
     protected void onHandleIntent(Intent intent) {
         if (ActivityRecognitionResult.hasResult(intent)) {
-            // Get the update
             ActivityRecognitionResult result =
                     ActivityRecognitionResult.extractResult(intent);
-            // Get the most probable activity
             DetectedActivity mostProbableActivity =
                     result.getMostProbableActivity();
             int confidence = mostProbableActivity.getConfidence();
-//            Log.i("CONFIDENCE", Integer.toString(confidence));
             int activityType = mostProbableActivity.getType();
             if (confidence >= 60) {
                 getSharedPreferences(USER_PREFS, MODE_PRIVATE).edit().putInt(KEY_ACTIVITY, activityType).commit();

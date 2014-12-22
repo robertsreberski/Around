@@ -5,7 +5,7 @@ public class FriendsInfo extends ModelBase {
     private double x_friend;
     private double y_friend;
     private byte[] profilePhoto;
-    private String activities;
+    private int activities;
     private String status;
 
     public byte[] getProfilePhoto() {
@@ -48,11 +48,11 @@ public class FriendsInfo extends ModelBase {
         return status;
     }
 
-    public String getActivities() {
+    public int getActivities() {
         return activities;
     }
 
-    public void setActivities(String activities) {
+    public void setActivities(int activities) {
         this.activities = activities;
     }
 }

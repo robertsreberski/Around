@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.StrapleGroup.around.R;
 
 /**
@@ -31,32 +32,6 @@ public class NavDrawer extends Fragment {
                 } else {
                     pFriendLogin.setVisibility(View.VISIBLE);
                 }
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            Log.d("CONN", "CONNECTION_STARTED");
-//                            URL pUrl = new URL("http://10.0.2.2:8080/Servletkurfa/Test");
-//                            URLConnection pConnection = pUrl.openConnection();
-//                            String pTest = pFriendLogin.getText().toString();
-//                            pConnection.setDoOutput(true);
-//                            OutputStreamWriter out = new OutputStreamWriter(pConnection.getOutputStream());
-//                            out.write(pTest);
-//                            out.close();
-//                            BufferedReader in = new BufferedReader(new InputStreamReader(pConnection.getInputStream()));
-//                            final String pResponse = in.readLine();
-//                            in.close();
-//                            getActivity().runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    Toast.makeText(getActivity().getApplicationContext(),pResponse,Toast.LENGTH_LONG).show();
-//                                }
-//                            });
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
             }
         });
         return view;

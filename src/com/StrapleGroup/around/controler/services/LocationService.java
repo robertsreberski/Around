@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.StrapleGroup.around.base.Constants;
 
 public class LocationService extends Service implements Constants {
@@ -111,7 +112,6 @@ public class LocationService extends Service implements Constants {
 
         public void onLocationChanged(Location currentLocation) {
             intent = new Intent(LOCATION_ACTION);
-            Log.i("**************************************", "Location changed");
             if (isBetterLocation(currentLocation, previousBestLocation)) {
                 intent.putExtra("Latitude", currentLocation.getLatitude());
                 intent.putExtra("Longitude", currentLocation.getLongitude());

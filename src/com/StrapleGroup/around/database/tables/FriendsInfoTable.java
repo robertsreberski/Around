@@ -25,7 +25,7 @@ public class FriendsInfoTable {
         build.append(FriendsInfoColumns.X_FRIEND + " DOUBLE, ");
         build.append(FriendsInfoColumns.Y_FRIEND + " DOUBLE, ");
         build.append(FriendsInfoColumns.STATUS + " TEXT, ");
-        build.append(FriendsInfoColumns.ACTIVITY + " TEXT");
+        build.append(FriendsInfoColumns.ACTIVITY + " INTEGER");
         build.append(");");
         db.execSQL(build.toString());
     }

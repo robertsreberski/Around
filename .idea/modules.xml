@@ -3,9 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Around.iml" filepath="$PROJECT_DIR$/Around.iml" />
-      <module fileurl="file://C:/android_sdk/extras/android/support/v7/appcompat/appcompat.iml" filepath="C:/android_sdk/extras/android/support/v7/appcompat/appcompat.iml" />
-      <module fileurl="file://C:/android_sdk/extras/google/google_play_services/libproject/google-play-services_lib/google-play-services_lib.iml" filepath="C:/android_sdk/extras/google/google_play_services/libproject/google-play-services_lib/google-play-services_lib.iml" />
       <module fileurl="file://C:/android_sdk/sdk/extras/google/google_play_services/libproject/google-play-services_lib/google-play-services_lib.iml" filepath="C:/android_sdk/sdk/extras/google/google_play_services/libproject/google-play-services_lib/google-play-services_lib.iml" />
     </modules>
   </component>
 </project>
+

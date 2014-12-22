@@ -5,21 +5,26 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Base64;
 import android.util.Log;
+
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.database.DataManagerImpl;
-import com.StrapleGroup.around.database.OpenHelper;
+import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationServices;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,8 +36,7 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
     private SendInfoTask sendInfo;
     private Timer looper;
     private Context context;
-    private SharedPreferences sharedUserInfo;
-    private SharedPreferences sharedLocationInfo;
+    private SharedPreferences prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
     private Handler serviceHandler;
     private GoogleApiClient googleApiClient;
     private DataManagerImpl dataManager;
@@ -52,8 +56,6 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
         looper = new Timer();
         Log.i("SERVICE_WORKING", "SENDING_DATA");
         context = getApplicationContext();
-        SQLiteOpenHelper openHelper = new OpenHelper(this.context);
-        SQLiteDatabase db = openHelper.getWritableDatabase();
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
         googleApiClient = new GoogleApiClient.Builder(this).addApi(ActivityRecognition.API).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
@@ -94,40 +96,62 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
         if (googleApiClient.isConnected()) {
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             setLastLocation(lastLocation);
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    if (lastLocation != null) {
-                        sharedLocationInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-                        SharedPreferences.Editor pEditor = sharedLocationInfo.edit();
-                        Log.e("LATITUDE", Double.toString(lastLocation.getLatitude()));
-                        Log.e("LONGTITUDE", Double.toString(lastLocation.getLongitude()));
-                        pEditor.putString(Constants.KEY_X, Double.toString(lastLocation.getLatitude()));
-                        pEditor.putString(Constants.KEY_Y, Double.toString(lastLocation.getLongitude()));
-                        pEditor.commit();
-                    }
-                    return null;
-                }
-            }.execute(null, null, null);
-        } else {
-            Log.e("NOT_CONNECTED", "ERROR IN DATALOADSERVICE");
+            if (lastLocation != null) {
+                SharedPreferences.Editor pEditor = prefs.edit();
+                Log.e("LATITUDE", Double.toString(lastLocation.getLatitude()));
+                Log.e("LONGTITUDE", Double.toString(lastLocation.getLongitude()));
+                pEditor.putString(Constants.KEY_X, Double.toString(lastLocation.getLatitude()));
+                pEditor.putString(Constants.KEY_Y, Double.toString(lastLocation.getLongitude()));
+                pEditor.commit();
+                if (checkIfLogin()) {
+                    new AsyncTask<Void, Void, Boolean>() {
+                        @Override
+                        protected Boolean doInBackground(Void... params) {
+                            ConnectionHelper connectionHelper = new ConnectionHelper(context);
+                            JSONArray pFriendArray = connectionHelper.updateToApp(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""),
+                                    Double.parseDouble(prefs.getString(KEY_X, "")), Double.parseDouble(prefs.getString(KEY_Y, "")),
+                                    prefs.getInt(KEY_ACTIVITY, 4), prefs.getString(KEY_STATUS, ""));
+                            try {
+                                for (int i = 0; i < pFriendArray.length(); i++) {
+                                    JSONObject pJsonFriend = pFriendArray.getJSONObject(i);
+                                    DataManagerImpl pDataManager = new DataManagerImpl(context);
+                                    FriendsInfo pFriend = new FriendsInfo();
+                                    pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
+                                    pFriend.setXFriend(pJsonFriend.getDouble(KEY_X));
+                                    pFriend.setYFriend(pJsonFriend.getDouble(KEY_Y));
+                                    pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
+                                    pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
+                                    pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
+                                    pDataManager.saveFriendInfo(pFriend);
+                                    /*
+                                    Will create notifications here
+                                     */
+                                }
+                                sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                    }.execute(null, null, null);
+                } else Log.e("NOT_LOGGED_IN", "ERROR IN DATALOADSERVICE");
+            } else {
+                Log.e("NOT_CONNECTED", "ERROR IN DATALOADSERVICE");
+            }
         }
     }
 
     private boolean checkIfLogin() {
         boolean pCheck = false;
-        sharedUserInfo = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
-        if (sharedUserInfo.contains(KEY_LOGIN) && sharedUserInfo.contains(KEY_PASS)) {
-            pCheck = true;
-        }
+        if (prefs.contains(KEY_LOGIN) && prefs.contains(KEY_PASS)) pCheck = true;
         return pCheck;
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-            Log.e("CONNECTION", "JUST_CONNECTED");
+        Log.e("CONNECTION", "JUST_CONNECTED");
         ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 1000, mActivityRecognitionPendingIntent);
-        }
+    }
 
     @Override
     public void onConnectionSuspended(int i) {
