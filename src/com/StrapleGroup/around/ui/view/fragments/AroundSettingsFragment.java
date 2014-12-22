@@ -103,8 +103,9 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
 
                 @Override
                 protected Boolean doInBackground(Void... params) {
-                    ConnectionHelper pConnectionHelper = new ConnectionHelper(getActivity().getApplicationContext());
-                    return pConnectionHelper.updatePhoto(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""), pPhotoString);
+//                    ConnectionHelper pConnectionHelper = new ConnectionHelper(getActivity().getApplicationContext());
+//                    return pConnectionHelper.updatePhoto(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""), pPhotoString);
+                    return true;
                 }
 
                 @Override
