@@ -38,6 +38,12 @@ public class NetworkDialog extends DialogFragment {
     }
 
     @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        noticeDialogListener.onDialogPositiveClick(NetworkDialog.this);
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {

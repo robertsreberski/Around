@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.services.DataRefreshService;
 import com.StrapleGroup.around.controler.services.LocationService;
+import com.StrapleGroup.around.ui.utils.LocationDialog;
 import com.StrapleGroup.around.ui.utils.NetworkDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -28,7 +30,11 @@ public class StartActivity extends FragmentActivity implements NetworkDialog.Not
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-//        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this).addApi().build()
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         checkInternetConn();
     }
 
@@ -55,12 +61,17 @@ public class StartActivity extends FragmentActivity implements NetworkDialog.Not
 
     private void checkInternetConn() {
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        LocationManager pLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         NetworkInfo pWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         NetworkInfo pMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
         if (pWifi.isConnected() || pMobile.isConnected()) {
             final int pServicesStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
             if (pServicesStatus == ConnectionResult.SUCCESS) {
-                initiateApp();
+                if (pLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == false && pLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
+                    startActivity(new Intent(StartActivity.this, LocationDialog.class));
+                } else initiateApp();
+
             } else {
                 if (GooglePlayServicesUtil.isUserRecoverableError(pServicesStatus)) {
                     Dialog pDialog = GooglePlayServicesUtil.getErrorDialog(pServicesStatus, getParent(), GooglePlayServicesUtil.GOOGLE_PLAY_SERVICES_VERSION_CODE);
@@ -71,6 +82,7 @@ public class StartActivity extends FragmentActivity implements NetworkDialog.Not
                                 if (ConnectionResult.SERVICE_INVALID == pServicesStatus) getParent().finish();
                             }
                         });
+
                     }
                 }
             }

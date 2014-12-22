@@ -32,6 +32,10 @@
         <meta-data
                 android:name="com.google.android.gms.version"
                 android:value="@integer/google_play_services_version"/>
+
+        <activity
+            android:name=".ui.utils.LocationDialog"
+            android:theme="@android:style/Theme.Material.Dialog.NoActionBar"></activity>
         <activity android:name=".ui.view.MainActivity"
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="adjustResize"
@@ -55,8 +59,7 @@
         </activity>
         <activity android:name=".ui.view.RegisterActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ui.view.StartActivity"
-                  android:theme="@android:style/Theme.Holo.Light.NoActionBar">
+        <activity android:name=".ui.view.StartActivity">
 
         <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

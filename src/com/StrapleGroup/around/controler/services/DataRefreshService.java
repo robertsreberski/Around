@@ -134,7 +134,7 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                     }.execute(null, null, null);
                 } else Log.e("NOT_LOGGED_IN", "ERROR IN DATALOADSERVICE");
             } else {
-                Log.e("NOT_CONNECTED", "ERROR IN DATALOADSERVICE");
+                Log.e("NO_LOCATION_ENABLED", "ERROR IN DATALOADSERVICE");
             }
         }
     }
