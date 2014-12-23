@@ -93,6 +93,38 @@ public class ConnectionHelper implements Constants {
         return bool;
     }
 
+    public boolean sendAddRequest(String aLogin, String aPass, String aFriendLogin) {
+        JSONObject pObject = new JSONObject();
+        boolean bool = false;
+        try {
+            pObject.put(KEY_LOGIN, aLogin);
+            pObject.put(KEY_PASS, aPass);
+            pObject.put(KEY_FRIEND, aFriendLogin);
+            bool = sendToServer(pObject, "").getBoolean(KEY_VALID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bool;
+    }
+
+    public boolean sendDeleteRequest(String aLogin, String aPass, String aFriendLogin) {
+        JSONObject pObject = new JSONObject();
+        boolean bool = false;
+        try {
+            pObject.put(KEY_LOGIN, aLogin);
+            pObject.put(KEY_PASS, aPass);
+            pObject.put(KEY_FRIEND, aFriendLogin);
+            bool = sendToServer(pObject, "").getBoolean(KEY_VALID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bool;
+    }
+
     public JSONArray updateToApp(String aLogin, String aPass, Double aLat, Double aLng, int aActivity, String aStatus) {
         JSONObject pObject = new JSONObject();
         JSONObject pJsonResponse;
@@ -107,8 +139,8 @@ public class ConnectionHelper implements Constants {
             // Where should request go?
             pJsonResponse = sendToServer(pObject, "");
             if (pJsonResponse.getBoolean(KEY_VALID))
-                addFriendRequest(pJsonResponse.getJSONArray(KEY_REQUEST_LIST));
-                pJsonFinal = pJsonResponse.getJSONArray(KEY_FRIEND_LIST);
+                addRequest(pJsonResponse.getJSONArray(KEY_REQUEST_LIST));
+            pJsonFinal = pJsonResponse.getJSONArray(KEY_FRIEND_LIST);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -117,7 +149,7 @@ public class ConnectionHelper implements Constants {
         return pJsonFinal;
     }
 
-    private void addFriendRequest(JSONArray aArray) throws JSONException {
+    private void addRequest(JSONArray aArray) throws JSONException {
         if (aArray.length() != 0) {
             DataManagerImpl pDataManager = new DataManagerImpl(context);
             for (int i = 0; i < aArray.length(); i++) {
@@ -133,6 +165,7 @@ public class ConnectionHelper implements Constants {
             }
         }
     }
+
     private boolean restoreData(JSONObject aObject) throws JSONException {
         if (aObject.getBoolean(KEY_VALID)) {
             pPrefs.edit().putString(KEY_PHOTO, aObject.getString(KEY_PHOTO));

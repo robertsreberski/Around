@@ -2,6 +2,8 @@ package com.StrapleGroup.around.ui.view;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,9 +11,11 @@ import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
@@ -70,7 +74,14 @@ public class StartActivity extends FragmentActivity implements NetworkDialog.Not
             if (pServicesStatus == ConnectionResult.SUCCESS) {
                 if (pLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == false && pLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
                     startActivity(new Intent(StartActivity.this, LocationDialog.class));
-                } else initiateApp();
+                } else {
+                    initiateApp();
+//                    NotificationCompat.Builder pBuilder = new NotificationCompat.Builder(this).setCategory(Notification.CATEGORY_ERROR).setSmallIcon(R.drawable.home_img)
+//                            .setContentTitle("Location Services").setContentText("Turn on your location feature!");
+//                    NotificationManager mNotifyMgr =
+//                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                    mNotifyMgr.notify(001,pBuilder.build());
+                }
 
             } else {
                 if (GooglePlayServicesUtil.isUserRecoverableError(pServicesStatus)) {

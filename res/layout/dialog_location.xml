@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="We&apos;ve found out that your location settings are disabled. We suggest you turning them on so we can help you more with realizing who is around you."
+        android:text="Your location feature is off, turn it on to use the app in a better way!"
         android:id="@+id/textView2"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
@@ -30,7 +30,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:textSize="18dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
 
@@ -43,7 +43,7 @@
         android:layout_alignTop="@+id/internet_toggle"
         android:layout_alignLeft="@+id/textView"
         android:layout_alignStart="@+id/textView"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="7dp" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -54,7 +54,7 @@
         android:layout_alignTop="@+id/gps_toggle"
         android:layout_alignLeft="@+id/textView3"
         android:layout_alignStart="@+id/textView3"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="7dp"
         android:layout_toLeftOf="@+id/gps_toggle"
         android:layout_toStartOf="@+id/gps_toggle" />
 
@@ -68,10 +68,11 @@
         android:layout_below="@+id/textView2"
         android:layout_alignRight="@+id/textView2"
         android:layout_alignEnd="@+id/textView2"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="10dp"
         android:checked="true"
         android:clickable="false"
-        android:enabled="false" />
+        android:enabled="false"
+        android:layout_marginRight="5dp" />
 
     <ToggleButton
         android:layout_width="40dp"
