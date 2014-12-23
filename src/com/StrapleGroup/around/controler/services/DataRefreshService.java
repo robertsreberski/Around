@@ -105,30 +105,30 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                     new AsyncTask<Void, Void, Boolean>() {
                         @Override
                         protected Boolean doInBackground(Void... params) {
-//                            ConnectionHelper connectionHelper = new ConnectionHelper(context);
-//                            JSONArray pFriendArray = connectionHelper.updateToApp(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""),
-//                                    Double.parseDouble(prefs.getString(KEY_X, "")), Double.parseDouble(prefs.getString(KEY_Y, "")),
-//                                    prefs.getInt(KEY_ACTIVITY, 4), prefs.getString(KEY_STATUS, ""));
-//                            try {
-//                                for (int i = 0; i < pFriendArray.length(); i++) {
-//                                    JSONObject pJsonFriend = pFriendArray.getJSONObject(i);
-//                                    DataManagerImpl pDataManager = new DataManagerImpl(context);
-//                                    FriendsInfo pFriend = new FriendsInfo();
-//                                    pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
-//                                    pFriend.setXFriend(pJsonFriend.getDouble(KEY_X));
-//                                    pFriend.setYFriend(pJsonFriend.getDouble(KEY_Y));
-//                                    pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
-//                                    pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
-//                                    pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
-//                                    pDataManager.updateFriendInfo(pFriend);
-//                                    /*
-//                                    Will create notifications here :1
-//                                     */
-//                                }
-//                                sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
+                            ConnectionHelper connectionHelper = new ConnectionHelper(context);
+                            JSONArray pFriendArray = connectionHelper.updateToApp(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""),
+                                    Double.parseDouble(prefs.getString(KEY_X, "")), Double.parseDouble(prefs.getString(KEY_Y, "")),
+                                    prefs.getInt(KEY_ACTIVITY, 4), prefs.getString(KEY_STATUS, ""));
+                            try {
+                                for (int i = 0; i < pFriendArray.length(); i++) {
+                                    JSONObject pJsonFriend = pFriendArray.getJSONObject(i);
+                                    DataManagerImpl pDataManager = new DataManagerImpl(context);
+                                    FriendsInfo pFriend = new FriendsInfo();
+                                    pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
+                                    pFriend.setXFriend(pJsonFriend.getDouble(KEY_X));
+                                    pFriend.setYFriend(pJsonFriend.getDouble(KEY_Y));
+                                    pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
+                                    pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
+                                    pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
+                                    pDataManager.updateFriendInfo(pFriend);
+                                    /*
+                                    Will create notifications here :1
+                                     */
+                                }
+                                sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             return null;
                         }
                     }.execute(null, null, null);
