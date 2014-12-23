@@ -120,7 +120,7 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
 //                                    pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
 //                                    pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
 //                                    pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
-//                                    pDataManager.saveFriendInfo(pFriend);
+//                                    pDataManager.updateFriendInfo(pFriend);
 //                                    /*
 //                                    Will create notifications here :1
 //                                     */

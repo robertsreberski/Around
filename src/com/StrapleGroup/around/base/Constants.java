@@ -21,8 +21,9 @@ public interface Constants {
     static final String ACTIVITY_RECOGNITION_LOCAL_ACTION = "com.StrapleGroup.around.action.ACTIVITY_RECOGNITION";
     static final String LOG_OUT_LOCAL_ACTION = "com.StrapleGroup.around.action.LOG_OUT";
 
-
+    static final String KEY_FRIEND = "friend";
     static final String KEY_ACTIVITY = "activity";
+    static final String KEY_REQUEST_LIST = "request_list";
     static final String KEY_FRIEND_LIST = "friend_list";
     static final String KEY_PHOTO = "photo";
     static final String KEY_LOGIN = "login";
@@ -31,6 +32,7 @@ public interface Constants {
     static final String KEY_VALID = "valid";
     static final String KEY_Y = "y";
     static final String KEY_STATUS = "status";
+    static final String STATUS_REQUEST = "request";
     static final String STATUS_ONLINE = "online";
     static final String STATUS_OFFLINE = "offline";
     static final String STATUS_BUSY = "busy";

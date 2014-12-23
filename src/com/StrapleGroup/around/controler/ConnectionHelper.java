@@ -7,6 +7,7 @@ import android.util.Base64;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.base.FriendsInfo;
+import com.google.android.gms.location.DetectedActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,6 +107,7 @@ public class ConnectionHelper implements Constants {
             // Where should request go?
             pJsonResponse = sendToServer(pObject, "");
             if (pJsonResponse.getBoolean(KEY_VALID))
+                addFriendRequest(pJsonResponse.getJSONArray(KEY_REQUEST_LIST));
                 pJsonFinal = pJsonResponse.getJSONArray(KEY_FRIEND_LIST);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -115,13 +117,29 @@ public class ConnectionHelper implements Constants {
         return pJsonFinal;
     }
 
+    private void addFriendRequest(JSONArray aArray) throws JSONException {
+        if (aArray.length() != 0) {
+            DataManagerImpl pDataManager = new DataManagerImpl(context);
+            for (int i = 0; i < aArray.length(); i++) {
+                JSONObject pJsonRequest = aArray.getJSONObject(i);
+                FriendsInfo pFriend = new FriendsInfo();
+                pFriend.setLoginFriend(pJsonRequest.getString(KEY_LOGIN));
+                pFriend.setXFriend(0);
+                pFriend.setYFriend(0);
+                pFriend.setActivities(DetectedActivity.UNKNOWN);
+                pFriend.setStatus(STATUS_REQUEST);
+                pFriend.setProfilePhoto(Base64.decode("", 0));
+                pDataManager.saveFriendInfo(pFriend);
+            }
+        }
+    }
     private boolean restoreData(JSONObject aObject) throws JSONException {
         if (aObject.getBoolean(KEY_VALID)) {
             pPrefs.edit().putString(KEY_PHOTO, aObject.getString(KEY_PHOTO));
+            DataManagerImpl pDataManager = new DataManagerImpl(context);
             JSONArray pJsonArray = aObject.getJSONArray(KEY_FRIEND_LIST);
             for (int i = 0; i < pJsonArray.length(); i++) {
                 JSONObject pJsonFriend = pJsonArray.getJSONObject(i);
-                DataManagerImpl pDataManager = new DataManagerImpl(context);
                 FriendsInfo pFriend = new FriendsInfo();
                 pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
                 pFriend.setXFriend(pJsonFriend.getDouble(KEY_X));

@@ -42,12 +42,6 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         return insertStatement.executeInsert();
     }
 
-//    public long saveLoginOnly(FriendsInfo friendsInfo) {
-//        insertStatement.clearBindings();
-//        insertStatement.bindString(1, friendsInfo.getLoginFriend());
-//        return insertStatement.executeInsert();
-//    }
-
     @Override
     public void update(FriendsInfo friendsInfo) {
         final ContentValues values = new ContentValues();
@@ -58,8 +52,7 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         values.put(FriendsInfoColumns.STATUS, friendsInfo.getStatus());
         values.put(FriendsInfoColumns.ACTIVITY, friendsInfo.getActivities());
         db.update(FriendsInfoTable.TABLE_NAME, values,
-                BaseColumns._ID + " = ?",
-                new String[]{String.valueOf(friendsInfo.getId())});
+                BaseColumns._ID + " = " + find(friendsInfo.getLoginFriend()), null);
     }
 
     @Override

@@ -72,6 +72,19 @@ public class DataManagerImpl implements DataManager {
         return friendId;
     }
 
+    @Override
+    public void updateFriendInfo(FriendsInfo friendsInfo) {
+        try {
+            db.beginTransaction();
+            friendsDao.update(friendsInfo);
+            db.setTransactionSuccessful();
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "SthBroke");
+        } finally {
+            db.endTransaction();
+        }
+    }
+
 //    @Override
 //    public long saveLoginOnly(FriendsInfo friendsInfo) {
 //        long friendId = 0L;
