@@ -76,17 +76,16 @@ public class RegisterActivity extends Activity implements Constants {
                         prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
                         ImageHelper pImageHelper = new ImageHelper();
                         photoString = pImageHelper.encodeImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example));
-//                        ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
-//                        Double pLat = 0.000;
-//                        Double pLng = 0.000;
-//                        int pActivity = DetectedActivity.UNKNOWN;
-//                        if (prefs.contains(KEY_X) && prefs.contains(KEY_Y)) {
-//                            pLat = Double.parseDouble(prefs.getString(KEY_X, ""));
-//                            pLng = Double.parseDouble(prefs.getString(KEY_Y, ""));
-//                        }
-//                        if (prefs.contains(KEY_ACTIVITY)) pActivity = prefs.getInt(KEY_ACTIVITY, 4);
-//                        return pConnectionHelper.registerToApp(login, pass, pLat, pLng, photoString, pActivity);
-                        return true;
+                        ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
+                        Double pLat = 0.000;
+                        Double pLng = 0.000;
+                        int pActivity = DetectedActivity.UNKNOWN;
+                        if (prefs.contains(KEY_X) && prefs.contains(KEY_Y)) {
+                            pLat = Double.parseDouble(prefs.getString(KEY_X, ""));
+                            pLng = Double.parseDouble(prefs.getString(KEY_Y, ""));
+                        }
+                        if (prefs.contains(KEY_ACTIVITY)) pActivity = prefs.getInt(KEY_ACTIVITY, 4);
+                        return pConnectionHelper.registerToApp(login, pass, pLat, pLng, photoString, pActivity);
                     }
 
                     @Override
