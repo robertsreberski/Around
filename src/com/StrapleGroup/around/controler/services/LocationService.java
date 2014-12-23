@@ -85,12 +85,13 @@ public class LocationService extends Service implements Constants {
         return provider1.equals(provider2);
     }
 
+
     @Override
     public void onDestroy() {
 //        handler.removeCallbacks(sendUpdatesToUI);
-        super.onDestroy();
         Log.v("STOP_SERVICE", "DONE");
         locationManager.removeUpdates(listener);
+        super.onDestroy();
     }
 
     public static Thread performOnBackgroundThread(final Runnable runnable) {

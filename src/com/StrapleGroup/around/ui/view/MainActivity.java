@@ -1,13 +1,16 @@
 package com.StrapleGroup.around.ui.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.controler.services.LocationService;
 import com.StrapleGroup.around.ui.utils.AroundViewPager;
 import com.StrapleGroup.around.ui.view.fragments.*;
 
@@ -65,6 +68,19 @@ public class MainActivity extends FragmentActivity implements Constants {
             FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
             pTransaction.remove(navDrawer).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("Location service", "RESUME");
+        startService(new Intent(MainActivity.this, LocationService.class));
+    }
+
+    @Override
+    protected void onPause() {
+        stopService(new Intent(MainActivity.this, LocationService.class));
+        super.onPause();
     }
 
     public void goFriendList(View view) {
