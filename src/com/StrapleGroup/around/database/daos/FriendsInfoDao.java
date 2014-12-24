@@ -10,6 +10,7 @@ import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.intefaces.Dao;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable.FriendsInfoColumns;
+import com.google.android.gms.location.DetectedActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,17 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
     }
 
     @Override
+    public void saveRequest(FriendsInfo friendsInfo) {
+        insertStatement.clearBindings();
+        insertStatement.bindString(1, friendsInfo.getLoginFriend());
+        insertStatement.bindBlob(2, friendsInfo.getProfilePhoto());
+        insertStatement.bindDouble(3, 0);
+        insertStatement.bindDouble(4, 0);
+        insertStatement.bindString(5, friendsInfo.getStatus());
+        insertStatement.bindDouble(6, DetectedActivity.UNKNOWN);
+    }
+
+    @Override
     public void update(FriendsInfo friendsInfo) {
         final ContentValues values = new ContentValues();
         values.put(FriendsInfoColumns.LOGIN_FRIEND, friendsInfo.getLoginFriend());
@@ -69,6 +81,7 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
     public void delete(String id) {
         db.delete(FriendsInfoTable.TABLE_NAME, BaseColumns._ID + " =" + id, null);
     }
+
 
     public FriendsInfo get(long id) {
         FriendsInfo pFriendsInfo = null;

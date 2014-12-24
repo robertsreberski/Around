@@ -3,12 +3,13 @@ package com.StrapleGroup.around.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
 
 public class OpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "DataTables.db";
+    private static final String DATABASE_NAME = "AroundDataBase.db";
 
     public OpenHelper(final Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

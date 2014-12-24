@@ -6,6 +6,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.StrapleGroup.around.database.intefaces.DataManager;
@@ -70,6 +71,19 @@ public class DataManagerImpl implements DataManager {
             db.endTransaction();
         }
         return friendId;
+    }
+
+    @Override
+    public void saveRequest(FriendsInfo friendsInfo) {
+        try {
+            db.beginTransaction();
+            friendsDao.saveRequest(friendsInfo);
+            db.setTransactionSuccessful();
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "BrokenDB");
+        } finally {
+            db.endTransaction();
+        }
     }
 
     @Override

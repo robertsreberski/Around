@@ -11,6 +11,8 @@ public interface Dao<T> {
 
     void delete(String id);
 
+    void saveRequest(T type);
+
 //    long saveLoginOnly(T type);
 
     List<T> getAll();

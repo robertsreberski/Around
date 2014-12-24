@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 
@@ -22,8 +21,7 @@ import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.base.FriendsInfo;
-import com.StrapleGroup.around.ui.utils.LocationDialog;
-import com.StrapleGroup.around.ui.view.MainActivity;
+import com.StrapleGroup.around.ui.view.dialogs.LocationDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
@@ -117,22 +115,25 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                                     Double.parseDouble(prefs.getString(KEY_X, "")), Double.parseDouble(prefs.getString(KEY_Y, "")),
                                     prefs.getInt(KEY_ACTIVITY, 4), prefs.getString(KEY_STATUS, ""));
                             try {
-                                for (int i = 0; i < pFriendArray.length(); i++) {
-                                    JSONObject pJsonFriend = pFriendArray.getJSONObject(i);
-                                    DataManagerImpl pDataManager = new DataManagerImpl(context);
-                                    FriendsInfo pFriend = new FriendsInfo();
-                                    pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
-                                    pFriend.setXFriend(pJsonFriend.getDouble(KEY_X));
-                                    pFriend.setYFriend(pJsonFriend.getDouble(KEY_Y));
-                                    pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
-                                    pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
-                                    pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
-                                    pDataManager.updateFriendInfo(pFriend);
+                                if (pFriendArray != null) {
+                                    for (int i = 0; i < pFriendArray.length(); i++) {
+                                        JSONObject pJsonFriend = pFriendArray.getJSONObject(i);
+                                        DataManagerImpl pDataManager = new DataManagerImpl(context);
+                                        FriendsInfo pFriend = new FriendsInfo();
+                                        pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
+                                        pFriend.setXFriend(pJsonFriend.getDouble(KEY_X));
+                                        pFriend.setYFriend(pJsonFriend.getDouble(KEY_Y));
+                                        pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
+                                        pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
+                                        pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
+                                        pDataManager.updateFriendInfo(pFriend);
                                     /*
                                     Will create notifications here :1
                                      */
-                                }
-                                sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
+                                    }
+                                    sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
+                                } else Log.e("SERVER", "SERVER DOESNT WORK");
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -1,6 +1,7 @@
 package com.StrapleGroup.around.database.intefaces;
 
 import android.database.Cursor;
+
 import com.StrapleGroup.around.database.base.FriendsInfo;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public interface DataManager {
     long findFriend(String friendLogin);
 
     public long saveFriendInfo(FriendsInfo friendInfo);
+
+    void saveRequest(FriendsInfo friendsInfo);
 
     void updateFriendInfo(FriendsInfo friendsInfo);
 

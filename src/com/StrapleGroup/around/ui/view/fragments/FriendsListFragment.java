@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,9 +24,10 @@ import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.ui.controler.SmartListAdapter;
+import com.StrapleGroup.around.ui.view.dialogs.FriendDialog;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-public class FriendsListFragment extends Fragment implements Constants {
+public class FriendsListFragment extends Fragment implements Constants, AdapterView.OnItemClickListener {
     private Context context;
     private DataManagerImpl dataManager;
     private SharedPreferences userInfoPrefs;
@@ -64,6 +66,7 @@ public class FriendsListFragment extends Fragment implements Constants {
         viewGroup = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.request_list, null);
         ListView listView = (ListView) getActivity().findViewById(R.id.listViewTest);
         listView.setAdapter(smartListAdapter);
+        listView.setOnItemClickListener(this);
         startComps();
     }
 
@@ -147,6 +150,12 @@ public class FriendsListFragment extends Fragment implements Constants {
         getActivity().registerReceiver(requestReceiver, requestFilter);
         getActivity().registerReceiver(deleteReceiver, deleteFilter);
         getActivity().registerReceiver(refreshReceiver, addFilter);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent pIntent = new Intent(getActivity().getBaseContext(), FriendDialog.class);
+        startActivity(pIntent);
     }
 
     private class RefreshReceiver extends WakefulBroadcastReceiver {

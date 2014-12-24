@@ -1,4 +1,4 @@
-package com.StrapleGroup.around.ui.utils;
+package com.StrapleGroup.around.ui.view.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;

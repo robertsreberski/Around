@@ -39,7 +39,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".ui.utils.LocationDialog"
+            android:name=".ui.view.dialogs.LocationDialog"
             android:theme="@style/DialogTheme"></activity>
         <activity
             android:name=".ui.view.MainActivity"
@@ -67,6 +67,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.view.dialogs.FriendDialog" />
     </application>
 
 </manifest>

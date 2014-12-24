@@ -2,8 +2,6 @@ package com.StrapleGroup.around.ui.view;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,18 +9,15 @@ import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NotificationCompat;
 
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.services.DataRefreshService;
-import com.StrapleGroup.around.controler.services.LocationService;
-import com.StrapleGroup.around.ui.utils.LocationDialog;
-import com.StrapleGroup.around.ui.utils.NetworkDialog;
+import com.StrapleGroup.around.ui.view.dialogs.LocationDialog;
+import com.StrapleGroup.around.ui.view.dialogs.NetworkDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 

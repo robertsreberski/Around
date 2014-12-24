@@ -35,6 +35,7 @@ public interface Constants {
     static final String KEY_STATUS = "status";
 
     static final String STATUS_REQUEST = "request";
+    static final String STATUS_INVITATION = "invitation";
     static final String STATUS_ONLINE = "online";
     static final String STATUS_OFFLINE = "offline";
     static final String STATUS_BUSY = "busy";
