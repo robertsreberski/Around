@@ -130,6 +130,24 @@ public class ConnectionHelper implements Constants {
         return bool;
     }
 
+    public boolean sendAddResponse(String aLogin, String aPass, String aFriendLogin, boolean aResponse) {
+        JSONObject pObject = new JSONObject();
+        boolean bool = false;
+        try {
+            pObject.put(KEY_ACTION, RESPONSE_REQUEST_SERVER_ACTION);
+            pObject.put(KEY_LOGIN, aLogin);
+            pObject.put(KEY_PASS, aPass);
+            pObject.put(KEY_FRIEND, aFriendLogin);
+            pObject.put(KEY_VALID, aResponse);
+            bool = sendToServer(pObject, "").getBoolean(KEY_VALID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bool;
+    }
+
     public JSONArray updateToApp(String aLogin, String aPass, Double aLat, Double aLng, int aActivity, String aStatus) {
         JSONObject pObject = new JSONObject();
         JSONObject pJsonResponse;
