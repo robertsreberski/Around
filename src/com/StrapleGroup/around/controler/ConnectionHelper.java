@@ -3,6 +3,7 @@ package com.StrapleGroup.around.controler;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
+import android.util.Log;
 
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.DataManagerImpl;
@@ -47,10 +48,11 @@ public class ConnectionHelper implements Constants {
             pObject.put(KEY_ACTIVITY, aActivity);
             System.out.println(pObject.toString());
             // Where should request go?
-            bool = restoreData(sendToServer(pObject, ""));
+            bool = restoreData(sendToServer(pObject));
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            Log.e("SERVER", "PROBLEM WITH SERVER");
             e.printStackTrace();
         }
         return bool;
@@ -65,10 +67,11 @@ public class ConnectionHelper implements Constants {
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_PHOTO, aPhoto);
             // Where should request go?
-            bool = sendToServer(pObject, "").getBoolean(KEY_VALID);
+            bool = sendToServer(pObject).getBoolean(KEY_VALID);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            Log.e("SERVER", "PROBLEM WITH SERVER");
             e.printStackTrace();
         }
         return bool;
@@ -87,10 +90,11 @@ public class ConnectionHelper implements Constants {
             pObject.put(KEY_ACTIVITY, aActivity);
             pObject.put(KEY_PHOTO, aPhoto);
             // Where should request go?
-            bool = sendToServer(pObject, "").getBoolean(KEY_VALID);
+            bool = sendToServer(pObject).getBoolean(KEY_VALID);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            Log.e("SERVER", "PROBLEM WITH SERVER");
             e.printStackTrace();
         }
         return bool;
@@ -104,10 +108,11 @@ public class ConnectionHelper implements Constants {
             pObject.put(KEY_LOGIN, aLogin);
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_FRIEND, aFriendLogin);
-            bool = sendToServer(pObject, "").getBoolean(KEY_VALID);
+            bool = sendToServer(pObject).getBoolean(KEY_VALID);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            Log.e("SERVER", "PROBLEM WITH SERVER");
             e.printStackTrace();
         }
         return bool;
@@ -121,10 +126,11 @@ public class ConnectionHelper implements Constants {
             pObject.put(KEY_LOGIN, aLogin);
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_FRIEND, aFriendLogin);
-            bool = sendToServer(pObject, "").getBoolean(KEY_VALID);
+            bool = sendToServer(pObject).getBoolean(KEY_VALID);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            Log.e("SERVER", "PROBLEM WITH SERVER");
             e.printStackTrace();
         }
         return bool;
@@ -139,10 +145,11 @@ public class ConnectionHelper implements Constants {
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_FRIEND, aFriendLogin);
             pObject.put(KEY_VALID, aResponse);
-            bool = sendToServer(pObject, "").getBoolean(KEY_VALID);
+            bool = sendToServer(pObject).getBoolean(KEY_VALID);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            Log.e("SERVER", "PROBLEM WITH SERVER");
             e.printStackTrace();
         }
         return bool;
@@ -161,13 +168,14 @@ public class ConnectionHelper implements Constants {
             pObject.put(KEY_STATUS, aStatus);
             pObject.put(KEY_ACTIVITY, aActivity);
             // Where should request go?
-            pJsonResponse = sendToServer(pObject, "");
+            pJsonResponse = sendToServer(pObject);
             if (pJsonResponse.getBoolean(KEY_VALID))
                 addRequest(pJsonResponse.getJSONArray(KEY_REQUEST_LIST));
             pJsonFinal = pJsonResponse.getJSONArray(KEY_FRIEND_LIST);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            Log.e("SERVER", "PROBLEM WITH SERVER");
             e.printStackTrace();
         }
         return pJsonFinal;
@@ -196,16 +204,18 @@ public class ConnectionHelper implements Constants {
             pPrefs.edit().putString(KEY_PHOTO, aObject.getString(KEY_PHOTO));
             DataManagerImpl pDataManager = new DataManagerImpl(context);
             JSONArray pJsonArray = aObject.getJSONArray(KEY_FRIEND_LIST);
-            for (int i = 0; i < pJsonArray.length(); i++) {
-                JSONObject pJsonFriend = pJsonArray.getJSONObject(i);
-                FriendsInfo pFriend = new FriendsInfo();
-                pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
-                pFriend.setXFriend(pJsonFriend.getDouble(KEY_X));
-                pFriend.setYFriend(pJsonFriend.getDouble(KEY_Y));
-                pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
-                pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
-                pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
-                pDataManager.saveFriendInfo(pFriend);
+            if (pJsonArray != null) {
+                for (int i = 0; i < pJsonArray.length(); i++) {
+                    JSONObject pJsonFriend = pJsonArray.getJSONObject(i);
+                    FriendsInfo pFriend = new FriendsInfo();
+                    pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
+                    pFriend.setXFriend(pJsonFriend.getDouble(KEY_X));
+                    pFriend.setYFriend(pJsonFriend.getDouble(KEY_Y));
+                    pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
+                    pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
+                    pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
+                    pDataManager.saveFriendInfo(pFriend);
+                }
             }
             return true;
         } else {
@@ -214,8 +224,8 @@ public class ConnectionHelper implements Constants {
     }
 
 
-    private JSONObject sendToServer(JSONObject aObject, String aWhere) throws IOException, JSONException {
-        URL pUrl = new URL(TEST_SERVER + aWhere);
+    private JSONObject sendToServer(JSONObject aObject) throws IOException, JSONException {
+        URL pUrl = new URL(TEST_SERVER);
         URLConnection pConnection = pUrl.openConnection();
         pConnection.setDoOutput(true);
         OutputStreamWriter out = new OutputStreamWriter(pConnection.getOutputStream());
