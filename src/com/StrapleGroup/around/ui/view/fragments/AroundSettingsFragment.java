@@ -103,9 +103,8 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
 
                 @Override
                 protected Boolean doInBackground(Void... params) {
-//                    ConnectionHelper pConnectionHelper = new ConnectionHelper(getActivity().getApplicationContext());
-//                    return pConnectionHelper.updatePhoto(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""), pPhotoString);
-                    return true;
+                    ConnectionHelper pConnectionHelper = new ConnectionHelper(getActivity().getApplicationContext());
+                    return pConnectionHelper.updatePhoto(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""), pPhotoString);
                 }
 
                 @Override
@@ -116,7 +115,8 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
                         pPrefsEdit.putString(Constants.KEY_PHOTO, pPhotoString);
                         pPrefsEdit.commit();
                         getActivity().sendBroadcast(new Intent(REFRESH_SETTINGS_LOCAL_ACTION));
-                    }
+                    } else
+                        Toast.makeText(getActivity().getApplicationContext(), "An error occured while changing photo", Toast.LENGTH_SHORT).show();
                 }
             }.execute(null, null, null);
         }

@@ -38,6 +38,7 @@ public class ConnectionHelper implements Constants {
         boolean bool = false;
         JSONObject pObject = new JSONObject();
         try {
+            pObject.put(KEY_ACTION, LOGIN_SERVER_ACTION);
             pObject.put(KEY_LOGIN, aLogin);
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_X, aLat);
@@ -59,6 +60,7 @@ public class ConnectionHelper implements Constants {
         boolean bool = false;
         try {
             JSONObject pObject = new JSONObject();
+            pObject.put(KEY_ACTION, PHOTO_UPDATE_SERVER_ACTION);
             pObject.put(KEY_LOGIN, aLogin);
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_PHOTO, aPhoto);
@@ -76,6 +78,7 @@ public class ConnectionHelper implements Constants {
         boolean bool = false;
         JSONObject pObject = new JSONObject();
         try {
+            pObject.put(KEY_ACTION, REGISTER_SERVER_ACTION);
             pObject.put(KEY_LOGIN, aLogin);
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_X, aLat);
@@ -97,6 +100,7 @@ public class ConnectionHelper implements Constants {
         JSONObject pObject = new JSONObject();
         boolean bool = false;
         try {
+            pObject.put(KEY_ACTION, ADD_SERVER_ACTION);
             pObject.put(KEY_LOGIN, aLogin);
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_FRIEND, aFriendLogin);
@@ -113,6 +117,7 @@ public class ConnectionHelper implements Constants {
         JSONObject pObject = new JSONObject();
         boolean bool = false;
         try {
+            pObject.put(KEY_ACTION, DELETE_SERVER_ACTION);
             pObject.put(KEY_LOGIN, aLogin);
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_FRIEND, aFriendLogin);
@@ -130,6 +135,7 @@ public class ConnectionHelper implements Constants {
         JSONObject pJsonResponse;
         JSONArray pJsonFinal = null;
         try {
+            pObject.put(KEY_ACTION, UPDATE_SERVER_ACTION);
             pObject.put(KEY_LOGIN, aLogin);
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_X, aLat);
@@ -148,6 +154,7 @@ public class ConnectionHelper implements Constants {
         }
         return pJsonFinal;
     }
+
 
     private void addRequest(JSONArray aArray) throws JSONException {
         if (aArray.length() != 0) {

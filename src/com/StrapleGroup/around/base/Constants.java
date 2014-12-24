@@ -1,13 +1,13 @@
 package com.StrapleGroup.around.base;
 
 public interface Constants {
-    static final String PHOTO_ACTION = "com.StrapleGroup.gcm.PHOTO";
-    static final String REGISTER_ACTION = "com.StrapleGroup.gcm.REGISTER";
-    static final String ADD_ACTION = "com.StrapleGroup.gcm.REQUEST";
-    static final String ADD_RESPONSE = "com.StrapleGroup.gcm.FRIENDADD";
-    static final String LOGIN_ACTION = "com.StrapleGroup.gcm.LOGIN";
-    static final String REFRESH_ACTION = "com.StrapleGroup.gcm.LOCATION";
-    static final String DELETE_ACTION = "com.StrapleGroup.gcm.DELETE";
+    static final String UPDATE_SERVER_ACTION = "com.StrapleGroup.UPDATE";
+    static final String REGISTER_SERVER_ACTION = "com.StrapleGroup.REGISTER";
+    static final String LOGIN_SERVER_ACTION = "com.StrapleGroup.LOGIN";
+    static final String PHOTO_UPDATE_SERVER_ACTION = "com.StrapleGroup.PHOTO_UPDATE";
+    static final String ADD_SERVER_ACTION = "com.StrapleGroup.ADD";
+    static final String RESPONSE_REQUEST_SERVER_ACTION = "com.StrapleGroup.RESPONSE";
+    static final String DELETE_SERVER_ACTION = "com.StrapleGroup.DELETE";
 
     static final String PHOTO_LOCAL_ACTION = "com.StrapleGroup.around.action.PHOTO";
     static final String DELETE_LOCAL_ACTION = "com.StrapleGroup.around.action.DELETE";
@@ -21,6 +21,7 @@ public interface Constants {
     static final String ACTIVITY_RECOGNITION_LOCAL_ACTION = "com.StrapleGroup.around.action.ACTIVITY_RECOGNITION";
     static final String LOG_OUT_LOCAL_ACTION = "com.StrapleGroup.around.action.LOG_OUT";
 
+    static final String KEY_ACTION = "action";
     static final String KEY_FRIEND = "friend";
     static final String KEY_ACTIVITY = "activity";
     static final String KEY_REQUEST_LIST = "request_list";
@@ -32,13 +33,13 @@ public interface Constants {
     static final String KEY_VALID = "valid";
     static final String KEY_Y = "y";
     static final String KEY_STATUS = "status";
+
     static final String STATUS_REQUEST = "request";
     static final String STATUS_ONLINE = "online";
     static final String STATUS_OFFLINE = "offline";
     static final String STATUS_BUSY = "busy";
-    static final String KEY_ACTION = "action";
+
     static final String KEY_MESSAGE = "message";
-    static final String PROPERTY_APP_VERSION = "appVersion";
 
     static final String USER_PREFS = "user_data";
 }

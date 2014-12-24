@@ -59,19 +59,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/loginProgress"
-            android:indeterminate="false"
-            android:layout_alignTop="@+id/loginButton" android:layout_centerHorizontal="true"/>
+        android:layout_alignTop="@+id/loginButton"
+        android:layout_centerHorizontal="true" />
+
     <ImageButton
             android:layout_width="300dp"
             android:layout_height="90dp"
             android:onClick="goRegister"
             android:id="@+id/go_register"
-            android:layout_alignRight="@+id/loginButton"
-        android:layout_alignEnd="@+id/loginButton"
-        android:layout_toEndOf="@+id/loginProgress"
+        android:layout_below="@+id/loginProgress"
         android:layout_alignLeft="@+id/loginButton"
         android:layout_alignStart="@+id/loginButton"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignRight="@+id/loginButton"
+        android:layout_alignEnd="@+id/loginButton" />
     <!--<TextView-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->

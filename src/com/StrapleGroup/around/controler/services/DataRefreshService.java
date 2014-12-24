@@ -1,7 +1,10 @@
 package com.StrapleGroup.around.controler.services;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,13 +13,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 
+import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.base.FriendsInfo;
+import com.StrapleGroup.around.ui.utils.LocationDialog;
+import com.StrapleGroup.around.ui.view.MainActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
@@ -134,11 +141,21 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                     }.execute(null, null, null);
                 } else Log.e("NOT_LOGGED_IN", "ERROR IN DATALOADSERVICE");
             } else {
+                sendNotification();
                 Log.e("NO_LOCATION_ENABLED", "ERROR IN DATALOADSERVICE");
             }
         }
     }
 
+    private void sendNotification() {
+        Intent pIntent = new Intent(this, LocationDialog.class);
+        TaskStackBuilder pTaskStack = TaskStackBuilder.create(this).addNextIntent(pIntent);
+        Notification.Builder pNotification = new Notification.Builder(this).setSmallIcon(R.drawable.home_img).setAutoCancel(true)
+                .setContentTitle("Location settings turned off!").setContentText("Please turn on location settings")
+                .setContentIntent(pTaskStack.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT));
+        NotificationManager pNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        pNotificationManager.notify(0, pNotification.build());
+    }
     private boolean checkIfLogin() {
         boolean pCheck = false;
         if (prefs.contains(KEY_LOGIN) && prefs.contains(KEY_PASS)) pCheck = true;
