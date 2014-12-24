@@ -155,10 +155,9 @@ public class ConnectionHelper implements Constants {
         return bool;
     }
 
-    public JSONArray updateToApp(String aLogin, String aPass, Double aLat, Double aLng, int aActivity, String aStatus) {
+    public JSONObject updateToApp(String aLogin, String aPass, Double aLat, Double aLng, int aActivity, String aStatus) {
         JSONObject pObject = new JSONObject();
-        JSONObject pJsonResponse;
-        JSONArray pJsonFinal = null;
+        JSONObject pJsonFinal = null;
         try {
             pObject.put(KEY_ACTION, UPDATE_SERVER_ACTION);
             pObject.put(KEY_LOGIN, aLogin);
@@ -168,10 +167,9 @@ public class ConnectionHelper implements Constants {
             pObject.put(KEY_STATUS, aStatus);
             pObject.put(KEY_ACTIVITY, aActivity);
             // Where should request go?
-            pJsonResponse = sendToServer(pObject);
+            JSONObject pJsonResponse = sendToServer(pObject);
             if (pJsonResponse.getBoolean(KEY_VALID))
-                addRequest(pJsonResponse.getJSONArray(KEY_REQUEST_LIST));
-            pJsonFinal = pJsonResponse.getJSONArray(KEY_FRIEND_LIST);
+                pJsonFinal = pJsonResponse;
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -200,6 +198,7 @@ public class ConnectionHelper implements Constants {
     }
 
     private boolean restoreData(JSONObject aObject) throws JSONException {
+        boolean pBool = false;
         if (aObject.getBoolean(KEY_VALID)) {
             pPrefs.edit().putString(KEY_PHOTO, aObject.getString(KEY_PHOTO));
             DataManagerImpl pDataManager = new DataManagerImpl(context);
@@ -217,10 +216,11 @@ public class ConnectionHelper implements Constants {
                     pDataManager.saveFriendInfo(pFriend);
                 }
             }
-            return true;
+            pBool = true;
         } else {
-            return false;
+            pBool = false;
         }
+        return pBool;
     }
 
 

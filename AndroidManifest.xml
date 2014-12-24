@@ -53,6 +53,7 @@
             android:exported="true"></service>
         <service android:name=".controler.services.DataRefreshService" />
         <service android:name="com.StrapleGroup.around.controler.services.ActivityRecognitionService"></service>
+        <service android:name=".controler.services.AroundNotifierService" />
 
         <activity
             android:name="com.StrapleGroup.around.ui.view.LoginActivity"

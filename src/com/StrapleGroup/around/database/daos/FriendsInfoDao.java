@@ -58,11 +58,19 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
     public void update(FriendsInfo friendsInfo) {
         final ContentValues values = new ContentValues();
         values.put(FriendsInfoColumns.LOGIN_FRIEND, friendsInfo.getLoginFriend());
-        values.put(FriendsInfoColumns.PROFILE_PHOTO, friendsInfo.getProfilePhoto());
         values.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
         values.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
         values.put(FriendsInfoColumns.STATUS, friendsInfo.getStatus());
         values.put(FriendsInfoColumns.ACTIVITY, friendsInfo.getActivities());
+        db.update(FriendsInfoTable.TABLE_NAME, values,
+                BaseColumns._ID + " = " + find(friendsInfo.getLoginFriend()), null);
+    }
+
+    @Override
+    public void updatePhoto(FriendsInfo friendsInfo) {
+        final ContentValues values = new ContentValues();
+        values.put(FriendsInfoColumns.LOGIN_FRIEND, friendsInfo.getLoginFriend());
+        values.put(FriendsInfoColumns.PROFILE_PHOTO, friendsInfo.getProfilePhoto());
         db.update(FriendsInfoTable.TABLE_NAME, values,
                 BaseColumns._ID + " = " + find(friendsInfo.getLoginFriend()), null);
     }

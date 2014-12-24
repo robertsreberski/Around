@@ -80,7 +80,20 @@ public class DataManagerImpl implements DataManager {
             friendsDao.saveRequest(friendsInfo);
             db.setTransactionSuccessful();
         } catch (SQLException e) {
-            Log.e("Transaction unsuccessful", "BrokenDB");
+            Log.e("Transaction unsuccessful", "Broken DB");
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    @Override
+    public void updatePhoto(FriendsInfo friendsInfo) {
+        try {
+            db.beginTransaction();
+            friendsDao.updatePhoto(friendsInfo);
+            db.setTransactionSuccessful();
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "Broken DB");
         } finally {
             db.endTransaction();
         }
@@ -93,7 +106,7 @@ public class DataManagerImpl implements DataManager {
             friendsDao.update(friendsInfo);
             db.setTransactionSuccessful();
         } catch (SQLException e) {
-            Log.e("Transaction unsuccessful", "SthBroke");
+            Log.e("Transaction unsuccessful", "Broken DB");
         } finally {
             db.endTransaction();
         }

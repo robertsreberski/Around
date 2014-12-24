@@ -33,6 +33,7 @@ public interface Constants {
     static final String KEY_VALID = "valid";
     static final String KEY_Y = "y";
     static final String KEY_STATUS = "status";
+    static final String KEY_PHOTO_LIST = "photo_list";
 
     static final String STATUS_REQUEST = "request";
     static final String STATUS_INVITATION = "invitation";

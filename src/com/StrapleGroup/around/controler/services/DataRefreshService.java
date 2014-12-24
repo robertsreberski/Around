@@ -8,6 +8,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.base.FriendsInfo;
+import com.StrapleGroup.around.ui.utils.ImageHelper;
 import com.StrapleGroup.around.ui.view.dialogs.LocationDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,6 +40,7 @@ import java.util.TimerTask;
  * Created by Robert on 2014-08-30.
  */
 public class DataRefreshService extends Service implements Constants, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+    float MIN_DISTANCE = 1 * 1000;
     private SendInfoTask sendInfo;
     private Timer looper;
     private Context context;
@@ -111,25 +114,62 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                         @Override
                         protected Boolean doInBackground(Void... params) {
                             ConnectionHelper connectionHelper = new ConnectionHelper(context);
-                            JSONArray pFriendArray = connectionHelper.updateToApp(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""),
+                            JSONObject pRefreshObject = connectionHelper.updateToApp(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""),
                                     Double.parseDouble(prefs.getString(KEY_X, "")), Double.parseDouble(prefs.getString(KEY_Y, "")),
                                     prefs.getInt(KEY_ACTIVITY, 4), prefs.getString(KEY_STATUS, ""));
                             try {
-                                if (pFriendArray != null) {
-                                    for (int i = 0; i < pFriendArray.length(); i++) {
-                                        JSONObject pJsonFriend = pFriendArray.getJSONObject(i);
-                                        DataManagerImpl pDataManager = new DataManagerImpl(context);
-                                        FriendsInfo pFriend = new FriendsInfo();
-                                        pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
-                                        pFriend.setXFriend(pJsonFriend.getDouble(KEY_X));
-                                        pFriend.setYFriend(pJsonFriend.getDouble(KEY_Y));
-                                        pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
-                                        pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
-                                        pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
-                                        pDataManager.updateFriendInfo(pFriend);
+                                if (pRefreshObject != null) {
+                                    if (pRefreshObject.getBoolean(KEY_VALID)) {
+                                        JSONArray pFriendArray = pRefreshObject.getJSONArray(KEY_FRIEND_LIST);
+                                        JSONArray pRequestArray = pRefreshObject.getJSONArray(KEY_REQUEST_LIST);
+                                        JSONArray pPhotoArray = pRefreshObject.getJSONArray(KEY_PHOTO_LIST);
+                                        for (int i = 0; i < pFriendArray.length(); i++) {
+                                            JSONObject pJsonFriend = pFriendArray.getJSONObject(i);
+                                            DataManagerImpl pDataManager = new DataManagerImpl(context);
+                                            FriendsInfo pFriend = new FriendsInfo();
+                                            final double pFriendLat = pJsonFriend.getDouble(KEY_X);
+                                            final double pFriendLng = pJsonFriend.getDouble(KEY_Y);
+                                            pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
+                                            pFriend.setXFriend(pFriendLat);
+                                            pFriend.setYFriend(pFriendLng);
+                                            pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
+                                            pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
+                                            pDataManager.updateFriendInfo(pFriend);
+                                            Location pFriendLocation = new Location("Friend Location");
+                                            pFriendLocation.setLatitude(pFriendLat);
+                                            pFriendLocation.setLongitude(pFriendLng);
+                                            Location pMyLocation = new Location("My Location");
+                                            pMyLocation.setLatitude(Double.parseDouble(prefs.getString(KEY_X, "")));
+                                            pMyLocation.setLongitude(Double.parseDouble(prefs.getString(KEY_Y, "")));
+                                            if (pMyLocation.distanceTo(pFriendLocation) <= MIN_DISTANCE) {
+                                                Intent pNotifierIntent = new Intent(context, AroundNotifierService.class);
+                                                pNotifierIntent.putExtra(KEY_LOGIN, pJsonFriend.getString(KEY_LOGIN));
+                                                startService(pNotifierIntent);
+                                            }
+
+
                                     /*
                                     Will create notifications here :1
                                      */
+                                        }
+                                        for (int i = 0; i < pRequestArray.length(); i++) {
+                                            JSONObject pJsonRequest = pRequestArray.getJSONObject(i);
+                                            DataManagerImpl pDataManager = new DataManagerImpl(context);
+                                            FriendsInfo pFriend = new FriendsInfo();
+                                            ImageHelper pImageHelper = new ImageHelper();
+                                            pFriend.setLoginFriend(pJsonRequest.getString(KEY_LOGIN));
+                                            pFriend.setProfilePhoto(pImageHelper.encodeImageForDB(BitmapFactory.decodeResource(getResources(), R.drawable.facebook_example)));
+                                            pFriend.setStatus(STATUS_INVITATION);
+                                            pDataManager.saveRequest(pFriend);
+                                        }
+                                        for (int i = 0; i < pPhotoArray.length(); i++) {
+                                            JSONObject pJsonPhoto = pPhotoArray.getJSONObject(i);
+                                            DataManagerImpl pDataManager = new DataManagerImpl(context);
+                                            FriendsInfo pFriend = new FriendsInfo();
+                                            pFriend.setLoginFriend(pJsonPhoto.getString(KEY_LOGIN));
+                                            pFriend.setProfilePhoto(Base64.decode(pJsonPhoto.getString(KEY_PHOTO), 0));
+                                            pDataManager.updatePhoto(pFriend);
+                                        }
                                     }
                                     sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
                                 } else Log.e("SERVER", "SERVER DOESNT WORK");
@@ -157,6 +197,7 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
         NotificationManager pNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         pNotificationManager.notify(0, pNotification.build());
     }
+
     private boolean checkIfLogin() {
         boolean pCheck = false;
         if (prefs.contains(KEY_LOGIN) && prefs.contains(KEY_PASS)) pCheck = true;

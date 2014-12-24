@@ -7,6 +7,8 @@ public interface Dao<T> {
 
     void update(T type);
 
+    void updatePhoto(T type);
+
     void updateCoordinates(T type, String id);
 
     void delete(String id);

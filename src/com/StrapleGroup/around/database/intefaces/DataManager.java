@@ -18,6 +18,8 @@ public interface DataManager {
 
     void saveRequest(FriendsInfo friendsInfo);
 
+    void updatePhoto(FriendsInfo friendsInfo);
+
     void updateFriendInfo(FriendsInfo friendsInfo);
 
     Cursor getCompleteCursor();
