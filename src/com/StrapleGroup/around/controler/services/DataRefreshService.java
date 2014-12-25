@@ -122,7 +122,9 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                                     if (pRefreshObject.getBoolean(KEY_VALID)) {
                                         JSONArray pFriendArray = pRefreshObject.getJSONArray(KEY_FRIEND_LIST);
                                         JSONArray pRequestArray = pRefreshObject.getJSONArray(KEY_REQUEST_LIST);
-                                        JSONArray pPhotoArray = pRefreshObject.getJSONArray(KEY_PHOTO_LIST);
+                                        if (pRefreshObject.getBoolean(KEY_PHOTO_LIST)) {
+                                            connectionHelper.updatePhotoRequest(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""));
+                                        }
                                         for (int i = 0; i < pFriendArray.length(); i++) {
                                             JSONObject pJsonFriend = pFriendArray.getJSONObject(i);
                                             DataManagerImpl pDataManager = new DataManagerImpl(context);
@@ -144,13 +146,10 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                                             if (pMyLocation.distanceTo(pFriendLocation) <= MIN_DISTANCE) {
                                                 Intent pNotifierIntent = new Intent(context, AroundNotifierService.class);
                                                 pNotifierIntent.putExtra(KEY_LOGIN, pJsonFriend.getString(KEY_LOGIN));
+                                                pNotifierIntent.putExtra(KEY_X, pFriendLat);
+                                                pNotifierIntent.putExtra(KEY_Y, pFriendLng);
                                                 startService(pNotifierIntent);
                                             }
-
-
-                                    /*
-                                    Will create notifications here :1
-                                     */
                                         }
                                         for (int i = 0; i < pRequestArray.length(); i++) {
                                             JSONObject pJsonRequest = pRequestArray.getJSONObject(i);
@@ -162,14 +161,7 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                                             pFriend.setStatus(STATUS_INVITATION);
                                             pDataManager.saveRequest(pFriend);
                                         }
-                                        for (int i = 0; i < pPhotoArray.length(); i++) {
-                                            JSONObject pJsonPhoto = pPhotoArray.getJSONObject(i);
-                                            DataManagerImpl pDataManager = new DataManagerImpl(context);
-                                            FriendsInfo pFriend = new FriendsInfo();
-                                            pFriend.setLoginFriend(pJsonPhoto.getString(KEY_LOGIN));
-                                            pFriend.setProfilePhoto(Base64.decode(pJsonPhoto.getString(KEY_PHOTO), 0));
-                                            pDataManager.updatePhoto(pFriend);
-                                        }
+
                                     }
                                     sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
                                 } else Log.e("SERVER", "SERVER DOESNT WORK");

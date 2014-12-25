@@ -119,9 +119,9 @@ public class AroundMapFragment extends Fragment implements Constants {
                 .newCameraPosition(cameraPosition));
     }
 
-    public void addMarker(LatLng latLng) {
+    public void addMarker(String aLogin, LatLng latLng) {
         MarkerOptions pMarkerOptions = new MarkerOptions();
-        pMarkerOptions.position(latLng);
+        pMarkerOptions.position(latLng).title(aLogin);
         mapPane.addMarker(pMarkerOptions);
     }
 
@@ -136,11 +136,12 @@ public class AroundMapFragment extends Fragment implements Constants {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            String aLogin = intent.getStringExtra(KEY_LOGIN);
             double pLat = intent.getDoubleExtra("LAT", 0.00);
             double pLng = intent.getDoubleExtra("LNG", 0.00);
             LatLng pLatLng = new LatLng(pLat, pLng);
-            addMarker(pLatLng);
-            Log.e("MARKER_ADD", "****************************************MARKER_ADDED");
+            addMarker(aLogin, pLatLng);
+            Log.e("MARKER_ADD", "MARKER_ADDED");
         }
     }
 }

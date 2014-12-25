@@ -69,13 +69,6 @@ public class NavDrawer extends Fragment implements View.OnClickListener, Constan
         String aPass = pPrefs.getString(KEY_PASS, "");
         ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
         if (pConnectionHelper.sendAddRequest(aLogin, aPass, aFriendLogin)) {
-            DataManagerImpl pDataManager = new DataManagerImpl(context);
-            FriendsInfo pFriend = new FriendsInfo();
-            ImageHelper pImageHelper = new ImageHelper();
-            pFriend.setLoginFriend(aFriendLogin);
-            pFriend.setProfilePhoto(pImageHelper.encodeImageForDB(BitmapFactory.decodeResource(getResources(), R.drawable.facebook_example)));
-            pFriend.setStatus(STATUS_REQUEST);
-            pDataManager.saveRequest(pFriend);
             return true;
         }
         return false;

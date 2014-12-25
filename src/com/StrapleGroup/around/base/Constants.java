@@ -8,6 +8,7 @@ public interface Constants {
     static final String ADD_SERVER_ACTION = "com.StrapleGroup.ADD";
     static final String RESPONSE_REQUEST_SERVER_ACTION = "com.StrapleGroup.RESPONSE";
     static final String DELETE_SERVER_ACTION = "com.StrapleGroup.DELETE";
+    static final String DOWNLOAD_PHOTO_ACTION = "com.StrapleGroup.DOWNLOAD";
 
     static final String PHOTO_LOCAL_ACTION = "com.StrapleGroup.around.action.PHOTO";
     static final String DELETE_LOCAL_ACTION = "com.StrapleGroup.around.action.DELETE";
@@ -21,6 +22,7 @@ public interface Constants {
     static final String ACTIVITY_RECOGNITION_LOCAL_ACTION = "com.StrapleGroup.around.action.ACTIVITY_RECOGNITION";
     static final String LOG_OUT_LOCAL_ACTION = "com.StrapleGroup.around.action.LOG_OUT";
 
+    static final String KEY_POKE_LIST = "poke_list";
     static final String KEY_ACTION = "action";
     static final String KEY_FRIEND = "friend";
     static final String KEY_ACTIVITY = "activity";

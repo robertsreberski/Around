@@ -136,6 +136,26 @@ public class ConnectionHelper implements Constants {
         return bool;
     }
 
+    public boolean updatePhotoRequest(String aLogin, String aPass) {
+        JSONObject pObject = new JSONObject();
+        boolean bool = false;
+        try {
+            pObject.put(KEY_ACTION, DOWNLOAD_PHOTO_ACTION);
+            pObject.put(KEY_LOGIN, aLogin);
+            pObject.put(KEY_PASS, aPass);
+            JSONObject pResponse = sendToServer(pObject);
+            if (pResponse.getBoolean(KEY_VALID)) {
+                bool = updatePhotoToDB(pResponse.getJSONArray(KEY_PHOTO_LIST));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e("SERVER", "PROBLEM WITH SERVER");
+            e.printStackTrace();
+        }
+        return bool;
+    }
+
     public boolean sendAddResponse(String aLogin, String aPass, String aFriendLogin, boolean aResponse) {
         JSONObject pObject = new JSONObject();
         boolean bool = false;
@@ -145,7 +165,18 @@ public class ConnectionHelper implements Constants {
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_FRIEND, aFriendLogin);
             pObject.put(KEY_VALID, aResponse);
-            bool = sendToServer(pObject).getBoolean(KEY_VALID);
+            JSONObject pJsonResponse = sendToServer(pObject);
+            if (pJsonResponse.getBoolean(KEY_VALID)) {
+                FriendsInfo pFriend = new FriendsInfo();
+                DataManagerImpl pDataManager = new DataManagerImpl(context);
+                pFriend.setLoginFriend(aLogin);
+                pFriend.setXFriend(pJsonResponse.getDouble(KEY_X));
+                pFriend.setYFriend(pJsonResponse.getDouble(KEY_Y));
+                pFriend.setStatus(pJsonResponse.getString(KEY_STATUS));
+                pFriend.setActivities(pJsonResponse.getInt(KEY_ACTIVITY));
+                pDataManager.updateFriendInfo(pFriend);
+                bool = true;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -179,22 +210,16 @@ public class ConnectionHelper implements Constants {
         return pJsonFinal;
     }
 
-
-    private void addRequest(JSONArray aArray) throws JSONException {
-        if (aArray.length() != 0) {
+    private boolean updatePhotoToDB(JSONArray aPhotoArray) throws JSONException {
+        for (int i = 0; i < aPhotoArray.length(); i++) {
+            JSONObject pJsonPhoto = aPhotoArray.getJSONObject(i);
             DataManagerImpl pDataManager = new DataManagerImpl(context);
-            for (int i = 0; i < aArray.length(); i++) {
-                JSONObject pJsonRequest = aArray.getJSONObject(i);
-                FriendsInfo pFriend = new FriendsInfo();
-                pFriend.setLoginFriend(pJsonRequest.getString(KEY_LOGIN));
-                pFriend.setXFriend(0);
-                pFriend.setYFriend(0);
-                pFriend.setActivities(DetectedActivity.UNKNOWN);
-                pFriend.setStatus(STATUS_REQUEST);
-                pFriend.setProfilePhoto(Base64.decode("", 0));
-                pDataManager.saveFriendInfo(pFriend);
-            }
+            FriendsInfo pFriend = new FriendsInfo();
+            pFriend.setLoginFriend(pJsonPhoto.getString(KEY_LOGIN));
+            pFriend.setProfilePhoto(Base64.decode(pJsonPhoto.getString(KEY_PHOTO), 0));
+            pDataManager.updatePhoto(pFriend);
         }
+        return true;
     }
 
     private boolean restoreData(JSONObject aObject) throws JSONException {

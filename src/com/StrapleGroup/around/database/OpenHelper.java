@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
+import com.StrapleGroup.around.database.tables.LogsTable;
 
 public class OpenHelper extends SQLiteOpenHelper {
 
@@ -18,12 +19,13 @@ public class OpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         FriendsInfoTable.onCreate(db);
-
+        LogsTable.onCreate(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         FriendsInfoTable.onUpgrade(db, oldVersion, newVersion);
+        LogsTable.onUpgrade(db, oldVersion, newVersion);
     }
 
     public void deleteDb(SQLiteDatabase db) {

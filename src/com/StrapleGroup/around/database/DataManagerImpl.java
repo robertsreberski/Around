@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.StrapleGroup.around.database.base.FriendsInfo;
+import com.StrapleGroup.around.database.base.LogInfo;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
+import com.StrapleGroup.around.database.daos.LogsDao;
 import com.StrapleGroup.around.database.intefaces.DataManager;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
 
@@ -22,6 +24,7 @@ public class DataManagerImpl implements DataManager {
     private Context context;
     private SQLiteDatabase db;
     private FriendsInfoDao friendsDao;
+    private LogsDao logsDao;
 //	private UserInfoDao userDao;
 
     public DataManagerImpl(Context context) {
@@ -31,6 +34,8 @@ public class DataManagerImpl implements DataManager {
         SQLiteOpenHelper openHelper = new OpenHelper(this.context);
         db = openHelper.getWritableDatabase();
         friendsDao = new FriendsInfoDao(db);
+        logsDao = new LogsDao(db);
+
     }
 
     @Override
@@ -57,6 +62,17 @@ public class DataManagerImpl implements DataManager {
         return friendsDao.find(friendLogin);
     }
 
+    public void saveLog(LogInfo logInfo) {
+        try {
+            db.beginTransaction();
+            logsDao.save(logInfo);
+            db.setTransactionSuccessful();
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "SthBroke");
+        } finally {
+            db.endTransaction();
+        }
+    }
     @Override
     public long saveFriendInfo(FriendsInfo friendInfo) {
         long friendId = 0L;
