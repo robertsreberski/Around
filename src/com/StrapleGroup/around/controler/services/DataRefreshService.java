@@ -159,7 +159,8 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                                             pFriend.setLoginFriend(pJsonRequest.getString(KEY_LOGIN));
                                             pFriend.setProfilePhoto(pImageHelper.encodeImageForDB(BitmapFactory.decodeResource(getResources(), R.drawable.facebook_example)));
                                             pFriend.setStatus(STATUS_INVITATION);
-                                            pDataManager.saveRequest(pFriend);
+                                            if (pDataManager.findFriend(pJsonRequest.getString(KEY_LOGIN)) == -1)
+                                                pDataManager.saveRequest(pFriend);
                                         }
 
                                     }

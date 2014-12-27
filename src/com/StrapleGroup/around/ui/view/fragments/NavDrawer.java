@@ -23,7 +23,7 @@ import com.StrapleGroup.around.ui.utils.ImageHelper;
 /**
  * Created by Robert on 2014-12-21.
  */
-public class NavDrawer extends Fragment implements View.OnClickListener, Constants {
+public class NavDrawer extends Fragment implements Constants {
     ImageButton addFriend;
     EditText friendLogin;
     private Context context;
@@ -34,33 +34,38 @@ public class NavDrawer extends Fragment implements View.OnClickListener, Constan
         addFriend = (ImageButton) view.findViewById(R.id.add_friend);
         friendLogin = (EditText) view.findViewById(R.id.friend_field);
         context = getActivity().getApplicationContext();
-        addFriend.setOnClickListener(this);
         return view;
     }
 
     @Override
-    public void onClick(View v) {
-        if (friendLogin.isShown()) {
-            new AsyncTask<Void, Void, Boolean>() {
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    return sendRequest(friendLogin.getText().toString());
-                }
+    public void onStart() {
+        super.onStart();
+        addFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (friendLogin.isShown()) {
+                    new AsyncTask<Void, Void, Boolean>() {
+                        @Override
+                        protected Boolean doInBackground(Void... params) {
+                            return sendRequest(friendLogin.getText().toString());
+                        }
 
-                @Override
-                protected void onPostExecute(Boolean aBoolean) {
-                    super.onPostExecute(aBoolean);
-                    if (aBoolean) {
-                        Toast.makeText(getActivity().getApplicationContext(), friendLogin.getText().toString() + " added", Toast.LENGTH_LONG).show();
-                        friendLogin.setVisibility(View.INVISIBLE);
-                        friendLogin.setText("");
-                    } else
-                        Toast.makeText(context, "Friend cannot be added now", Toast.LENGTH_SHORT);
+                        @Override
+                        protected void onPostExecute(Boolean aBoolean) {
+                            super.onPostExecute(aBoolean);
+                            if (aBoolean) {
+                                Toast.makeText(getActivity().getApplicationContext(), friendLogin.getText().toString() + " added", Toast.LENGTH_LONG).show();
+                                friendLogin.setVisibility(View.INVISIBLE);
+                                friendLogin.setText("");
+                            } else
+                                Toast.makeText(context, "Friend cannot be added now", Toast.LENGTH_SHORT).show();
+                        }
+                    }.execute(null, null, null);
+                } else {
+                    friendLogin.setVisibility(View.VISIBLE);
                 }
-            };
-        } else {
-            friendLogin.setVisibility(View.VISIBLE);
-        }
+            }
+        });
     }
 
     private boolean sendRequest(String aFriendLogin) {

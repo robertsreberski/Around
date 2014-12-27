@@ -3,6 +3,7 @@ package com.StrapleGroup.around.ui.utils;
 import android.content.Context;
 import android.graphics.*;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.ImageView;
 import com.StrapleGroup.around.base.Constants;
 
@@ -16,9 +17,29 @@ public class ImageHelper implements Constants {
         super();
     }
 
+    public String compressFromPhoto(Bitmap aBitmap) {
+        int width = aBitmap.getWidth();
+        int height = aBitmap.getHeight();
+        int maxSize = 150;
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        Bitmap pScaledBitmap = Bitmap.createScaledBitmap(aBitmap, width, height, true);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        pScaledBitmap.compress(Bitmap.CompressFormat.PNG, 60, baos);
+        byte[] b = baos.toByteArray();
+        String encodedPhoto = Base64.encodeToString(b, 0);
+        return encodedPhoto;
+    }
+
     public String encodeImage(Bitmap aBitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        aBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        aBitmap.compress(Bitmap.CompressFormat.PNG, 60, baos);
         byte[] b = baos.toByteArray();
         String encodedPhoto = Base64.encodeToString(b, 0);
         return encodedPhoto;
@@ -26,7 +47,7 @@ public class ImageHelper implements Constants {
 
     public byte[] encodeImageForDB(Bitmap aBitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        aBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        aBitmap.compress(Bitmap.CompressFormat.PNG, 60, baos);
         return baos.toByteArray();
     }
 
@@ -70,7 +91,7 @@ public class ImageHelper implements Constants {
     public void setImg(Context context, ImageView imageView, Bitmap aBitmap) {
         Bitmap sbmp;
         if (aBitmap.getWidth() != 330 || aBitmap.getHeight() != 330)
-            sbmp = Bitmap.createScaledBitmap(aBitmap, 330, 330, false);
+            sbmp = Bitmap.createScaledBitmap(aBitmap, 330, 330, true);
         else sbmp = aBitmap;
         Bitmap output = Bitmap.createBitmap(sbmp.getWidth(),
                 sbmp.getHeight(), Bitmap.Config.ARGB_8888);
@@ -89,6 +110,7 @@ public class ImageHelper implements Constants {
                 sbmp.getWidth() / 2 + 0.1f, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(sbmp, rect, rect, paint);
+        Log.d("IMG_SIZE", output.getHeight() + "," + output.getWidth());
         imageView.setImageBitmap(output);
     }
 }

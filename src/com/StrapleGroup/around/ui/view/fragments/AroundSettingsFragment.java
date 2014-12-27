@@ -98,7 +98,7 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
                 e.printStackTrace();
             }
             Bitmap rotatedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
-            final String pPhotoString = pImageHelper.encodeImage(rotatedBitmap);
+            final String pPhotoString = pImageHelper.compressFromPhoto(rotatedBitmap);
             new AsyncTask<Void, Void, Boolean>() {
 
                 @Override

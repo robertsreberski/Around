@@ -57,27 +57,40 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
             pViewInvitationHolder.setTrue.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
-                    SharedPreferences pPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-                    if (!pConnectionHelper.sendAddResponse(pPrefs.getString(KEY_LOGIN, ""), pPrefs.getString(KEY_PASS, ""), aFriendLogin, true)) {
-                        Toast.makeText(context, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
-                    } else notifyDataSetChanged();
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
+                            SharedPreferences pPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+                            if (!pConnectionHelper.sendAddResponse(pPrefs.getString(KEY_LOGIN, ""), pPrefs.getString(KEY_PASS, ""), aFriendLogin, true)) {
+//                                Toast.makeText(context, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
+                            } else notifyChange();
+                            return null;
+                        }
+                    }.execute(null, null, null);
                 }
             });
             pViewInvitationHolder.setFalse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
-                    SharedPreferences pPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
-                    if (pConnectionHelper.sendAddResponse(pPrefs.getString(KEY_LOGIN, ""), pPrefs.getString(KEY_PASS, ""), aFriendLogin, false)) {
-                        DataManagerImpl pDataManager = new DataManagerImpl(context);
-                        pDataManager.deleteFriend(pDataManager.findFriend(aFriendLogin));
-                        notifyDataSetChanged();
-                    } else
-                        Toast.makeText(context, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
+                            SharedPreferences pPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+                            if (pConnectionHelper.sendAddResponse(pPrefs.getString(KEY_LOGIN, ""), pPrefs.getString(KEY_PASS, ""), aFriendLogin, false)) {
+                                DataManagerImpl pDataManager = new DataManagerImpl(context);
+                                pDataManager.deleteFriend(pDataManager.findFriend(aFriendLogin));
+                                notifyChange();
+                            } else
+                                Toast.makeText(context, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
+                            return null;
+                        }
+                    }.execute(null, null, null);
                 }
             });
             view.setTag(pViewInvitationHolder);
+            return;
         }
         ViewFriendHolder pViewFriendHolder = new ViewFriendHolder();
         pViewFriendHolder.login = (TextView) view.findViewById(R.id.friend_name);
@@ -103,6 +116,10 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
             }
         }.execute(pViewFriendHolder);
         view.setTag(pViewFriendHolder);
+    }
+
+    public void notifyChange() {
+        notifyDataSetChanged();
     }
 
 

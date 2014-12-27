@@ -52,6 +52,7 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         insertStatement.bindDouble(4, 0);
         insertStatement.bindString(5, friendsInfo.getStatus());
         insertStatement.bindDouble(6, DetectedActivity.UNKNOWN);
+        insertStatement.executeInsert();
     }
 
     @Override

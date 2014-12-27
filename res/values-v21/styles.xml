@@ -7,5 +7,5 @@
         <!-- API 21 theme customizations can go here. -->
     </style>
 
-    <style name="DialogTheme" parent="android:Theme.Material.Light.Dialog.NoActionBar"></style>
+    <style name="DialogTheme" parent="android:Theme.Material.Dialog.NoActionBar"></style>
 </resources>

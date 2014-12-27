@@ -1,134 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/nav_drawer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#6Fecf0f1">
+    android:id="@+id/nav_drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#6Fecf0f1">
 
     <ImageButton
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:background="@android:color/transparent"
-            android:id="@+id/imageButton2" android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-            android:layout_marginRight="15dp" android:layout_marginBottom="15dp"/>
-    <ImageButton
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:id="@+id/settings_img"
-            android:onClick="goSettings"
-        android:background="@drawable/circle_background_orange"
-            android:elevation="4dp"
-            android:layout_above="@+id/imageButton2" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" android:layout_marginBottom="33dp" android:layout_marginRight="15dp"
-            android:src="@drawable/settings_img"/>
-    <ImageButton
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:elevation="4dp"
-        android:background="@drawable/circle_background_orange"
-            android:id="@+id/around_img" android:layout_above="@+id/settings_img"
-            android:onClick="goAround"
-            android:layout_alignRight="@+id/settings_img" android:layout_alignEnd="@+id/settings_img"
-            android:layout_marginBottom="10dp" android:src="@drawable/aroundyou_img"/>
-    <ImageButton
-            android:layout_width="45dp"
-            android:elevation="4dp"
-            android:layout_height="45dp"
-        android:background="@drawable/circle_background_orange"
-            android:id="@+id/home_img" android:layout_above="@+id/around_img"
-            android:onClick="goHome"
-            android:layout_alignRight="@+id/around_img" android:layout_alignEnd="@+id/around_img"
-            android:layout_marginBottom="10dp" android:src="@drawable/home_img"/>
-    <ImageButton
-            android:layout_width="45dp"
-            android:elevation="4dp"
-            android:layout_height="45dp"
-        android:background="@drawable/circle_background_orange"
-            android:id="@+id/news_img" android:layout_above="@+id/home_img"
-            android:onClick="goNews"
-            android:layout_alignRight="@+id/home_img" android:layout_alignEnd="@+id/home_img"
-            android:layout_marginBottom="10dp" android:src="@drawable/news_img"/>
-    <ImageButton
-            android:layout_width="45dp"
-            android:elevation="4dp"
-            android:layout_height="45dp"
-        android:background="@drawable/circle_background_orange"
-            android:id="@+id/friendlist_img" android:layout_above="@+id/news_img"
-            android:onClick="goFriendList"
-            android:layout_alignRight="@+id/news_img" android:layout_alignEnd="@+id/news_img"
-            android:layout_marginBottom="10dp" android:src="@drawable/friendlist_img"/>
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="@drawable/card_ui"
-            android:text="News"
-            android:id="@+id/news_label"
-            android:layout_alignBottom="@+id/news_img" android:layout_alignRight="@+id/home_label"
-            android:layout_alignEnd="@+id/home_label" android:layout_marginBottom="5dp"/>
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:background="@drawable/card_ui"
-            android:text="Home"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:id="@+id/home_label"
-            android:layout_alignBottom="@+id/home_img" android:layout_toLeftOf="@+id/home_img"
-            android:layout_marginBottom="5dp" android:layout_marginRight="5dp" android:focusable="false"/>
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:background="@drawable/card_ui"
-            android:text="Around You"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:id="@+id/around_label" android:layout_alignBottom="@+id/around_img"
-            android:layout_toLeftOf="@+id/around_img"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="5dp" android:focusable="false"/>
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="@drawable/card_ui"
-            android:text="Settings"
-            android:id="@+id/settings_label"
-            android:layout_alignBottom="@+id/settings_img"
-            android:layout_marginBottom="5dp"
-            android:layout_toLeftOf="@+id/settings_img" android:layout_marginRight="5dp" android:focusable="false"
-            />
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="@drawable/card_ui"
-            android:text="Friend List"
-            android:id="@+id/friendlist_label"
-            android:layout_alignBottom="@+id/friendlist_img" android:layout_alignRight="@+id/news_label"
-            android:layout_alignEnd="@+id/news_label" android:layout_marginBottom="5dp"/>
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:background="@android:color/transparent"
+        android:id="@+id/imageButton2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp" />
 
-    <ImageButton android:layout_width="45dp" android:layout_height="45dp" android:id="@+id/add_friend"
-        android:onClick="add"
+    <ImageButton
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:id="@+id/settings_img"
+        android:onClick="goSettings"
         android:background="@drawable/circle_background_orange"
-                 android:elevation="4dp"
-                 android:src="@drawable/ic_action_add_person" android:layout_alignBottom="@+id/imageButton2"
-                 android:layout_toLeftOf="@+id/imageButton2" android:layout_toStartOf="@+id/imageButton2"
-                 android:layout_marginRight="18dp"/>
-    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:inputType="textPersonName" android:ems="10" android:id="@+id/friend_field"
-              android:layout_alignBottom="@+id/add_friend"
+        android:elevation="4dp"
+        android:layout_above="@+id/imageButton2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="33dp"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/settings_img" />
+
+    <ImageButton
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:elevation="4dp"
+        android:background="@drawable/circle_background_orange"
+        android:id="@+id/around_img"
+        android:layout_above="@+id/settings_img"
+        android:onClick="goAround"
+        android:layout_alignRight="@+id/settings_img"
+        android:layout_alignEnd="@+id/settings_img"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/aroundyou_img" />
+
+    <ImageButton
+        android:layout_width="45dp"
+        android:elevation="4dp"
+        android:layout_height="45dp"
+        android:background="@drawable/circle_background_orange"
+        android:id="@+id/home_img"
+        android:layout_above="@+id/around_img"
+        android:onClick="goHome"
+        android:layout_alignRight="@+id/around_img"
+        android:layout_alignEnd="@+id/around_img"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/home_img" />
+
+    <ImageButton
+        android:layout_width="45dp"
+        android:elevation="4dp"
+        android:layout_height="45dp"
+        android:background="@drawable/circle_background_orange"
+        android:id="@+id/news_img"
+        android:layout_above="@+id/home_img"
+        android:onClick="goNews"
+        android:layout_alignRight="@+id/home_img"
+        android:layout_alignEnd="@+id/home_img"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/news_img" />
+
+    <ImageButton
+        android:layout_width="45dp"
+        android:elevation="4dp"
+        android:layout_height="45dp"
+        android:background="@drawable/circle_background_orange"
+        android:id="@+id/friendlist_img"
+        android:layout_above="@+id/news_img"
+        android:onClick="goFriendList"
+        android:layout_alignRight="@+id/news_img"
+        android:layout_alignEnd="@+id/news_img"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/friendlist_img" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/card_ui"
+        android:text="News"
+        android:id="@+id/news_label"
+        android:layout_alignBottom="@+id/news_img"
+        android:layout_alignRight="@+id/home_label"
+        android:layout_alignEnd="@+id/home_label"
+        android:layout_marginBottom="5dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:background="@drawable/card_ui"
+        android:text="Home"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:id="@+id/home_label"
+        android:layout_alignBottom="@+id/home_img"
+        android:layout_toLeftOf="@+id/home_img"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:focusable="false" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:background="@drawable/card_ui"
+        android:text="Around You"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:id="@+id/around_label"
+        android:layout_alignBottom="@+id/around_img"
+        android:layout_toLeftOf="@+id/around_img"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:focusable="false" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/card_ui"
+        android:text="Settings"
+        android:id="@+id/settings_label"
+        android:layout_alignBottom="@+id/settings_img"
+        android:layout_marginBottom="5dp"
+        android:layout_toLeftOf="@+id/settings_img"
+        android:layout_marginRight="5dp"
+        android:focusable="false" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/card_ui"
+        android:text="Friend List"
+        android:id="@+id/friendlist_label"
+        android:layout_alignBottom="@+id/friendlist_img"
+        android:layout_alignRight="@+id/news_label"
+        android:layout_alignEnd="@+id/news_label"
+        android:layout_marginBottom="5dp" />
+
+    <ImageButton
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:id="@+id/add_friend"
+        android:background="@drawable/circle_background_orange"
+        android:elevation="4dp"
+        android:src="@drawable/ic_action_add_person"
+        android:layout_alignBottom="@+id/imageButton2"
+        android:layout_toLeftOf="@+id/imageButton2"
+        android:layout_toStartOf="@+id/imageButton2"
+        android:layout_marginRight="18dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/friend_field"
+        android:layout_alignBottom="@+id/add_friend"
         android:visibility="invisible"
-              android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-              android:layout_toLeftOf="@+id/add_friend" android:layout_toStartOf="@+id/add_friend"
-              android:layout_marginLeft="5dp" android:layout_marginRight="5dp"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/add_friend"
+        android:layout_toStartOf="@+id/add_friend"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
 </RelativeLayout>
