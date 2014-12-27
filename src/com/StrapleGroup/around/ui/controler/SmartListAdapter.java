@@ -90,32 +90,32 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
                 }
             });
             view.setTag(pViewInvitationHolder);
-            return;
+        } else {
+            ViewFriendHolder pViewFriendHolder = new ViewFriendHolder();
+            pViewFriendHolder.login = (TextView) view.findViewById(R.id.friend_name);
+            final String pFriendName = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
+            pViewFriendHolder.login.setText(pFriendName);
+            pViewFriendHolder.photo = (ImageView) view.findViewById(R.id.photo);
+            new AsyncTask<ViewFriendHolder, Void, Bitmap>() {
+                private ViewFriendHolder viewFriendHolder;
+                private ImageHelper imageHelper;
+
+                @Override
+                protected Bitmap doInBackground(ViewFriendHolder... params) {
+                    viewFriendHolder = params[0];
+                    imageHelper = new ImageHelper();
+                    Bitmap fBitmap = imageHelper.decodeImageFromBytes(cursor.getBlob(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO)));
+                    return fBitmap;
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap result) {
+                    super.onPostExecute(result);
+                    imageHelper.setImg(context, viewFriendHolder.photo, result);
+                }
+            }.execute(pViewFriendHolder);
+            view.setTag(pViewFriendHolder);
         }
-        ViewFriendHolder pViewFriendHolder = new ViewFriendHolder();
-        pViewFriendHolder.login = (TextView) view.findViewById(R.id.friend_name);
-        final String pFriendName = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
-        pViewFriendHolder.login.setText(pFriendName);
-        pViewFriendHolder.photo = (ImageView) view.findViewById(R.id.photo);
-        new AsyncTask<ViewFriendHolder, Void, Bitmap>() {
-            private ViewFriendHolder viewFriendHolder;
-            private ImageHelper imageHelper;
-
-            @Override
-            protected Bitmap doInBackground(ViewFriendHolder... params) {
-                viewFriendHolder = params[0];
-                imageHelper = new ImageHelper();
-                Bitmap fBitmap = imageHelper.decodeImageFromBytes(cursor.getBlob(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO)));
-                return fBitmap;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap result) {
-                super.onPostExecute(result);
-                imageHelper.setImg(context, viewFriendHolder.photo, result);
-            }
-        }.execute(pViewFriendHolder);
-        view.setTag(pViewFriendHolder);
     }
 
     public void notifyChange() {
