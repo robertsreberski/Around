@@ -8,6 +8,7 @@ import android.util.Log;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.base.FriendsInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.location.DetectedActivity;
 
 import org.json.JSONArray;
@@ -20,15 +21,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Map;
 
 /**
  * Created by Robert on 2014-12-21.
  */
 public class ConnectionHelper implements Constants {
-    static final String TEST_SERVER = "http://10.0.2.2:8080/";
+    static final String TEST_SERVER = "http://188.166.49.246:8080/AroundServlet/ServletTest";
     static final String OFFICIAL_SERVER = "http://officialrelease.straplegroup.com/";
     private SharedPreferences pPrefs;
     private Context context;
+    private ObjectMapper mapper = new ObjectMapper();
+
 
     public ConnectionHelper(Context context) {
         this.context = context;
@@ -225,7 +229,7 @@ public class ConnectionHelper implements Constants {
     private boolean restoreData(JSONObject aObject) throws JSONException {
         boolean pBool = false;
         if (aObject.getBoolean(KEY_VALID)) {
-            pPrefs.edit().putString(KEY_PHOTO, aObject.getString(KEY_PHOTO));
+            pPrefs.edit().putString(KEY_PHOTO, aObject.getString(KEY_PHOTO)).commit();
             DataManagerImpl pDataManager = new DataManagerImpl(context);
             JSONArray pJsonArray = aObject.getJSONArray(KEY_FRIEND_LIST);
             if (pJsonArray != null) {
@@ -256,13 +260,9 @@ public class ConnectionHelper implements Constants {
         OutputStreamWriter out = new OutputStreamWriter(pConnection.getOutputStream());
         out.write(aObject.toString());
         out.close();
-        StringBuilder resultStringBuilder = new StringBuilder();
-        BufferedReader in = new BufferedReader(new InputStreamReader(pConnection.getInputStream()));
-        String resultString;
-        while ((resultString = in.readLine()) != null)
-            resultStringBuilder.append(resultString);
-        JSONObject jsonObject = new JSONObject(resultStringBuilder.toString());
-        in.close();
+        Map<String, Object> jsonMap = mapper.readValue(pConnection.getInputStream(), Map.class);
+        JSONObject jsonObject = new JSONObject(jsonMap);
+        Log.e("JSON", jsonObject.toString());
         return jsonObject;
     }
 }

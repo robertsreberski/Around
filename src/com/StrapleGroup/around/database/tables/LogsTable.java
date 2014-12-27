@@ -18,7 +18,7 @@ public class LogsTable {
 
     public static void onCreate(SQLiteDatabase db) {
         StringBuilder build = new StringBuilder();
-        build.append("CREATE TABLE " + FriendsInfoTable.TABLE_NAME + " (");
+        build.append("CREATE TABLE " + LogsTable.TABLE_NAME + " (");
         build.append(BaseColumns._ID + " INTEGER PRIMARY KEY, ");
         build.append(LogsColumns.LOGIN_FRIEND + " TEXT NOT NULL UNIQUE, ");
         build.append(LogsColumns.TYPE_LOG + " TEXT, ");
@@ -28,7 +28,7 @@ public class LogsTable {
     }
 
     public static void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + FriendsInfoTable.TABLE_NAME);
-        FriendsInfoTable.onCreate(db);
+        db.execSQL("DROP TABLE IF EXISTS " + LogsTable.TABLE_NAME);
+        LogsTable.onCreate(db);
     }
 }

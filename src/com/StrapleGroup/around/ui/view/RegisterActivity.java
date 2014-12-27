@@ -133,6 +133,8 @@ public class RegisterActivity extends Activity implements Constants {
     }
 
     public void registrationUnsuccessful() {
+        registerButton.setText("Register");
+        registerProgress.setVisibility(View.INVISIBLE);
         Toast.makeText(context, "Something went wrong :c", Toast.LENGTH_SHORT).show();
     }
 
