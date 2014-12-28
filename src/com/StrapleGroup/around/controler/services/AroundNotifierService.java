@@ -19,14 +19,12 @@ import com.StrapleGroup.around.ui.view.dialogs.LocationDialog;
  * Created by Robert on 2014-12-24.
  */
 public class AroundNotifierService extends IntentService implements Constants {
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public AroundNotifierService(String name) {
-        super(name);
+
+
+    public AroundNotifierService() {
+        super("Around Notifier");
     }
+
 
     @Override
     protected void onHandleIntent(Intent intent) {

@@ -27,7 +27,7 @@ import java.util.Map;
  * Created by Robert on 2014-12-21.
  */
 public class ConnectionHelper implements Constants {
-    static final String TEST_SERVER = "http://188.166.49.246:8080/AroundServlet/ServletTest";
+    static final String TEST_SERVER = "http://testrelease.straplegroup.com:8080/AroundServlet/ServletTest";
     static final String OFFICIAL_SERVER = "http://officialrelease.straplegroup.com/";
     private SharedPreferences pPrefs;
     private Context context;

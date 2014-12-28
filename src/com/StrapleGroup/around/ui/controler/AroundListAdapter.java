@@ -43,35 +43,35 @@ public class AroundListAdapter extends CursorAdapter {
         Location pFriendLocation = new Location("Friend");
         pFriendLocation.setLatitude(pLat);
         pFriendLocation.setLongitude(pLng);
-        if (pMyLocation.distanceTo(pFriendLocation) <= 5000) {
-            ViewHolder pViewHolder = new ViewHolder();
-            pViewHolder.login = (TextView) view.findViewById(R.id.login_view);
-            final String pLogin = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
-            pViewHolder.login.setText(pLogin);
-            pViewHolder.photo = (ImageView) view.findViewById(R.id.photo);
-            pViewHolder.photo.setImageBitmap(pImageHelper.decodeImageFromBytes(cursor.getBlob(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO))));
-            pViewHolder.distance = (TextView) view.findViewById(R.id.distance_view);
-            pViewHolder.distance.setText((int) pMyLocation.distanceTo(pFriendLocation));
-            pViewHolder.activity = (ImageView) view.findViewById(R.id.activity_view);
-            final int pActivityType = cursor.getInt(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.ACTIVITY));
-            switch (pActivityType) {
-                case DetectedActivity.IN_VEHICLE:
-                    pViewHolder.activity.setImageResource(R.drawable.icon_car);
-                    break;
-                case DetectedActivity.ON_BICYCLE:
-                    pViewHolder.activity.setImageResource(R.drawable.icon_bike);
-                    break;
-                case DetectedActivity.ON_FOOT:
-                    pViewHolder.activity.setImageResource(R.drawable.icon_walk);
-                    break;
-                case DetectedActivity.STILL:
-                    pViewHolder.activity.setImageResource(R.drawable.icon_still);
-                    break;
-                case DetectedActivity.UNKNOWN:
-                    pViewHolder.activity.setImageResource(R.drawable.icon_unknown);
-                    break;
-            }
-        }
+//        if (pMyLocation.distanceTo(pFriendLocation) <= 5000) {
+//            ViewHolder pViewHolder = new ViewHolder();
+//            pViewHolder.login = (TextView) view.findViewById(R.id.login_view);
+//            final String pLogin = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
+//            pViewHolder.login.setText(pLogin);
+//            pViewHolder.photo = (ImageView) view.findViewById(R.id.photo);
+//            pViewHolder.photo.setImageBitmap(pImageHelper.decodeImageFromBytes(cursor.getBlob(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO))));
+//            pViewHolder.distance = (TextView) view.findViewById(R.id.distance_view);
+//            pViewHolder.distance.setText((int) pMyLocation.distanceTo(pFriendLocation));
+//            pViewHolder.activity = (ImageView) view.findViewById(R.id.activity_view);
+//            final int pActivityType = cursor.getInt(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.ACTIVITY));
+//            switch (pActivityType) {
+//                case DetectedActivity.IN_VEHICLE:
+//                    pViewHolder.activity.setImageResource(R.drawable.icon_car);
+//                    break;
+//                case DetectedActivity.ON_BICYCLE:
+//                    pViewHolder.activity.setImageResource(R.drawable.icon_bike);
+//                    break;
+//                case DetectedActivity.ON_FOOT:
+//                    pViewHolder.activity.setImageResource(R.drawable.icon_walk);
+//                    break;
+//                case DetectedActivity.STILL:
+//                    pViewHolder.activity.setImageResource(R.drawable.icon_still);
+//                    break;
+//                case DetectedActivity.UNKNOWN:
+//                    pViewHolder.activity.setImageResource(R.drawable.icon_unknown);
+//                    break;
+//            }
+//        }
 
 
     }
