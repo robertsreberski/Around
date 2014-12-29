@@ -18,6 +18,7 @@ import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.ui.utils.ConnectionUtils;
+import com.StrapleGroup.around.ui.utils.FastLocationObtainer;
 import com.StrapleGroup.around.ui.utils.ImageHelper;
 import com.google.android.gms.location.DetectedActivity;
 
@@ -74,8 +75,9 @@ public class LoginActivity extends Activity implements Constants {
                     @Override
                     protected Boolean doInBackground(Void... params) {
                         ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
-                        Double pLat = 0.000;
-                        Double pLng = 0.000;
+                        FastLocationObtainer pFastLocationObtainer = new FastLocationObtainer(LoginActivity.this);
+                        Double pLat = pFastLocationObtainer.getLatitude();
+                        Double pLng = pFastLocationObtainer.getLongtitude();
                         int pActivity = DetectedActivity.UNKNOWN;
                         if (prefs.contains(KEY_X) && prefs.contains(KEY_Y)) {
                             pLat = Double.parseDouble(prefs.getString(KEY_X, ""));

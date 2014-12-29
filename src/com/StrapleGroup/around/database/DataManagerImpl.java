@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.base.LogInfo;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
@@ -52,6 +53,13 @@ public class DataManagerImpl implements DataManager {
                 null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
     }
 
+    public Cursor getAroundCursor() {
+        return db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
+                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO, FriendsInfoTable.FriendsInfoColumns.X_FRIEND,
+                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY},
+                FriendsInfoTable.FriendsInfoColumns.STATUS + " =?", new String[]{Constants.STATUS_ONLINE}, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
+    }
+
     @Override
     public List<FriendsInfo> getAllFriendsInfo() {
         return friendsDao.getAll();
@@ -73,6 +81,7 @@ public class DataManagerImpl implements DataManager {
             db.endTransaction();
         }
     }
+
     @Override
     public long saveFriendInfo(FriendsInfo friendInfo) {
         long friendId = 0L;

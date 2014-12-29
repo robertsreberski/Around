@@ -25,7 +25,7 @@ public class AroundFriendsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
         dataManager = new DataManagerImpl(context);
-        aroundListAdapter = new AroundListAdapter(context, dataManager.getCompleteCursor(), 0);
+        aroundListAdapter = new AroundListAdapter(context, dataManager.getAroundCursor(), 0);
     }
 
     @Override

@@ -137,8 +137,8 @@ public class AroundMapFragment extends Fragment implements Constants {
         @Override
         public void onReceive(Context context, Intent intent) {
             String aLogin = intent.getStringExtra(KEY_LOGIN);
-            double pLat = intent.getDoubleExtra("LAT", 0.00);
-            double pLng = intent.getDoubleExtra("LNG", 0.00);
+            double pLat = intent.getDoubleExtra(KEY_X, 0.00);
+            double pLng = intent.getDoubleExtra(KEY_Y, 0.00);
             LatLng pLatLng = new LatLng(pLat, pLng);
             addMarker(aLogin, pLatLng);
             Log.e("MARKER_ADD", "MARKER_ADDED");

@@ -37,23 +37,53 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
         super(context, c, flags);
     }
 
+
+    private int getItemViewType(Cursor cursor) {
+        String type = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.STATUS));
+        if (type.equals(STATUS_INVITATION)) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Cursor cursor = (Cursor) getItem(position);
+        return getItemViewType(cursor);
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
+        View v;
         if (cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.STATUS)).equals(STATUS_INVITATION)) {
-            return ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.invitation_item, viewGroup, false);
+            ViewInvitationHolder pViewInvitationHolder = new ViewInvitationHolder();
+            v = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.invitation_item, viewGroup, false);
+            pViewInvitationHolder.login = (TextView) v.findViewById(R.id.login_label);
+            pViewInvitationHolder.setTrue = (ImageButton) v.findViewById(R.id.set_true);
+            pViewInvitationHolder.setFalse = (ImageButton) v.findViewById(R.id.set_false);
+            v.setTag(pViewInvitationHolder);
+        } else {
+            v = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.friend_item, viewGroup, false);
+            ViewFriendHolder pViewFriendHolder = new ViewFriendHolder();
+            pViewFriendHolder.login = (TextView) v.findViewById(R.id.friend_name);
+            pViewFriendHolder.photo = (ImageView) v.findViewById(R.id.photo);
+            v.setTag(pViewFriendHolder);
         }
-        return ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.friend_item, viewGroup, false);
+        return v;
     }
 
     @Override
     public void bindView(final View view, final Context context, final Cursor cursor) {
         if (cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.STATUS)).equals(STATUS_INVITATION)) {
-            ViewInvitationHolder pViewInvitationHolder = new ViewInvitationHolder();
-            pViewInvitationHolder.login = (TextView) view.findViewById(R.id.login_label);
+            ViewInvitationHolder pViewInvitationHolder = (ViewInvitationHolder) view.getTag();
             final String aFriendLogin = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
             pViewInvitationHolder.login.setText(aFriendLogin);
-            pViewInvitationHolder.setTrue = (ImageButton) view.findViewById(R.id.set_true);
-            pViewInvitationHolder.setFalse = (ImageButton) view.findViewById(R.id.set_false);
             pViewInvitationHolder.setTrue.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -64,7 +94,7 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
                             SharedPreferences pPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
                             if (!pConnectionHelper.sendAddResponse(pPrefs.getString(KEY_LOGIN, ""), pPrefs.getString(KEY_PASS, ""), aFriendLogin, true)) {
 //                                Toast.makeText(context, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
-                            } else notifyChange();
+                            }
                             return null;
                         }
                     }.execute(null, null, null);
@@ -81,7 +111,6 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
                             if (pConnectionHelper.sendAddResponse(pPrefs.getString(KEY_LOGIN, ""), pPrefs.getString(KEY_PASS, ""), aFriendLogin, false)) {
                                 DataManagerImpl pDataManager = new DataManagerImpl(context);
                                 pDataManager.deleteFriend(pDataManager.findFriend(aFriendLogin));
-                                notifyChange();
                             } else
                                 Toast.makeText(context, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
                             return null;
@@ -89,13 +118,10 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
                     }.execute(null, null, null);
                 }
             });
-            view.setTag(pViewInvitationHolder);
         } else {
-            ViewFriendHolder pViewFriendHolder = new ViewFriendHolder();
-            pViewFriendHolder.login = (TextView) view.findViewById(R.id.friend_name);
+            ViewFriendHolder pViewFriendHolder = (ViewFriendHolder) view.getTag();
             final String pFriendName = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
             pViewFriendHolder.login.setText(pFriendName);
-            pViewFriendHolder.photo = (ImageView) view.findViewById(R.id.photo);
             new AsyncTask<ViewFriendHolder, Void, Bitmap>() {
                 private ViewFriendHolder viewFriendHolder;
                 private ImageHelper imageHelper;
@@ -117,11 +143,6 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
             view.setTag(pViewFriendHolder);
         }
     }
-
-    public void notifyChange() {
-        notifyDataSetChanged();
-    }
-
 
     static class ViewInvitationHolder {
         TextView login;
