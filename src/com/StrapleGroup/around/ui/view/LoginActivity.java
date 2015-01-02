@@ -71,13 +71,14 @@ public class LoginActivity extends Activity implements Constants {
                 prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
 
                 new AsyncTask<Void, Void, Boolean>() {
-
+                    Double pLat;
+                    Double pLng;
                     @Override
                     protected Boolean doInBackground(Void... params) {
                         ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
                         FastLocationObtainer pFastLocationObtainer = new FastLocationObtainer(LoginActivity.this);
-                        Double pLat = pFastLocationObtainer.getLatitude();
-                        Double pLng = pFastLocationObtainer.getLongtitude();
+                        pLat = pFastLocationObtainer.getLatitude();
+                        pLng = pFastLocationObtainer.getLongtitude();
                         int pActivity = DetectedActivity.UNKNOWN;
                         if (prefs.contains(KEY_X) && prefs.contains(KEY_Y)) {
                             pLat = Double.parseDouble(prefs.getString(KEY_X, ""));
@@ -95,6 +96,8 @@ public class LoginActivity extends Activity implements Constants {
                             pEditor.putString(KEY_LOGIN, login);
                             pEditor.putString(KEY_PASS, pass);
                             pEditor.putString(KEY_STATUS, STATUS_ONLINE);
+                            pEditor.putString(KEY_X, Double.toString(pLat));
+                            pEditor.putString(KEY_Y, Double.toString(pLng));
 //                            ImageHelper pImageHelper = new ImageHelper();
 //                            String photoString = pImageHelper.encodeImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example));
 //                            pEditor.putString(KEY_PHOTO, photoString);

@@ -136,7 +136,11 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                                             pFriend.setYFriend(pFriendLng);
                                             pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
                                             pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
-                                            pDataManager.updateFriendInfo(pFriend);
+                                            if (pDataManager.findFriend(pJsonFriend.getString(KEY_LOGIN)) == -1) {
+                                                pDataManager.saveFriendInfo(pFriend);
+                                            } else {
+                                                pDataManager.updateFriendInfo(pFriend);
+                                            }
                                             Location pFriendLocation = new Location("Friend Location");
                                             pFriendLocation.setLatitude(pFriendLat);
                                             pFriendLocation.setLongitude(pFriendLng);

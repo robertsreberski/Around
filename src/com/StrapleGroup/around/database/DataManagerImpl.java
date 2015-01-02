@@ -8,8 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.database.base.AroundInfo;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.base.LogInfo;
+import com.StrapleGroup.around.database.daos.AroundInfoDao;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.StrapleGroup.around.database.daos.LogsDao;
 import com.StrapleGroup.around.database.intefaces.DataManager;
@@ -26,6 +28,7 @@ public class DataManagerImpl implements DataManager {
     private SQLiteDatabase db;
     private FriendsInfoDao friendsDao;
     private LogsDao logsDao;
+    private AroundInfoDao aroundDao;
 //	private UserInfoDao userDao;
 
     public DataManagerImpl(Context context) {
@@ -36,6 +39,7 @@ public class DataManagerImpl implements DataManager {
         db = openHelper.getWritableDatabase();
         friendsDao = new FriendsInfoDao(db);
         logsDao = new LogsDao(db);
+        aroundDao = new AroundInfoDao(db);
 
     }
 
@@ -137,6 +141,41 @@ public class DataManagerImpl implements DataManager {
         }
     }
 
+    public void updateAroundFriend(AroundInfo aroundInfo) {
+        try {
+            db.beginTransaction();
+            aroundDao.update(aroundInfo);
+            db.setTransactionSuccessful();
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "Broken DB");
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteAroundList() {
+        try {
+            db.beginTransaction();
+            aroundDao.deleteAll();
+            db.setTransactionSuccessful();
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "Broken DB");
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void saveAroundFriend(AroundInfo aroundInfo) {
+        try {
+            db.beginTransaction();
+            aroundDao.save(aroundInfo);
+            db.setTransactionSuccessful();
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "Broken DB");
+        } finally {
+            db.endTransaction();
+        }
+    }
 //    @Override
 //    public long saveLoginOnly(FriendsInfo friendsInfo) {
 //        long friendId = 0L;

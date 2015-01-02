@@ -18,8 +18,10 @@ public class FastLocationObtainer {
         Criteria pCriteria = new Criteria();
         pCriteria.setAccuracy(Criteria.ACCURACY_FINE);
         Location pLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(pCriteria, true));
-        setLatitude(pLocation.getLatitude());
-        setLongtitude(pLocation.getLongitude());
+        if (pLocation != null) {
+            setLatitude(pLocation.getLatitude());
+            setLongtitude(pLocation.getLongitude());
+        }
     }
 
     public void setLatitude(double latitude) {

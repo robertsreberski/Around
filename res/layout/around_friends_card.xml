@@ -9,30 +9,49 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:id="@+id/photo" android:layout_alignParentTop="true"
-            android:layout_marginTop="20dp" android:layout_marginLeft="20dp"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp" />
+
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/friend_name"
-            android:layout_marginLeft="10dp"
-            android:text="robert" android:layout_alignTop="@+id/photo"
-            />
+        android:text="default"
+        android:textColor="@android:color/black"
+        android:layout_alignTop="@+id/photo"
+        android:layout_toRightOf="@+id/photo"
+        android:layout_toEndOf="@+id/photo"
+        android:layout_marginLeft="10dp" />
+
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Distance: "
-            android:id="@+id/distance_label" android:layout_below="@+id/friend_name"
-            />
+        android:id="@+id/distance_label"
+        android:textColor="@android:color/black"
+        android:layout_alignLeft="@+id/friend_name"
+        android:layout_alignStart="@+id/friend_name"
+        android:layout_below="@+id/friend_name" />
+
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="xxx"
-            android:id="@+id/distance_view" android:layout_below="@+id/friend_name"
-            android:layout_marginLeft="5dp"/>
+        android:id="@+id/distance_view"
+        android:layout_alignBottom="@+id/distance_label"
+        android:layout_alignTop="@+id/distance_label"
+        android:layout_toRightOf="@+id/distance_label"
+        android:layout_toEndOf="@+id/distance_label"
+        android:textColor="@android:color/darker_gray" />
+
     <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/activity_view" android:layout_alignParentTop="true"
-            android:layout_marginTop="15dp" android:layout_marginRight="15dp"/>
+        android:id="@+id/activity_view"
+        android:layout_alignTop="@+id/photo"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="20dp" />
 </RelativeLayout>

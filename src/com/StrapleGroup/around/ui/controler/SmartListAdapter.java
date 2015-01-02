@@ -1,9 +1,11 @@
 package com.StrapleGroup.around.ui.controler;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,7 +96,8 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
                             SharedPreferences pPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
                             if (!pConnectionHelper.sendAddResponse(pPrefs.getString(KEY_LOGIN, ""), pPrefs.getString(KEY_PASS, ""), aFriendLogin, true)) {
 //                                Toast.makeText(context, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
-                            }
+                            } else
+                                context.sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
                             return null;
                         }
                     }.execute(null, null, null);
@@ -111,6 +114,7 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
                             if (pConnectionHelper.sendAddResponse(pPrefs.getString(KEY_LOGIN, ""), pPrefs.getString(KEY_PASS, ""), aFriendLogin, false)) {
                                 DataManagerImpl pDataManager = new DataManagerImpl(context);
                                 pDataManager.deleteFriend(pDataManager.findFriend(aFriendLogin));
+                                context.sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
                             } else
                                 Toast.makeText(context, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
                             return null;
@@ -122,25 +126,9 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
             ViewFriendHolder pViewFriendHolder = (ViewFriendHolder) view.getTag();
             final String pFriendName = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
             pViewFriendHolder.login.setText(pFriendName);
-            new AsyncTask<ViewFriendHolder, Void, Bitmap>() {
-                private ViewFriendHolder viewFriendHolder;
-                private ImageHelper imageHelper;
-
-                @Override
-                protected Bitmap doInBackground(ViewFriendHolder... params) {
-                    viewFriendHolder = params[0];
-                    imageHelper = new ImageHelper();
+            ImageHelper imageHelper = new ImageHelper();
                     Bitmap fBitmap = imageHelper.decodeImageFromBytes(cursor.getBlob(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO)));
-                    return fBitmap;
-                }
-
-                @Override
-                protected void onPostExecute(Bitmap result) {
-                    super.onPostExecute(result);
-                    imageHelper.setImg(context, viewFriendHolder.photo, result);
-                }
-            }.execute(pViewFriendHolder);
-            view.setTag(pViewFriendHolder);
+            imageHelper.setImg(context, pViewFriendHolder.photo, fBitmap);
         }
     }
 
