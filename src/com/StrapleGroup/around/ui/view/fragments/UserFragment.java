@@ -1,6 +1,7 @@
 package com.StrapleGroup.around.ui.view.fragments;
 
 import android.content.*;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
+import com.StrapleGroup.around.database.OpenHelper;
 import com.StrapleGroup.around.ui.utils.ImageHelper;
 import com.StrapleGroup.around.ui.view.LoginActivity;
 import com.google.android.gms.location.DetectedActivity;
@@ -102,6 +104,9 @@ public class UserFragment extends Fragment implements Constants {
             sharedUserInfo.edit().clear().commit();
             Log.i("GREAT", "Successfully logged off");
             if (!sharedUserInfo.contains(KEY_LOGIN) && !sharedUserInfo.contains(KEY_PASS)) {
+                OpenHelper pOpenHelper = new OpenHelper(context);
+                SQLiteDatabase db = pOpenHelper.getWritableDatabase();
+                pOpenHelper.deleteDb(db);
                 Intent logoffSuccessfulIntent = new Intent(context, LoginActivity.class);
                 startActivity(logoffSuccessfulIntent);
             }

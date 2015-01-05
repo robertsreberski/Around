@@ -8,8 +8,11 @@ import android.util.Log;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.DataManagerImpl;
 import com.StrapleGroup.around.database.base.FriendsInfo;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.location.DetectedActivity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +24,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -252,7 +257,6 @@ public class ConnectionHelper implements Constants {
         return pBool;
     }
 
-
     private JSONObject sendToServer(JSONObject aObject) throws IOException, JSONException {
         URL pUrl = new URL(TEST_SERVER);
         URLConnection pConnection = pUrl.openConnection();
@@ -260,8 +264,10 @@ public class ConnectionHelper implements Constants {
         OutputStreamWriter out = new OutputStreamWriter(pConnection.getOutputStream());
         out.write(aObject.toString());
         out.close();
+        Gson gson = new Gson();
         Map<String, Object> jsonMap = mapper.readValue(pConnection.getInputStream(), Map.class);
-        JSONObject jsonObject = new JSONObject(jsonMap);
+        String jsonString = gson.toJson((Map) jsonMap);
+        JSONObject jsonObject = new JSONObject(jsonString);
         Log.e("JSON", jsonObject.toString());
         return jsonObject;
     }

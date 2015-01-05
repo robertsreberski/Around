@@ -32,6 +32,8 @@ public class OpenHelper extends SQLiteOpenHelper {
     }
 
     public void deleteDb(SQLiteDatabase db) {
-        db.delete(DATABASE_NAME, null, null);
+        db.delete(FriendsInfoTable.TABLE_NAME, null, null);
+        db.delete(LogsTable.TABLE_NAME, null, null);
+        db.delete(AroundInfoTable.TABLE_NAME, null, null);
     }
 }
