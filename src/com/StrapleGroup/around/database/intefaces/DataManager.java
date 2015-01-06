@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface DataManager {
 
-    public FriendsInfo getFriendInfo(long friendId);
+    public FriendsInfo getFriendInfo(String name);
 
     public List<FriendsInfo> getAllFriendsInfo();
 

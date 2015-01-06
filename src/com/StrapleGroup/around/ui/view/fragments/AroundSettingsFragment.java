@@ -1,5 +1,7 @@
 package com.StrapleGroup.around.ui.view.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +17,7 @@ import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -52,6 +55,28 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.around_settings);
         prefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+        ((Preference) findPreference("location_settings")).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                return true;
+            }
+        });
+        ((Preference) findPreference("credits")).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                AlertDialog.Builder pBuilder = new AlertDialog.Builder(getActivity());
+                pBuilder.setTitle("Credentials");
+                pBuilder.setMessage("StrapleGroup \n \n" +
+                        "Robert Sreberski \n" +
+                        "Mikołaj Speichert \n" +
+                        "Mateusz Rumiński \n \n" +
+                        "Special thanks for: \n" +
+                        "Michał Hołownia- alpha tester");
+                pBuilder.show();
+                return true;
+            }
+        });
         ((Preference) findPreference("log_out")).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {

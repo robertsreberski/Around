@@ -4,7 +4,6 @@
     <PreferenceCategory android:title="Account Actions">
 
     </PreferenceCategory>
-    <Preference android:title="Change Status"></Preference>
     <Preference
         android:title="Change Photo"
         android:key="change_photo"></Preference>
@@ -14,9 +13,10 @@
             android:title="@string/name_notifications"
             android:defaultValue="true"></CheckBoxPreference>
         <ListPreference
-            android:key="around_range"
-            android:title="Range of view"
+            android:key="@string/key_range"
+            android:title="Range of view [meters]"
             android:entries="@array/range"
+            android:defaultValue="2500"
             android:entryValues="@array/range"></ListPreference>
         <CheckBoxPreference
             android:key="inapp_sounds"
@@ -28,8 +28,14 @@
         android:key="more_info">
         <Preference android:title="Support"></Preference>
         <Preference android:title="Privacy Policy"></Preference>
+        <Preference
+            android:key="@string/key_credits"
+            android:title="Credentials"></Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="Advanced Actions">
+        <Preference
+            android:title="Location Settings"
+            android:key="location_settings"></Preference>
         <Preference
             android:title="Log Out"
             android:key="log_out"></Preference>

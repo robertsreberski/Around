@@ -21,6 +21,7 @@ import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.database.DataManagerImpl;
+import com.StrapleGroup.around.database.base.AroundInfo;
 import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.ui.utils.ImageHelper;
 import com.StrapleGroup.around.ui.view.dialogs.LocationDialog;
@@ -45,6 +46,7 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
     private Timer looper;
     private Context context;
     private SharedPreferences prefs;
+    private SharedPreferences settingsPrefs;
     private Handler serviceHandler;
     private GoogleApiClient googleApiClient;
     private DataManagerImpl dataManager;
@@ -63,6 +65,7 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
 
         Log.i("SERVICE_WORKING", "SENDING_DATA");
         context = getApplicationContext();
+        settingsPrefs = getSharedPreferences(SETTINGS_PREFS, MODE_PRIVATE);
         prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
         //dataManager initialization
         dataManager = new DataManagerImpl(this.context);
@@ -116,10 +119,11 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                             ConnectionHelper connectionHelper = new ConnectionHelper(context);
                             JSONObject pRefreshObject = connectionHelper.updateToApp(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""),
                                     Double.parseDouble(prefs.getString(KEY_X, "")), Double.parseDouble(prefs.getString(KEY_Y, "")),
-                                    prefs.getInt(KEY_ACTIVITY, 4), prefs.getString(KEY_STATUS, ""));
+                                    prefs.getInt(KEY_ACTIVITY, 4), settingsPrefs.getString(KEY_STATUS, ""));
                             try {
                                 if (pRefreshObject != null) {
                                     if (pRefreshObject.getBoolean(KEY_VALID)) {
+                                        dataManager.deleteAroundList();
                                         JSONArray pFriendArray = pRefreshObject.getJSONArray(KEY_FRIEND_LIST);
                                         JSONArray pRequestArray = pRefreshObject.getJSONArray(KEY_REQUEST_LIST);
                                         if (pRefreshObject.getBoolean(KEY_PHOTO_LIST)) {
@@ -131,7 +135,8 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                                             FriendsInfo pFriend = new FriendsInfo();
                                             final double pFriendLat = pJsonFriend.getDouble(KEY_X);
                                             final double pFriendLng = pJsonFriend.getDouble(KEY_Y);
-                                            pFriend.setLoginFriend(pJsonFriend.getString(KEY_LOGIN));
+                                            String pName = pJsonFriend.getString(KEY_LOGIN);
+                                            pFriend.setLoginFriend(pName);
                                             pFriend.setXFriend(pFriendLat);
                                             pFriend.setYFriend(pFriendLng);
                                             pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
@@ -147,7 +152,12 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
                                             Location pMyLocation = new Location("My Location");
                                             pMyLocation.setLatitude(Double.parseDouble(prefs.getString(KEY_X, "")));
                                             pMyLocation.setLongitude(Double.parseDouble(prefs.getString(KEY_Y, "")));
-                                            if (pMyLocation.distanceTo(pFriendLocation) <= MIN_DISTANCE) {
+                                            float pDistance = pMyLocation.distanceTo(pFriendLocation);
+                                            if (pDistance <= Float.parseFloat(settingsPrefs.getString(getString(R.string.key_range), ""))) {
+                                                AroundInfo pAround = new AroundInfo();
+                                                pAround.setLogin(pName);
+                                                pAround.setDistance(Float.toString(pDistance));
+                                                dataManager.saveAroundFriend(pAround);
                                                 Intent pNotifierIntent = new Intent(context, AroundNotifierService.class);
                                                 pNotifierIntent.putExtra(KEY_LOGIN, pJsonFriend.getString(KEY_LOGIN));
                                                 pNotifierIntent.putExtra(KEY_X, pFriendLat);

@@ -15,6 +15,7 @@ import com.StrapleGroup.around.database.daos.AroundInfoDao;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
 import com.StrapleGroup.around.database.daos.LogsDao;
 import com.StrapleGroup.around.database.intefaces.DataManager;
+import com.StrapleGroup.around.database.tables.AroundInfoTable;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
 
 import java.util.List;
@@ -44,8 +45,8 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
-    public FriendsInfo getFriendInfo(long friendId) {
-        FriendsInfo pFriendInfo = friendsDao.get(friendId);
+    public FriendsInfo getFriendInfo(String name) {
+        FriendsInfo pFriendInfo = friendsDao.get(findFriend(name));
         return pFriendInfo;
     }
 
@@ -58,10 +59,8 @@ public class DataManagerImpl implements DataManager {
     }
 
     public Cursor getAroundCursor() {
-        return db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
-                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO, FriendsInfoTable.FriendsInfoColumns.X_FRIEND,
-                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY},
-                FriendsInfoTable.FriendsInfoColumns.STATUS + " =?", new String[]{Constants.STATUS_ONLINE}, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
+        return db.query(AroundInfoTable.TABLE_NAME, new String[]{AroundInfoTable.AroundColumns._ID, AroundInfoTable.AroundColumns.LOGIN_FRIEND,
+                AroundInfoTable.AroundColumns.DISTANCE}, null, null, null, null, AroundInfoTable.AroundColumns.LOGIN_FRIEND, null);
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.graphics.*;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
+
 import com.StrapleGroup.around.base.Constants;
 
 import java.io.ByteArrayOutputStream;
@@ -20,7 +21,7 @@ public class ImageHelper implements Constants {
     public String compressFromPhoto(Bitmap aBitmap) {
         int width = aBitmap.getWidth();
         int height = aBitmap.getHeight();
-        int maxSize = 150;
+        int maxSize = 400;
         float bitmapRatio = (float) width / (float) height;
         if (bitmapRatio > 1) {
             width = maxSize;

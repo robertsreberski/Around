@@ -45,5 +45,6 @@ public interface Constants {
 
     static final String KEY_MESSAGE = "message";
 
+    static final String SETTINGS_PREFS = "com.StrapleGroup.around_preferences";
     static final String USER_PREFS = "user_data";
 }

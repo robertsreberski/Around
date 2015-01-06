@@ -1,63 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" android:background="#ecf0f1">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ecf0f1">
 
-    <include android:layout_width="match_parent"
-             android:layout_height="60dp"
-             layout="@layout/action_bar_settings"
-             android:id="@+id/include" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
-             android:layout_alignParentStart="true"/>
-    <fragment android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:name="com.StrapleGroup.around.ui.view.fragments.AroundSettingsFragment"
-              android:id="@+id/fragment" android:layout_alignParentLeft="true"
-              android:layout_alignParentStart="true"
-              android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-              android:layout_alignParentBottom="true" android:layout_below="@+id/imageView2"/>
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        layout="@layout/action_bar_settings"
+        android:id="@+id/user_bar"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="com.StrapleGroup.around.ui.view.fragments.AroundSettingsFragment"
+        android:id="@+id/fragment"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/imageView2" />
+
     <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="115dp"
-            android:id="@+id/imageView2"
-            android:background="@drawable/card_ui"
-            android:layout_below="@+id/include" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:layout_marginBottom="0dp" android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp" android:layout_marginTop="5dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        android:id="@+id/imageView2"
+        android:background="@drawable/card_ui"
+        android:layout_below="@+id/user_bar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp" />
+
     <ImageView
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:id="@+id/profilePhoto"
-            android:layout_below="@+id/include" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:layout_marginLeft="10dp" android:layout_marginTop="10dp"/>
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:id="@+id/profilePhoto"
+        android:layout_below="@+id/user_bar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp" />
+
     <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/activity_view"
-            android:src="@drawable/icon_unknown"
-            android:layout_alignTop="@+id/login_view" android:layout_alignRight="@+id/imageView2"
-            android:layout_alignEnd="@+id/imageView2" android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"/>
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/activity_view"
+        android:src="@drawable/icon_unknown"
+        android:layout_alignTop="@+id/login_view"
+        android:layout_alignRight="@+id/imageView2"
+        android:layout_alignEnd="@+id/imageView2"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp" />
+
     <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/online"
-            android:id="@+id/photo"
-            android:layout_alignBottom="@+id/profilePhoto" android:layout_alignRight="@+id/profilePhoto"
-            android:layout_alignEnd="@+id/profilePhoto"/>
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/online"
+        android:id="@+id/photo"
+        android:layout_alignBottom="@+id/profilePhoto"
+        android:layout_alignRight="@+id/profilePhoto"
+        android:layout_alignEnd="@+id/profilePhoto" />
+
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Score: "
-            android:id="@+id/friend_name"
-            android:layout_marginLeft="20dp"
-            android:layout_below="@+id/login_view" android:layout_toEndOf="@+id/profilePhoto"
-            android:layout_marginStart="31dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score: "
+        android:id="@+id/friend_name"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/login_view"
+        android:layout_toEndOf="@+id/profilePhoto"
+        android:layout_marginStart="31dp" />
+
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="robert"
-            android:id="@+id/login_view"
-            android:layout_alignTop="@+id/profilePhoto" android:layout_alignStart="@+id/friend_name"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="robert"
+        android:id="@+id/login_view"
+        android:layout_alignTop="@+id/profilePhoto"
+        android:layout_alignStart="@+id/friend_name" />
 </RelativeLayout>

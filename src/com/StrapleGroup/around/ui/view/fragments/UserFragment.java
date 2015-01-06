@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.OpenHelper;
@@ -68,6 +69,7 @@ public class UserFragment extends Fragment implements Constants {
             changePhoto();
         }
     }
+
     private class ActivityReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -107,6 +109,7 @@ public class UserFragment extends Fragment implements Constants {
                 OpenHelper pOpenHelper = new OpenHelper(context);
                 SQLiteDatabase db = pOpenHelper.getWritableDatabase();
                 pOpenHelper.deleteDb(db);
+                db.close();
                 Intent logoffSuccessfulIntent = new Intent(context, LoginActivity.class);
                 startActivity(logoffSuccessfulIntent);
             }

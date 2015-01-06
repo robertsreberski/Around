@@ -26,6 +26,7 @@ public class MainActivity extends FragmentActivity implements Constants {
     private AroundViewPager pager;
     private Fragment navDrawer;
     private ImageButton drawer;
+    List<Fragment> fragments;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,17 +36,25 @@ public class MainActivity extends FragmentActivity implements Constants {
         this.initializePaging();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (pager.getCurrentItem() == 2) {
+            super.onBackPressed();
+        } else {
+            pager.setCurrentItem(2);
+        }
+    }
 
     private void initializePaging() {
         drawer = (ImageButton) findViewById(R.id.drawer);
-        List<Fragment> fragments = new Vector<Fragment>();
-        fragments.add(Fragment.instantiate(this, UserFragment.class.getName()));
-        fragments.add(Fragment.instantiate(this, AroundFriendsFragment.class.getName()));
+        fragments = new Vector<Fragment>();
         fragments.add(Fragment.instantiate(this, AroundMapFragment.class.getName()));
-        fragments.add(Fragment.instantiate(this, NewsFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, AroundFriendsFragment.class.getName()));
         fragments.add(Fragment.instantiate(this, FriendsListFragment.class.getName()));
-        this.pagerAdapter = new PagerAdapter(super.getSupportFragmentManager(), fragments);
+        fragments.add(Fragment.instantiate(this, NewsFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, UserFragment.class.getName()));
 
+        this.pagerAdapter = new PagerAdapter(super.getSupportFragmentManager(), fragments);
         pager = (AroundViewPager) findViewById(R.id.pager);
         pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -54,8 +63,9 @@ public class MainActivity extends FragmentActivity implements Constants {
             }
         });
         pager.setAdapter(this.pagerAdapter);
+        pager.setPageTransformer(true, new AroundPageTransformer());
         pager.setOffscreenPageLimit(4);
-        pager.setCurrentItem(2);
+        pager.setCurrentItem(0);
     }
 
 
@@ -84,14 +94,14 @@ public class MainActivity extends FragmentActivity implements Constants {
     }
 
     public void goFriendList(View view) {
-        pager.setCurrentItem(4, true);
+        pager.setCurrentItem(2, true);
         FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
         pTransaction.remove(navDrawer).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
         drawer.setImageResource(R.drawable.friendlist_img);
     }
 
     public void goSettings(View view) {
-        pager.setCurrentItem(0, true);
+        pager.setCurrentItem(4, true);
         FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
         pTransaction.remove(navDrawer).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
         drawer.setImageResource(R.drawable.settings_img);
@@ -105,7 +115,7 @@ public class MainActivity extends FragmentActivity implements Constants {
     }
 
     public void goHome(View view) {
-        pager.setCurrentItem(2, true);
+        pager.setCurrentItem(0, true);
         FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
         pTransaction.remove(navDrawer).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
         drawer.setImageResource(R.drawable.home_img);
@@ -118,6 +128,52 @@ public class MainActivity extends FragmentActivity implements Constants {
         drawer.setImageResource(R.drawable.news_img);
     }
 
+    private class AroundPageTransformer implements ViewPager.PageTransformer {
+        @Override
+        public void transformPage(View view, float position) {
+            int pageHeight = view.getHeight();
+            int pageWidth = view.getWidth();
+            if (position < -1) {
+                view.setAlpha(1);
+            } else if (position <= 1) {
+                int pPagerPosition = pager.getCurrentItem();
+                view.setTranslationX(pageWidth * -position);
+                view.setTranslationY(position * (pageHeight));
+//                switch (pPagerPosition){
+//                    case 0:
+//                        View pZeroView = fragments.get(pPagerPosition).getView();
+//                        pZeroView.setTranslationY(position*(pageHeight));
+//                    break;
+//                    case 1:
+//                        View pFirstView = fragments.get(pPagerPosition).getView();
+//                        pFirstView.setTranslationY(position*(pageHeight));
+//                        pFirstView.findViewById(R.id.around_bar).setTranslationY(position*(pageHeight/2));
+//                        break;
+//                    case 2:
+//                        View pSecondView = fragments.get(pPagerPosition).getView();
+//                        pSecondView.setTranslationY(position*(pageHeight));
+//                        pSecondView.findViewById(R.id.list_bar).setTranslationY(position*(pageHeight/2));
+//                        break;
+//                    case 3:
+//                        View pThirdView = fragments.get(pPagerPosition).getView();
+//                        pThirdView.setTranslationY(position*(pageHeight));
+//                        pThirdView.findViewById(R.id.news_bar).setTranslationY(position*(pageHeight/2));
+//                        break;
+//                    case 4:
+//                        View pFourthView = fragments.get(pPagerPosition).getView();
+//                        pFourthView.setTranslationY(position*(pageHeight));
+//                        pFourthView.findViewById(R.id.user_bar).setTranslationY(position*(pageHeight/2));
+//                        break;
+//                }
+//                drawer.setTranslationX(position*(pageWidth/3));
+//                drawer.setTranslationY(position*(pageHeight/3));
+//                drawer.setAlpha(1);
+            } else {
+                view.setAlpha(1);
+            }
+
+        }
+    }
     private class PagerAdapter extends FragmentStatePagerAdapter {
         private List<Fragment> fragments;
 

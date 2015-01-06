@@ -2,9 +2,18 @@
 <resources>
     <string name="key_notifications">notifications</string>
     <string name="name_notifications">Notifications</string>
+    <string name="key_credits">credits</string>
+    <string name="key_range">around_range</string>
+    <string name="key_online">online</string>
+    <string name="key_busy">busy</string>
+    <string name="key_offline"></string>
     <string-array name="range">
+        <item>100</item>
+        <item>500</item>
         <item>1000</item>
         <item>2000</item>
+        <item>2500</item>
+        <item>3000</item>
         <item>5000</item>
     </string-array>
 </resources>
