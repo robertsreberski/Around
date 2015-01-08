@@ -56,8 +56,7 @@ public class FriendsListFragment extends Fragment implements Constants, AdapterV
         View view = inflater.inflate(R.layout.fragment_friends_list, container, false);
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light
-                , android.R.color.holo_orange_light, android.R.color.holo_red_light);
+        swipeLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light);
         return view;
     }
 
