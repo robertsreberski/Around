@@ -49,6 +49,7 @@ public class UserFragment extends Fragment implements Constants {
     public void onStart() {
         super.onStart();
         changePhoto();
+        getIconFromType(prefs.getInt(Constants.KEY_ACTIVITY, 0));
         getActivity().registerReceiver(refreshReceiver, new IntentFilter(Constants.REFRESH_SETTINGS_LOCAL_ACTION));
         getActivity().registerReceiver(logoutRequestReceiver, new IntentFilter(Constants.LOG_OUT_LOCAL_ACTION));
         getActivity().registerReceiver(activityReceiver, new IntentFilter(Constants.ACTIVITY_RECOGNITION_LOCAL_ACTION));
@@ -60,6 +61,27 @@ public class UserFragment extends Fragment implements Constants {
         getActivity().unregisterReceiver(logoutRequestReceiver);
         getActivity().unregisterReceiver(activityReceiver);
         super.onStop();
+    }
+
+    public void getIconFromType(int activityType) {
+        ImageView pActivityView = (ImageView) getActivity().findViewById(R.id.activity_view);
+        switch (activityType) {
+            case DetectedActivity.IN_VEHICLE:
+                pActivityView.setImageResource(R.drawable.icon_car);
+                break;
+            case DetectedActivity.ON_BICYCLE:
+                pActivityView.setImageResource(R.drawable.icon_bike);
+                break;
+            case DetectedActivity.ON_FOOT:
+                pActivityView.setImageResource(R.drawable.icon_walk);
+                break;
+            case DetectedActivity.STILL:
+                pActivityView.setImageResource(R.drawable.icon_still);
+                break;
+            case DetectedActivity.UNKNOWN:
+                pActivityView.setImageResource(R.drawable.icon_unknown);
+                break;
+        }
     }
 
     private class RefreshReceiver extends BroadcastReceiver {
@@ -76,26 +98,6 @@ public class UserFragment extends Fragment implements Constants {
             getIconFromType(intent.getIntExtra(Constants.KEY_ACTIVITY, 0));
         }
 
-        private void getIconFromType(int activityType) {
-            ImageView pActivityView = (ImageView) getActivity().findViewById(R.id.activity_view);
-            switch (activityType) {
-                case DetectedActivity.IN_VEHICLE:
-                    pActivityView.setImageResource(R.drawable.icon_car);
-                    break;
-                case DetectedActivity.ON_BICYCLE:
-                    pActivityView.setImageResource(R.drawable.icon_bike);
-                    break;
-                case DetectedActivity.ON_FOOT:
-                    pActivityView.setImageResource(R.drawable.icon_walk);
-                    break;
-                case DetectedActivity.STILL:
-                    pActivityView.setImageResource(R.drawable.icon_still);
-                    break;
-                case DetectedActivity.UNKNOWN:
-                    pActivityView.setImageResource(R.drawable.icon_unknown);
-                    break;
-            }
-        }
     }
 
     public class LogoutRequestReceiver extends BroadcastReceiver {

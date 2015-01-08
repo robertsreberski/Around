@@ -29,7 +29,7 @@
         android:background="@drawable/false_button"
         android:layout_marginTop="14dp"
         android:layout_marginBottom="14dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="20dp" />
 
     <ImageButton
         android:layout_width="35dp"
@@ -41,4 +41,16 @@
         android:layout_toStartOf="@+id/set_false"
         android:layout_marginBottom="14dp"
         android:layout_marginRight="8dp" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/progress"
+        android:layout_alignTop="@+id/set_true"
+        android:layout_alignLeft="@+id/set_true"
+        android:layout_alignStart="@+id/set_true"
+        android:layout_marginLeft="20dp"
+        android:indeterminate="false"
+        android:visibility="invisible" />
 </RelativeLayout>

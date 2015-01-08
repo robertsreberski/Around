@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,9 +88,14 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
             ViewInvitationHolder pViewInvitationHolder = (ViewInvitationHolder) view.getTag();
             final String aFriendLogin = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
             pViewInvitationHolder.login.setText(aFriendLogin);
+            ProgressBar pProgressBar = (ProgressBar) view.findViewById(R.id.progress);
+
             pViewInvitationHolder.setTrue.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    pViewInvitationHolder.setTrue.setVisibility(View.INVISIBLE);
+                    pViewInvitationHolder.setFalse.setVisibility(View.INVISIBLE);
+                    pProgressBar.setVisibility(View.VISIBLE);
                     new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... params) {
@@ -107,6 +113,9 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
             pViewInvitationHolder.setFalse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    pViewInvitationHolder.setTrue.setVisibility(View.INVISIBLE);
+                    pViewInvitationHolder.setFalse.setVisibility(View.INVISIBLE);
+                    pProgressBar.setVisibility(View.VISIBLE);
                     new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... params) {
@@ -116,8 +125,8 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
                                 DataManagerImpl pDataManager = new DataManagerImpl(context);
                                 pDataManager.deleteFriend(pDataManager.findFriend(aFriendLogin));
                                 context.sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
-                            } else
-                                Toast.makeText(context, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
+                            }
+//                                Toast.makeText(context, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
                             return null;
                         }
                     }.execute(null, null, null);

@@ -27,6 +27,7 @@ public class FriendDialog extends Activity implements Constants {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_friend);
+        getWindow().setLayout(1300, 1500);
     }
 
     @Override
@@ -60,6 +61,7 @@ public class FriendDialog extends Activity implements Constants {
                         if (aBoolean == true) {
                             DataManagerImpl dataManager = new DataManagerImpl(getApplicationContext());
                             dataManager.deleteFriend(dataManager.findFriend(loginView.getText().toString()));
+                            dataManager.deleteAround(dataManager.findAround(loginView.getText().toString()));
                             sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
                             finish();
                         }
