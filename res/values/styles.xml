@@ -22,4 +22,8 @@
 
     </style>
 
+    <style name="DialogThemeFriend" parent="android:Theme.Holo.Light.Dialog.NoActionBar">
+
+    </style>
+
 </resources>

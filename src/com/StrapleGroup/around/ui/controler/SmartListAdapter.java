@@ -60,6 +60,7 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
         return 2;
     }
 
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         View v;
@@ -127,7 +128,7 @@ public class SmartListAdapter extends CursorAdapter implements Constants {
             final String pFriendName = cursor.getString(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND));
             pViewFriendHolder.login.setText(pFriendName);
             ImageHelper imageHelper = new ImageHelper();
-                    Bitmap fBitmap = imageHelper.decodeImageFromBytes(cursor.getBlob(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO)));
+            Bitmap fBitmap = imageHelper.decodeImageFromBytes(cursor.getBlob(cursor.getColumnIndex(FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO)));
             imageHelper.setImg(context, pViewFriendHolder.photo, fBitmap);
         }
     }

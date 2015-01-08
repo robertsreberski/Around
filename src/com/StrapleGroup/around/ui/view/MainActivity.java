@@ -1,5 +1,6 @@
 package com.StrapleGroup.around.ui.view;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.services.LocationService;
@@ -27,6 +29,8 @@ public class MainActivity extends FragmentActivity implements Constants {
     private Fragment navDrawer;
     private ImageButton drawer;
     List<Fragment> fragments;
+    private ObjectAnimator animateIn;
+    private ObjectAnimator animateOut;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +77,7 @@ public class MainActivity extends FragmentActivity implements Constants {
         if (findViewById(R.id.nav_drawer) == null) {
             navDrawer = new NavDrawer();
             FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
-            pTransaction.add(R.id.main_container, navDrawer).addToBackStack("NavDraw").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+            pTransaction.add(R.id.main_container, navDrawer).addToBackStack("NavDraw").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         } else {
             FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
             pTransaction.remove(navDrawer).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
@@ -174,6 +178,7 @@ public class MainActivity extends FragmentActivity implements Constants {
 
         }
     }
+
     private class PagerAdapter extends FragmentStatePagerAdapter {
         private List<Fragment> fragments;
 

@@ -50,6 +50,10 @@ public class DataManagerImpl implements DataManager {
         return pFriendInfo;
     }
 
+    public AroundInfo getAroundInfo(String name) {
+        return aroundDao.get(findAround(name));
+    }
+
     @Override
     public Cursor getCompleteCursor() {
         return db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
@@ -175,6 +179,22 @@ public class DataManagerImpl implements DataManager {
             db.endTransaction();
         }
     }
+
+    public long findAround(String login) {
+        return aroundDao.find(login);
+    }
+
+    public void updateAround(AroundInfo aAround) {
+        try {
+            db.beginTransaction();
+            aroundDao.update(aAround);
+            db.setTransactionSuccessful();
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "Broken DB");
+        } finally {
+            db.endTransaction();
+        }
+    }
 //    @Override
 //    public long saveLoginOnly(FriendsInfo friendsInfo) {
 //        long friendId = 0L;
@@ -208,5 +228,19 @@ public class DataManagerImpl implements DataManager {
         return result;
     }
 
+    public boolean deleteAround(long aroundId) {
+        boolean result = false;
+        try {
+            db.beginTransaction();
+            aroundDao.delete(Long.toString(aroundId));
+            db.setTransactionSuccessful();
+            result = true;
+        } catch (SQLException e) {
+            Log.e("Transaction unsuccessful", "SthBroke");
+        } finally {
+            db.endTransaction();
+        }
+        return result;
+    }
 
 }
