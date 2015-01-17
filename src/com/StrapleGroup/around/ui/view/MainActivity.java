@@ -1,8 +1,10 @@
 package com.StrapleGroup.around.ui.view;
 
 import android.animation.ObjectAnimator;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
@@ -31,6 +33,7 @@ public class MainActivity extends FragmentActivity implements Constants {
     List<Fragment> fragments;
     private ObjectAnimator animateIn;
     private ObjectAnimator animateOut;
+    private BroadcastReceiver changePageReceiver = new ChangePageReceiver();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,10 +45,10 @@ public class MainActivity extends FragmentActivity implements Constants {
 
     @Override
     public void onBackPressed() {
-        if (pager.getCurrentItem() == 2) {
+        if (pager.getCurrentItem() == 0) {
             super.onBackPressed();
         } else {
-            pager.setCurrentItem(2);
+            pager.setCurrentItem(0);
         }
     }
 
@@ -55,7 +58,6 @@ public class MainActivity extends FragmentActivity implements Constants {
         fragments.add(Fragment.instantiate(this, AroundMapFragment.class.getName()));
         fragments.add(Fragment.instantiate(this, AroundFriendsFragment.class.getName()));
         fragments.add(Fragment.instantiate(this, FriendsListFragment.class.getName()));
-        fragments.add(Fragment.instantiate(this, NewsFragment.class.getName()));
         fragments.add(Fragment.instantiate(this, UserFragment.class.getName()));
 
         this.pagerAdapter = new PagerAdapter(super.getSupportFragmentManager(), fragments);
@@ -68,7 +70,7 @@ public class MainActivity extends FragmentActivity implements Constants {
         });
         pager.setAdapter(this.pagerAdapter);
         pager.setPageTransformer(true, new AroundPageTransformer());
-        pager.setOffscreenPageLimit(4);
+        pager.setOffscreenPageLimit(3);
         pager.setCurrentItem(0);
     }
 
@@ -89,11 +91,13 @@ public class MainActivity extends FragmentActivity implements Constants {
         super.onResume();
         Log.i("Location service", "RESUME");
         startService(new Intent(MainActivity.this, LocationService.class));
+        registerReceiver(changePageReceiver, new IntentFilter(CHANGE_PAGE_LOCAL_ACTION));
     }
 
     @Override
     protected void onPause() {
         stopService(new Intent(MainActivity.this, LocationService.class));
+        unregisterReceiver(changePageReceiver);
         super.onPause();
     }
 
@@ -105,7 +109,7 @@ public class MainActivity extends FragmentActivity implements Constants {
     }
 
     public void goSettings(View view) {
-        pager.setCurrentItem(4, true);
+        pager.setCurrentItem(3, true);
         FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
         pTransaction.remove(navDrawer).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
         drawer.setImageResource(R.drawable.settings_img);
@@ -123,13 +127,6 @@ public class MainActivity extends FragmentActivity implements Constants {
         FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
         pTransaction.remove(navDrawer).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
         drawer.setImageResource(R.drawable.home_img);
-    }
-
-    public void goNews(View view) {
-        pager.setCurrentItem(3, true);
-        FragmentTransaction pTransaction = getSupportFragmentManager().beginTransaction();
-        pTransaction.remove(navDrawer).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
-        drawer.setImageResource(R.drawable.news_img);
     }
 
     private class AroundPageTransformer implements ViewPager.PageTransformer {
@@ -195,6 +192,14 @@ public class MainActivity extends FragmentActivity implements Constants {
         @Override
         public int getCount() {
             return this.fragments.size();
+        }
+    }
+
+    private class ChangePageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            pager.setCurrentItem(intent.getIntExtra("PAGE", 0), true);
+            drawer.setImageResource(R.drawable.aroundyou_img);
         }
     }
 }

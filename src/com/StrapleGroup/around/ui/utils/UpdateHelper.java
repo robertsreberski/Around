@@ -79,6 +79,8 @@ public class UpdateHelper implements Constants {
                         if (pDistance <= Float.parseFloat(settingsPrefs.getString(context.getString(R.string.key_range), "")) && pAroundL == l) {
                             AroundInfo pAround = new AroundInfo();
                             pAround.setLogin(pName);
+                            pAround.setX(pFriendLat);
+                            pAround.setY(pFriendLng);
                             pAround.setDistance(Float.toString(pDistance));
                             dataManager.saveAroundFriend(pAround);
                             Intent pNotifierIntent = new Intent(context, AroundNotifierService.class);
@@ -90,12 +92,15 @@ public class UpdateHelper implements Constants {
                         } else if (pDistance <= Float.parseFloat(settingsPrefs.getString(context.getString(R.string.key_range), "")) && pAroundL != l) {
                             AroundInfo pAround = new AroundInfo();
                             pAround.setLogin(pName);
+                            pAround.setX(pFriendLat);
+                            pAround.setY(pFriendLng);
                             pAround.setDistance(Float.toString(pDistance));
                             dataManager.updateAroundFriend(pAround);
                         } else if (pAroundL != l) {
                             dataManager.deleteAround(dataManager.findAround(pName));
                         }
                     }
+                    context.sendBroadcast(new Intent(MARKER_LOCAL_ACTION));
 
                     for (int i = 0; i < pRequestArray.length(); i++) {
                         JSONObject pJsonRequest = pRequestArray.getJSONObject(i);
@@ -104,7 +109,7 @@ public class UpdateHelper implements Constants {
                         ImageHelper pImageHelper = new ImageHelper();
                         pFriend.setLoginFriend(pJsonRequest.getString(KEY_LOGIN));
                         pFriend.setProfilePhoto(pImageHelper.encodeImageForDB(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example)));
-                        pFriend.setStatus(STATUS_INVITATION);
+                        pFriend.setStatus(STATUS_REQUEST);
                         if (pDataManager.findFriend(pJsonRequest.getString(KEY_LOGIN)) == -1)
                             pDataManager.saveRequest(pFriend);
                     }

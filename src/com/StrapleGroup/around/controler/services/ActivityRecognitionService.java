@@ -25,7 +25,7 @@ public class ActivityRecognitionService extends IntentService implements Constan
                     result.getMostProbableActivity();
             int confidence = mostProbableActivity.getConfidence();
             int activityType = mostProbableActivity.getType();
-            if (confidence >= 60) {
+            if (confidence >= 40) {
                 getSharedPreferences(USER_PREFS, MODE_PRIVATE).edit().putInt(KEY_ACTIVITY, activityType).commit();
                 Intent pReturnIntent = new Intent(ACTIVITY_RECOGNITION_LOCAL_ACTION);
                 pReturnIntent.putExtra(KEY_ACTIVITY, activityType);

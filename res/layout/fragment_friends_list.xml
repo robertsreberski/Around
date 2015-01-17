@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#ecf0f1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/friend_list_layout"
     android:animateLayoutChanges="true"
+    android:background="@android:color/white"
     tools:context="${packageName}.${activityClass}">
 
     <include
@@ -14,24 +14,27 @@
         layout="@layout/action_bar_friends"
         android:id="@+id/list_bar" />
 
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipe_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/list_bar">
+    <!--<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:id="@+id/swipe_container"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_below="@+id/list_bar">-->
 
-        <ListView
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:divider="@android:color/transparent"
-        android:dividerHeight="4dp"
+        android:dividerHeight="2dp"
+        android:fastScrollEnabled="true"
             android:overScrollMode="always"
             android:id="@+id/list"
+        android:background="@android:color/white"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/list_bar"
         android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:drawSelectorOnTop="false" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:drawSelectorOnTop="false"
+        android:layout_marginTop="10dp" />
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
 </RelativeLayout>

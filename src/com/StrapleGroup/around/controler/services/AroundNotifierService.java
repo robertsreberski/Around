@@ -40,7 +40,6 @@ public class AroundNotifierService extends IntentService implements Constants {
         pMarkerIntent.putExtra(KEY_X, pLat);
         pMarkerIntent.putExtra(KEY_Y, pLng);
         notifId = intent.getIntExtra("atomic", 0);
-        sendBroadcast(pMarkerIntent);
         sendNotification(pLogin, pMarkerIntent);
 
     }

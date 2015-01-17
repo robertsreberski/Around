@@ -153,7 +153,7 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
         looper.scheduleAtFixedRate(sendInfo, 2 * 1000, 60 * 1000);
         serviceHandler = new Handler();
         Log.e("CONNECTION", "JUST_CONNECTED");
-        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 1000, mActivityRecognitionPendingIntent);
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 100, mActivityRecognitionPendingIntent);
     }
 
     @Override

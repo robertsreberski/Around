@@ -10,6 +10,7 @@ public interface Constants {
     static final String DELETE_SERVER_ACTION = "com.StrapleGroup.DELETE";
     static final String DOWNLOAD_PHOTO_ACTION = "com.StrapleGroup.DOWNLOAD";
 
+    static final String CHANGE_PAGE_LOCAL_ACTION = "com.StrapleGroup.around.action.CHANGE_PAGE";
     static final String PHOTO_LOCAL_ACTION = "com.StrapleGroup.around.action.PHOTO";
     static final String DELETE_LOCAL_ACTION = "com.StrapleGroup.around.action.DELETE";
     static final String LOGIN_LOCAL_ACTION = "com.StrapleGroup.around.action.LOGIN";

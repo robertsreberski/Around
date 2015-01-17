@@ -6,6 +6,8 @@ package com.StrapleGroup.around.database.base;
 public class AroundInfo extends ModelBase {
     private String login;
     private String distance;
+    private double x;
+    private double y;
 
     public String getLogin() {
         return login;
@@ -21,5 +23,21 @@ public class AroundInfo extends ModelBase {
 
     public void setDistance(String distance) {
         this.distance = distance;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
     }
 }

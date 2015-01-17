@@ -13,6 +13,8 @@ public class AroundInfoTable {
     public static class AroundColumns implements BaseColumns {
         public static final String LOGIN_FRIEND = "login_friend";
         public static final String DISTANCE = "distance";
+        public static final String X = "x";
+        public static final String Y = "y";
     }
 
     public static void onCreate(SQLiteDatabase db) {
@@ -20,6 +22,8 @@ public class AroundInfoTable {
         build.append("CREATE TABLE " + AroundInfoTable.TABLE_NAME + " (");
         build.append(BaseColumns._ID + " INTEGER PRIMARY KEY, ");
         build.append(AroundColumns.LOGIN_FRIEND + " TEXT NOT NULL UNIQUE, ");
+        build.append(AroundColumns.X + " DOUBLE, ");
+        build.append(AroundColumns.Y + " DOUBLE, ");
         build.append(AroundColumns.DISTANCE + " FLOAT");
         build.append(");");
         db.execSQL(build.toString());

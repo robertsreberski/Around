@@ -10,10 +10,8 @@ import android.util.Log;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.database.base.AroundInfo;
 import com.StrapleGroup.around.database.base.FriendsInfo;
-import com.StrapleGroup.around.database.base.LogInfo;
 import com.StrapleGroup.around.database.daos.AroundInfoDao;
 import com.StrapleGroup.around.database.daos.FriendsInfoDao;
-import com.StrapleGroup.around.database.daos.LogsDao;
 import com.StrapleGroup.around.database.intefaces.DataManager;
 import com.StrapleGroup.around.database.tables.AroundInfoTable;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
@@ -28,7 +26,6 @@ public class DataManagerImpl implements DataManager {
     private Context context;
     private SQLiteDatabase db;
     private FriendsInfoDao friendsDao;
-    private LogsDao logsDao;
     private AroundInfoDao aroundDao;
 //	private UserInfoDao userDao;
 
@@ -39,7 +36,6 @@ public class DataManagerImpl implements DataManager {
         SQLiteOpenHelper openHelper = new OpenHelper(this.context);
         db = openHelper.getWritableDatabase();
         friendsDao = new FriendsInfoDao(db);
-        logsDao = new LogsDao(db);
         aroundDao = new AroundInfoDao(db);
 
     }
@@ -62,9 +58,15 @@ public class DataManagerImpl implements DataManager {
                 null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
     }
 
+
     public Cursor getAroundCursor() {
         return db.query(AroundInfoTable.TABLE_NAME, new String[]{AroundInfoTable.AroundColumns._ID, AroundInfoTable.AroundColumns.LOGIN_FRIEND,
-                AroundInfoTable.AroundColumns.DISTANCE}, null, null, null, null, AroundInfoTable.AroundColumns.LOGIN_FRIEND, null);
+                AroundInfoTable.AroundColumns.X, AroundInfoTable.AroundColumns.Y,
+                AroundInfoTable.AroundColumns.DISTANCE}, null, null, null, null, AroundInfoTable.AroundColumns.LOGIN_FRIEND + " COLLATE NOCASE ASC", null);
+    }
+
+    public List<AroundInfo> getAllAroundInfo() {
+        return aroundDao.getAllAround();
     }
 
     @Override
@@ -75,18 +77,6 @@ public class DataManagerImpl implements DataManager {
     @Override
     public long findFriend(String friendLogin) {
         return friendsDao.find(friendLogin);
-    }
-
-    public void saveLog(LogInfo logInfo) {
-        try {
-            db.beginTransaction();
-            logsDao.save(logInfo);
-            db.setTransactionSuccessful();
-        } catch (SQLException e) {
-            Log.e("Transaction unsuccessful", "SthBroke");
-        } finally {
-            db.endTransaction();
-        }
     }
 
     @Override
@@ -195,22 +185,6 @@ public class DataManagerImpl implements DataManager {
             db.endTransaction();
         }
     }
-//    @Override
-//    public long saveLoginOnly(FriendsInfo friendsInfo) {
-//        long friendId = 0L;
-//        try {
-//            db.beginTransaction();
-//            friendId = friendsDao.saveLoginOnly(friendsInfo);
-//            db.setTransactionSuccessful();
-//        } catch (SQLException e) {
-//            Log.e("Transaction unsuccessful", "Can't save friend");
-//            friendId = 0L;
-//        } finally {
-//            db.endTransaction();
-//        }
-//        return friendId;
-//    }
-
 
     @Override
     public boolean deleteFriend(long friendId) {

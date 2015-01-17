@@ -11,6 +11,9 @@ import com.StrapleGroup.around.database.base.FriendsInfo;
 import com.StrapleGroup.around.database.tables.AroundInfoTable;
 import com.StrapleGroup.around.database.tables.FriendsInfoTable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Robert on 2014-12-29.
  */
@@ -18,8 +21,10 @@ public class AroundInfoDao {
     private static final String INSERT_ALL = "insert into "
             + AroundInfoTable.TABLE_NAME + "("
             + AroundInfoTable.AroundColumns.LOGIN_FRIEND + " , "
+            + AroundInfoTable.AroundColumns.X + " , "
+            + AroundInfoTable.AroundColumns.Y + " , "
             + AroundInfoTable.AroundColumns.DISTANCE
-            + ") values (?, ?)";
+            + ") values (?, ?, ?, ?)";
     private SQLiteDatabase db;
     private SQLiteStatement insertStatement;
 
@@ -31,7 +36,9 @@ public class AroundInfoDao {
     public void save(AroundInfo aroundInfo) {
         insertStatement.clearBindings();
         insertStatement.bindString(1, aroundInfo.getLogin());
-        insertStatement.bindString(2, aroundInfo.getDistance());
+        insertStatement.bindDouble(2, aroundInfo.getX());
+        insertStatement.bindDouble(3, aroundInfo.getY());
+        insertStatement.bindString(4, aroundInfo.getDistance());
         insertStatement.executeInsert();
     }
 
@@ -42,14 +49,17 @@ public class AroundInfoDao {
     public void update(AroundInfo aroundInfo) {
         final ContentValues values = new ContentValues();
         values.put(AroundInfoTable.AroundColumns.LOGIN_FRIEND, aroundInfo.getLogin());
+        values.put(AroundInfoTable.AroundColumns.X, aroundInfo.getX());
+        values.put(AroundInfoTable.AroundColumns.Y, aroundInfo.getY());
         values.put(AroundInfoTable.AroundColumns.DISTANCE, aroundInfo.getDistance());
-        db.update(FriendsInfoTable.TABLE_NAME, values,
+        db.update(AroundInfoTable.TABLE_NAME, values,
                 BaseColumns._ID + " = " + find(aroundInfo.getLogin()), null);
     }
 
     public AroundInfo get(long id) {
         AroundInfo aroundInfo = null;
-        Cursor pCursor = db.query(AroundInfoTable.TABLE_NAME, new String[]{AroundInfoTable.AroundColumns.LOGIN_FRIEND, AroundInfoTable.AroundColumns.DISTANCE},
+        Cursor pCursor = db.query(AroundInfoTable.TABLE_NAME, new String[]{AroundInfoTable.AroundColumns._ID, AroundInfoTable.AroundColumns.LOGIN_FRIEND, AroundInfoTable.AroundColumns.X,
+                        AroundInfoTable.AroundColumns.Y, AroundInfoTable.AroundColumns.DISTANCE},
                 BaseColumns._ID + " =?", new String[]{String.valueOf(id)},
                 null, null, null, "1");
         if (pCursor.moveToFirst()) {
@@ -59,6 +69,26 @@ public class AroundInfoDao {
             pCursor.close();
         }
         return aroundInfo;
+    }
+
+    public List<AroundInfo> getAllAround() {
+        List<AroundInfo> pFriendsList = new ArrayList<AroundInfo>();
+        Cursor pCursor = db.query(AroundInfoTable.TABLE_NAME, new String[]{AroundInfoTable.AroundColumns._ID, AroundInfoTable.AroundColumns.LOGIN_FRIEND, AroundInfoTable.AroundColumns.X,
+                        AroundInfoTable.AroundColumns.Y, AroundInfoTable.AroundColumns.DISTANCE},
+                null, null, null, null, AroundInfoTable.AroundColumns.LOGIN_FRIEND + " COLLATE NOCASE ASC", null);
+        if (pCursor.moveToFirst()) {
+            do {
+                AroundInfo pFriendsInfo = this
+                        .buildUserInfoFromCursor(pCursor);
+                if (pFriendsInfo != null) {
+                    pFriendsList.add(pFriendsInfo);
+                }
+            } while (pCursor.moveToNext());
+        }
+        if (!pCursor.isClosed()) {
+            pCursor.close();
+        }
+        return pFriendsList;
     }
 
     public void delete(String id) {
@@ -84,7 +114,9 @@ public class AroundInfoDao {
             pAroundInfo = new AroundInfo();
             pAroundInfo.setId(pCursor.getLong(0));
             pAroundInfo.setLogin(pCursor.getString(1));
-            pAroundInfo.setDistance(Float.toString(pCursor.getFloat(2)));
+            pAroundInfo.setX(pCursor.getDouble(2));
+            pAroundInfo.setY(pCursor.getDouble(3));
+            pAroundInfo.setDistance(Float.toString(pCursor.getFloat(4)));
         }
         return pAroundInfo;
     }

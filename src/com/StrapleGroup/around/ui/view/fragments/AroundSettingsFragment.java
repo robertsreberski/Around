@@ -26,6 +26,7 @@ import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.ConnectionHelper;
 import com.StrapleGroup.around.ui.utils.ImageHelper;
+import com.StrapleGroup.around.ui.utils.UpdateHelper;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -50,6 +51,7 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
     File photoFile;
     String currentPhotoPath;
     SharedPreferences prefs;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,21 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                return true;
+            }
+        });
+        ((Preference) findPreference("around_range")).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                new AsyncTask<Void, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        UpdateHelper pUpdateHelper = new UpdateHelper(getActivity().getApplicationContext());
+                        pUpdateHelper.getUpdateOnDemand();
+                        return null;
+                    }
+                }.execute(null, null, null);
                 return true;
             }
         });

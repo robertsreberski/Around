@@ -61,40 +61,13 @@
         android:elevation="4dp"
         android:layout_height="45dp"
         android:background="@drawable/circle_background_orange"
-        android:id="@+id/news_img"
-        android:onClick="goNews"
-        android:src="@drawable/news_img"
-        android:layout_above="@+id/settings_img"
-        android:layout_alignRight="@+id/imageButton2"
-        android:layout_alignEnd="@+id/imageButton2"
-        android:layout_marginBottom="10dp" />
-
-    <ImageButton
-        android:layout_width="45dp"
-        android:elevation="4dp"
-        android:layout_height="45dp"
-        android:background="@drawable/circle_background_orange"
         android:id="@+id/friendlist_img"
         android:onClick="goFriendList"
         android:src="@drawable/friendlist_img"
-        android:layout_above="@+id/news_img"
         android:layout_alignRight="@+id/imageButton2"
         android:layout_alignEnd="@+id/imageButton2"
-        android:layout_marginBottom="10dp" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:background="@drawable/card_ui"
-        android:text="News"
-        android:id="@+id/news_label"
-        android:layout_alignBottom="@+id/news_img"
-        android:layout_alignRight="@+id/settings_label"
-        android:layout_alignEnd="@+id/settings_label"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/settings_img" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -151,9 +124,9 @@
         android:text="Friend List"
         android:id="@+id/friendlist_label"
         android:layout_alignBottom="@+id/friendlist_img"
-        android:layout_alignRight="@+id/news_label"
-        android:layout_alignEnd="@+id/news_label"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="5dp"
+        android:layout_alignRight="@+id/settings_label"
+        android:layout_alignEnd="@+id/settings_label" />
 
     <ImageButton
         android:layout_width="45dp"

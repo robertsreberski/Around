@@ -1,6 +1,7 @@
 package com.StrapleGroup.around.ui.view.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -43,6 +45,9 @@ public class NavDrawer extends Fragment implements Constants {
         addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
                 if (friendLogin.isShown()) {
                     new AsyncTask<Void, Void, Boolean>() {
                         @Override
@@ -55,6 +60,14 @@ public class NavDrawer extends Fragment implements Constants {
                             super.onPostExecute(aBoolean);
                             if (aBoolean) {
                                 Toast.makeText(getActivity().getApplicationContext(), friendLogin.getText().toString() + " added", Toast.LENGTH_LONG).show();
+                                DataManagerImpl dataManager = new DataManagerImpl(context);
+                                FriendsInfo pFriend = new FriendsInfo();
+                                ImageHelper pImageHelper = new ImageHelper();
+                                pFriend.setLoginFriend(friendLogin.getText().toString());
+                                pFriend.setProfilePhoto(pImageHelper.encodeImageForDB(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example)));
+                                pFriend.setStatus(Constants.STATUS_INVITATION);
+                                dataManager.saveRequest(pFriend);
+                                context.sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
                                 friendLogin.setVisibility(View.INVISIBLE);
                                 friendLogin.setText("");
                             } else

@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.StrapleGroup.around"
     android:versionCode="14"
-    android:versionName="0.01 ALPHA">
+    android:versionName="0.17 ALPHA">
 
-    <uses-feature
+<uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
     <uses-feature

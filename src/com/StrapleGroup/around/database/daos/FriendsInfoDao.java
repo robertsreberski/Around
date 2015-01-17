@@ -94,8 +94,9 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
 
     public FriendsInfo get(long id) {
         FriendsInfo pFriendsInfo = null;
-        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoColumns._ID, FriendsInfoColumns.LOGIN_FRIEND, FriendsInfoColumns.PROFILE_PHOTO,
-                        FriendsInfoColumns.X_FRIEND, FriendsInfoColumns.Y_FRIEND, FriendsInfoColumns.STATUS, FriendsInfoColumns.ACTIVITY},
+        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
+                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO, FriendsInfoTable.FriendsInfoColumns.X_FRIEND,
+                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY},
                 BaseColumns._ID + " =?", new String[]{String.valueOf(id)},
                 null, null, null, "1");
         if (pCursor.moveToFirst()) {
@@ -110,10 +111,10 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
     @Override
     public List<FriendsInfo> getAll() {
         List<FriendsInfo> pFriendsList = new ArrayList<FriendsInfo>();
-        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{
-                        FriendsInfoColumns.LOGIN_FRIEND,
-                        FriendsInfoColumns.X_FRIEND, FriendsInfoColumns.Y_FRIEND},
-                null, null, null, null, FriendsInfoColumns.LOGIN_FRIEND, null);
+        Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
+                        FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO, FriendsInfoTable.FriendsInfoColumns.X_FRIEND,
+                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY},
+                null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND + " COLLATE NOCASE ASC", null);
         if (pCursor.moveToFirst()) {
             do {
                 FriendsInfo pFriendsInfo = this
