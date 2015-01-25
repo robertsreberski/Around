@@ -7,6 +7,24 @@ public class FriendsInfo extends ModelBase {
     private byte[] profilePhoto;
     private int activities;
     private String status;
+    private int score;
+    private boolean poked;
+
+    public boolean isPoked() {
+        return poked;
+    }
+
+    public void setPoked(boolean poked) {
+        this.poked = poked;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     public byte[] getProfilePhoto() {
         return profilePhoto;

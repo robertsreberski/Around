@@ -1,36 +1,43 @@
 package com.StrapleGroup.around.ui.view;
 
-import android.app.Activity;
+import android.animation.ValueAnimator;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.graphics.Point;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.Display;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
-import com.StrapleGroup.around.controler.ConnectionHelper;
-import com.StrapleGroup.around.ui.utils.ConnectionUtils;
-import com.StrapleGroup.around.ui.utils.FastLocationObtainer;
-import com.StrapleGroup.around.ui.utils.ImageHelper;
-import com.google.android.gms.location.DetectedActivity;
+import com.StrapleGroup.around.ui.utils.FuckTextLayout;
+import com.StrapleGroup.around.ui.view.fragments.LoginFragment;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.LoginButton;
+import com.google.android.gms.common.SignInButton;
 
-public class LoginActivity extends Activity implements Constants {
+import java.util.Arrays;
+
+public class LoginActivity extends FragmentActivity implements Constants, Session.StatusCallback {
     private Context context;
-    private EditText loginField;
-    private EditText passField;
-    private SharedPreferences prefs;
-    private String login = null;
-    private String pass = null;
     private Button loginButton = null;
-    private ProgressBar loginProgress = null;
+    private LoginButton facebookLogin;
+    private SignInButton googleLogin;
+    private FuckTextLayout loginContainer = null;
+    private MyGestureDetector gestureListener = new MyGestureDetector();
+    private float width;
+    private float height;
+    private UiLifecycleHelper fbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +46,64 @@ public class LoginActivity extends Activity implements Constants {
         setContentView(R.layout.activity_login);
 
         context = getApplicationContext();
-        loginField = (EditText) findViewById(R.id.loginField);
-        passField = (EditText) findViewById(R.id.passField);
-        loginButton = (Button) findViewById(R.id.loginButton);
-        loginProgress = (ProgressBar) findViewById(R.id.loginProgress);
-        loginProgress.setVisibility(View.INVISIBLE);
+        fbHelper = new UiLifecycleHelper(this, this);
+        fbHelper.onCreate(savedInstanceState);
+        loginButton = (Button) findViewById(R.id.go_register);
+        GestureDetector gestureDetector = new GestureDetector(this, gestureListener);
+        loginContainer = (FuckTextLayout) findViewById(R.id.login_container);
+        facebookLogin = (LoginButton) findViewById(R.id.facebook_login);
+        facebookLogin.setReadPermissions(Arrays.asList("email", "public_profile"));
+        googleLogin = (SignInButton) findViewById(R.id.google_login);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
+        loginContainer.setOnTouchListener(new TouchEvents());
+
+    }
+
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (state.isOpened()) {
+            Log.i("facebook", "Logged in...");
+        } else if (state.isClosed()) {
+            Log.i("facebook", "Logged out...");
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Session session = Session.getActiveSession();
+        if (session != null &&
+                (session.isOpened() || session.isClosed())) {
+            onSessionStateChange(session, session.getState(), null);
+        }
+        fbHelper.onResume();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        fbHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        fbHelper.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        fbHelper.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        fbHelper.onSaveInstanceState(outState);
     }
 
     public void goRegister(View v) {
@@ -51,81 +111,142 @@ public class LoginActivity extends Activity implements Constants {
         startActivity(pGoRegister);
     }
 
-    public void login(View v) {
-        boolean done = true;
-        loginField.setError(null);
-        passField.setError(null);
-        login = loginField.getText().toString();
-        pass = passField.getText().toString();
-        if (TextUtils.isEmpty(login)) {
-            loginField.setError("Field required");
-            done = false;
-        } else if (TextUtils.isEmpty(pass)) {
-            passField.setError("Field required");
-            done = false;
-        }
-        if (done) {
-            if (ConnectionUtils.hasActiveInternetConnection(context)) {
-                loginButton.setText("");
-                loginProgress.setVisibility(View.VISIBLE);
-                prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
-                new AsyncTask<Void, Void, Boolean>() {
-                    Double pLat;
-                    Double pLng;
-                    @Override
-                    protected Boolean doInBackground(Void... params) {
-                        ConnectionHelper pConnectionHelper = new ConnectionHelper(context);
-                        FastLocationObtainer pFastLocationObtainer = new FastLocationObtainer(LoginActivity.this);
-                        pLat = pFastLocationObtainer.getLatitude();
-                        pLng = pFastLocationObtainer.getLongtitude();
-                        int pActivity = DetectedActivity.UNKNOWN;
-                        if (prefs.contains(KEY_X) && prefs.contains(KEY_Y)) {
-                            pLat = Double.parseDouble(prefs.getString(KEY_X, ""));
-                            pLng = Double.parseDouble(prefs.getString(KEY_Y, ""));
+    @Override
+    public void call(Session session, SessionState state, Exception exception) {
+        onSessionStateChange(session, state, exception);
+    }
+
+    public class TouchEvents implements View.OnTouchListener {
+        float startY = 0;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_MOVE:
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) loginContainer.getLayoutParams();
+                    float y = event.getRawY();
+                    int deltaY = (int) (y - startY);
+                    float pHeight = loginContainer.getHeight();
+
+                    params.height = (int) pHeight - deltaY;
+
+                    loginButton.setAlpha(1 - (pHeight / (height / 2)));
+                    facebookLogin.setAlpha(1 - (pHeight / (height / 2)));
+                    googleLogin.setAlpha(1 - (pHeight / (height / 2)));
+
+                    ValueAnimator pAnim = ValueAnimator.ofFloat(pHeight, (float) params.height);
+                    pAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            loginContainer.setLayoutParams(params);
                         }
-                        if (prefs.contains(KEY_ACTIVITY)) pActivity = prefs.getInt(KEY_ACTIVITY, 4);
-                        return pConnectionHelper.loginToApp(login, pass, pLat, pLng, pActivity);
-                    }
+                    });
+                    pAnim.setTarget(loginContainer);
+                    pAnim.start();
+                    startY = y;
+                    return true;
 
-                    @Override
-                    protected void onPostExecute(Boolean aBool) {
-                        super.onPostExecute(aBool);
-                        if (aBool) {
-                            SharedPreferences.Editor pEditor = prefs.edit();
-                            pEditor.putString(KEY_LOGIN, login);
-                            pEditor.putString(KEY_PASS, pass);
-                            pEditor.putString(KEY_STATUS, STATUS_ONLINE);
-                            pEditor.putString(KEY_X, Double.toString(pLat));
-                            pEditor.putString(KEY_Y, Double.toString(pLng));
-//                            ImageHelper pImageHelper = new ImageHelper();
-//                            String photoString = pImageHelper.encodeImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example));
-//                            pEditor.putString(KEY_PHOTO, photoString);
-                            pEditor.commit();
-                            nextActivity();
-                        } else badRequest();
+                case MotionEvent.ACTION_DOWN:
+                    loginButton.setEnabled(false);
+                    facebookLogin.setEnabled(false);
+                    googleLogin.setEnabled(false);
+
+                    startY = event.getRawY();
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    RelativeLayout.LayoutParams paramsUp = (RelativeLayout.LayoutParams) loginContainer.getLayoutParams();
+                    if (paramsUp.height < height / 5) {
+
+                        ValueAnimator pAnim2 = ValueAnimator.ofFloat((float) paramsUp.height, 220);
+                        pAnim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                paramsUp.height = 220;
+
+                                loginButton.setEnabled(true);
+                                facebookLogin.setEnabled(true);
+                                googleLogin.setEnabled(true);
+                                loginButton.setAlpha(1);
+                                facebookLogin.setAlpha(1);
+                                googleLogin.setAlpha(1);
+                                loginContainer.setLayoutParams(paramsUp);
+                            }
+                        });
+                        pAnim2.setTarget(loginContainer);
+                        pAnim2.start();
+                    } else {
+                        ValueAnimator pAnim2 = ValueAnimator.ofFloat((float) paramsUp.height, height / 2);
+                        pAnim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                paramsUp.height = (int) height / 2;
+                                loginContainer.setLayoutParams(paramsUp);
+                                loginButton.setAlpha(0);
+                                facebookLogin.setAlpha(0);
+                                googleLogin.setAlpha(0);
+                            }
+                        });
+                        pAnim2.setTarget(loginContainer);
+                        pAnim2.start();
                     }
-                }.execute(null, null, null);
-            } else noConnection();
+                    return true;
+            }
+            return false;
+        }
+
+    }
+
+    private class MyGestureDetector extends android.view.GestureDetector.SimpleOnGestureListener {
+        private static final int SWIPE_MIN_DISTANCE = 120;
+        private static final int SWIPE_MAX_OFF_PATH = -250;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 2000;
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) loginContainer.getLayoutParams();
+                if (loginContainer.getHeight() > (height / 5)) {
+                    params.height = (int) height / 2;
+                    loginContainer.setLayoutParams(params);
+//                    ValueAnimator pAnim = ValueAnimator.ofFloat(loginContainer.getHeight(), height / 2);
+//                    pAnim.setDuration(1000);
+//                    pAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                        @Override
+//                        public void onAnimationUpdate(ValueAnimator animation) {
+//
+//
+//                        }
+//                    });
+//                    pAnim.start();
+                } else {
+                    params.height = 70;
+                    loginContainer.setLayoutParams(params);
+//                    ValueAnimator pAnim = ValueAnimator.ofFloat(loginContainer.getHeight(), 70);
+//                    pAnim.setDuration(1000);
+//                    pAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                        @Override
+//                        public void onAnimationUpdate(ValueAnimator animation) {
+//
+//
+//                        }
+//                    });
+//                    pAnim.start();
+                }
+
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
         }
     }
-
-    protected void nextActivity() {
-        Intent pNextActivityIntent = new Intent(this, MainActivity.class);
-        startActivity(pNextActivityIntent);
-        finish();
-    }
-
-    private void noConnection() {
-        loginProgress.setVisibility(View.INVISIBLE);
-        loginButton.setText("Log in");
-        Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show();
-    }
-
-    protected void badRequest() {
-        loginProgress.setVisibility(View.INVISIBLE);
-        loginButton.setText("Log in");
-        Toast.makeText(this, "Unauthorized", Toast.LENGTH_SHORT).show();
-    }
-
 }

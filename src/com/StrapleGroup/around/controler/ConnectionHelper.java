@@ -44,12 +44,13 @@ public class ConnectionHelper implements Constants {
         this.pPrefs = context.getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
     }
 
-    public boolean loginToApp(String aLogin, String aPass, Double aLat, Double aLng, int aActivity) {
+    public boolean loginToApp(String aEmail, String aLogin, String aPass, Double aLat, Double aLng, int aActivity) {
         boolean bool = false;
         JSONObject pObject = new JSONObject();
         try {
             pObject.put(KEY_ACTION, LOGIN_SERVER_ACTION);
             pObject.put(KEY_LOGIN, aLogin);
+            pObject.put(KEY_EMAIL, aEmail);
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_X, aLat);
             pObject.put(KEY_Y, aLng);
@@ -86,11 +87,12 @@ public class ConnectionHelper implements Constants {
         return bool;
     }
 
-    public boolean registerToApp(String aLogin, String aPass, Double aLat, Double aLng, String aPhoto, int aActivity) {
+    public boolean registerToApp(String aEmail, String aLogin, String aPass, Double aLat, Double aLng, String aPhoto, int aActivity) {
         boolean bool = false;
         JSONObject pObject = new JSONObject();
         try {
             pObject.put(KEY_ACTION, REGISTER_SERVER_ACTION);
+            pObject.put(KEY_EMAIL, aEmail);
             pObject.put(KEY_LOGIN, aLogin);
             pObject.put(KEY_PASS, aPass);
             pObject.put(KEY_X, aLat);
@@ -178,12 +180,16 @@ public class ConnectionHelper implements Constants {
             if (pJsonResponse.getBoolean(KEY_VALID)) {
                 FriendsInfo pFriend = new FriendsInfo();
                 DataManagerImpl pDataManager = new DataManagerImpl(context);
-                pFriend.setLoginFriend(aLogin);
+                pFriend.setLoginFriend(aFriendLogin);
                 pFriend.setXFriend(pJsonResponse.getDouble(KEY_X));
                 pFriend.setYFriend(pJsonResponse.getDouble(KEY_Y));
                 pFriend.setStatus(pJsonResponse.getString(KEY_STATUS));
                 pFriend.setActivities(pJsonResponse.getInt(KEY_ACTIVITY));
                 pDataManager.updateFriendInfo(pFriend);
+                FriendsInfo pPhoto = new FriendsInfo();
+                pPhoto.setLoginFriend(aFriendLogin);
+                pPhoto.setProfilePhoto(Base64.decode(pJsonResponse.getString(KEY_PHOTO), 0));
+                pDataManager.updatePhoto(pPhoto);
                 bool = true;
             }
         } catch (JSONException e) {
@@ -195,7 +201,7 @@ public class ConnectionHelper implements Constants {
         return bool;
     }
 
-    public JSONObject updateToApp(String aLogin, String aPass, Double aLat, Double aLng, int aActivity, String aStatus) {
+    public JSONObject updateToApp(String aLogin, String aPass, Double aLat, Double aLng, int aActivity, String aStatus, int score) {
         JSONObject pObject = new JSONObject();
         JSONObject pJsonFinal = null;
         try {
@@ -206,6 +212,7 @@ public class ConnectionHelper implements Constants {
             pObject.put(KEY_Y, aLng);
             pObject.put(KEY_STATUS, aStatus);
             pObject.put(KEY_ACTIVITY, aActivity);
+            pObject.put(KEY_SCORE, score);
             // Where should request go?
             JSONObject pJsonResponse = sendToServer(pObject);
             if (pJsonResponse.getBoolean(KEY_VALID))
@@ -234,7 +241,8 @@ public class ConnectionHelper implements Constants {
     private boolean restoreData(JSONObject aObject) throws JSONException {
         boolean pBool = false;
         if (aObject.getBoolean(KEY_VALID)) {
-            pPrefs.edit().putString(KEY_PHOTO, aObject.getString(KEY_PHOTO)).commit();
+            pPrefs.edit().putString(KEY_LOGIN, aObject.getString(KEY_LOGIN)).putString(KEY_PHOTO, aObject.getString(KEY_PHOTO))
+                    .putInt(KEY_SCORE, aObject.getInt(KEY_SCORE)).commit();
             DataManagerImpl pDataManager = new DataManagerImpl(context);
             JSONArray pJsonArray = aObject.getJSONArray(KEY_FRIEND_LIST);
             if (pJsonArray != null) {
@@ -247,6 +255,8 @@ public class ConnectionHelper implements Constants {
                     pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
                     pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
                     pFriend.setProfilePhoto(Base64.decode(pJsonFriend.getString(KEY_PHOTO), 0));
+//                    pFriend.setScore(pJsonFriend.getInt(KEY_SCORE));
+                    pFriend.setPoked(false);
                     pDataManager.saveFriendInfo(pFriend);
                 }
             }

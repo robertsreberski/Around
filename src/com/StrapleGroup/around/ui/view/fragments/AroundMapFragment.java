@@ -1,12 +1,15 @@
 package com.StrapleGroup.around.ui.view.fragments;
 
 
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +23,16 @@ import com.StrapleGroup.around.database.base.AroundInfo;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.*;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class AroundMapFragment extends Fragment implements Constants, GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
@@ -39,6 +47,7 @@ public class AroundMapFragment extends Fragment implements Constants, GoogleMap.
     private boolean isAround = false;
     private int width;
     private int height;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,28 +115,34 @@ public class AroundMapFragment extends Fragment implements Constants, GoogleMap.
                 pMarkerOptions.position(pLatLng).title(pAround.getLogin()).flat(true);
                 markerList.add(mapPane.addMarker(pMarkerOptions));
             }
+            markerList.add(addMeMarker());
             addMarkers();
         }
+    }
+
+    private Marker addMeMarker() {
+        SharedPreferences pLatLngPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
+        LatLng pLatLng = new LatLng(Double.parseDouble(pLatLngPrefs.getString(KEY_X, "")), Double.parseDouble(pLatLngPrefs.getString(KEY_Y, "")));
+        BitmapDescriptor pMyLocIcon = BitmapDescriptorFactory.fromResource(R.drawable.my_loc_marker);
+        return mapPane.addMarker(new MarkerOptions().flat(true).icon(pMyLocIcon).position(pLatLng));
     }
 
     public void mapCustomer() {
         mapPane = mapFragment.getMap();
         SharedPreferences pLatLngPrefs = getActivity().getSharedPreferences(USER_PREFS, Context.MODE_PRIVATE);
         if (pLatLngPrefs.contains(KEY_X) && pLatLngPrefs.contains(KEY_Y)) {
-            LatLng pLatLng = new LatLng(Double.parseDouble(pLatLngPrefs.getString(KEY_X, "")), Double.parseDouble(pLatLngPrefs.getString(KEY_Y, "")));
-            BitmapDescriptor pMyLocIcon = BitmapDescriptorFactory.fromResource(R.drawable.my_loc_marker);
             if (locMarker != null) {
                 locMarker.remove();
             }
-            locMarker = mapPane.addMarker(new MarkerOptions().flat(true).icon(pMyLocIcon).position(pLatLng));
+            locMarker = addMeMarker();
             CameraPosition pCameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(Double.parseDouble(pLatLngPrefs.getString(KEY_X, "")), Double.parseDouble(pLatLngPrefs.getString(KEY_Y, "")))).zoom(16).build();
+                    .target(new LatLng(Double.parseDouble(pLatLngPrefs.getString(KEY_X, "")),
+                            Double.parseDouble(pLatLngPrefs.getString(KEY_Y, "")))).zoom(15).build();
             mapPane.moveCamera(CameraUpdateFactory
                     .newCameraPosition(pCameraPosition));
         }
         mapPane.setMyLocationEnabled(false);
         mapPane.setBuildingsEnabled(true);
-
         mapPane.setOnMarkerClickListener(this);
         mapPane.setOnCameraChangeListener(this);
         mapPane.setOnInfoWindowClickListener(this);
@@ -156,9 +171,9 @@ public class AroundMapFragment extends Fragment implements Constants, GoogleMap.
             locMarker.remove();
         }
         locMarker = mapPane.addMarker(new MarkerOptions().flat(true).icon(pMyLocIcon).position(pLatLng));
-        if (isAround = false) {
+        if (isAround == false) {
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(pLatLng).zoom(15).build();
+                    .target(pLatLng).zoom(16).build();
             mapPane.animateCamera(CameraUpdateFactory
                     .newCameraPosition(cameraPosition));
         }

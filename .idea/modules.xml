@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Around.iml" filepath="$PROJECT_DIR$/Around.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libs/facebook-android-sdk-3.22.0/facebook/facebook.iml" filepath="$PROJECT_DIR$/libs/facebook-android-sdk-3.22.0/facebook/facebook.iml" />
       <module fileurl="file://C:/android_sdk/sdk/extras/google/google_play_services/libproject/google-play-services_lib/google-play-services_lib.iml" filepath="C:/android_sdk/sdk/extras/google/google_play_services/libproject/google-play-services_lib/google-play-services_lib.iml" />
     </modules>
   </component>

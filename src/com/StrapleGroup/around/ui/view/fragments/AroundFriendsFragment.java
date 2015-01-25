@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
 import com.StrapleGroup.around.R;
 import com.StrapleGroup.around.base.Constants;
 import com.StrapleGroup.around.controler.services.DataRefreshService;
@@ -35,7 +36,7 @@ public class AroundFriendsFragment extends Fragment implements SwipeRefreshLayou
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
-        dataManager = new DataManagerImpl(context);
+        dataManager = DataManagerImpl.getInstance(context);
         getActivity().registerReceiver(refreshReceiver, new IntentFilter(Constants.REFRESH_FRIEND_LIST_LOCAL_ACTION));
         aroundListAdapter = new AroundListAdapter(context, dataManager.getAroundCursor(), 0);
 

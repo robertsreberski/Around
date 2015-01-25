@@ -2,8 +2,10 @@ package com.StrapleGroup.around.ui.utils;
 
 import android.content.Context;
 import android.graphics.*;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.StrapleGroup.around.base.Constants;
@@ -21,7 +23,7 @@ public class ImageHelper implements Constants {
     public String compressFromPhoto(Bitmap aBitmap) {
         int width = aBitmap.getWidth();
         int height = aBitmap.getHeight();
-        int maxSize = 400;
+        int maxSize = 450;
         float bitmapRatio = (float) width / (float) height;
         if (bitmapRatio > 1) {
             width = maxSize;
@@ -91,8 +93,8 @@ public class ImageHelper implements Constants {
 
     public void setImg(Context context, ImageView imageView, Bitmap aBitmap) {
         Bitmap sbmp;
-        if (aBitmap.getWidth() != 330 || aBitmap.getHeight() != 330)
-            sbmp = Bitmap.createScaledBitmap(aBitmap, 330, 330, true);
+        if (aBitmap.getWidth() != 450 || aBitmap.getHeight() != 450)
+            sbmp = Bitmap.createScaledBitmap(aBitmap, 450, 450, true);
         else sbmp = aBitmap;
         Bitmap output = Bitmap.createBitmap(sbmp.getWidth(),
                 sbmp.getHeight(), Bitmap.Config.ARGB_8888);
@@ -114,4 +116,5 @@ public class ImageHelper implements Constants {
         Log.d("IMG_SIZE", output.getHeight() + "," + output.getWidth());
         imageView.setImageBitmap(output);
     }
+
 }

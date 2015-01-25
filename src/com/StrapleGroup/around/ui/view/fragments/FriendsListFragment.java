@@ -54,7 +54,7 @@ public class FriendsListFragment extends Fragment implements Constants, AdapterV
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
         deleteReceiver = new DeleteReceiver();
-        dataManager = new DataManagerImpl(this.context);
+        dataManager = DataManagerImpl.getInstance(context);
         smartListAdapter = new SmartListBetterAdapter(context);
 
     }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/card_ui">
+
+    <EditText
+        android:id="@+id/loginField"
+        android:hint="E-mail"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_width="250dp"
+        android:singleLine="true"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/pull_text"
+        android:layout_marginTop="30dp">
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:onClick="Login"
+        android:text="Log in"
+        android:background="@drawable/flat_buttons"
+        android:layout_below="@+id/passField"
+        android:layout_alignRight="@+id/passField"
+        android:layout_alignEnd="@+id/passField"
+        android:layout_alignLeft="@+id/passField"
+        android:layout_alignStart="@+id/passField"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:textStyle="bold"
+        android:textSize="17dp"
+        android:textColor="#ffffffff" />
+
+    <EditText
+        android:id="@+id/passField"
+        android:layout_width="250dp"
+        android:hint="Password"
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        android:layout_below="@+id/loginField"
+        android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        style="@android:style/Widget.Holo.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loginProgress"
+        android:layout_alignTop="@+id/loginButton"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Pull to login"
+        android:id="@+id/pull_text"
+        android:capitalize="characters"
+        android:gravity="center"
+        android:enabled="false"
+        android:focusable="false"
+        android:clickable="false"
+        android:layout_alignRight="@+id/loginField"
+        android:layout_alignEnd="@+id/loginField"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/loginField"
+        android:layout_alignStart="@+id/loginField"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp" />
+</RelativeLayout>

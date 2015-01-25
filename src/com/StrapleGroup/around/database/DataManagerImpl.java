@@ -27,6 +27,7 @@ public class DataManagerImpl implements DataManager {
     private SQLiteDatabase db;
     private FriendsInfoDao friendsDao;
     private AroundInfoDao aroundDao;
+    private static DataManagerImpl mInstance = null;
 //	private UserInfoDao userDao;
 
     public DataManagerImpl(Context context) {
@@ -38,6 +39,17 @@ public class DataManagerImpl implements DataManager {
         friendsDao = new FriendsInfoDao(db);
         aroundDao = new AroundInfoDao(db);
 
+    }
+
+    public static DataManagerImpl getInstance(Context ctx) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (mInstance == null) {
+            mInstance = new DataManagerImpl(ctx.getApplicationContext());
+        }
+        return mInstance;
     }
 
     @Override
@@ -54,7 +66,7 @@ public class DataManagerImpl implements DataManager {
     public Cursor getCompleteCursor() {
         return db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
                         FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO, FriendsInfoTable.FriendsInfoColumns.X_FRIEND,
-                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY},
+                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY, FriendsInfoTable.FriendsInfoColumns.SCORE},
                 null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, null);
     }
 

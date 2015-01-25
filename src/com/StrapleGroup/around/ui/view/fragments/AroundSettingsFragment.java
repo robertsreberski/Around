@@ -1,9 +1,11 @@
 package com.StrapleGroup.around.ui.view.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -48,6 +50,7 @@ import java.util.List;
 public class AroundSettingsFragment extends PreferenceFragment implements Constants {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int SELECT_PICTURE = 2;
     File photoFile;
     String currentPhotoPath;
     SharedPreferences prefs;
@@ -105,7 +108,21 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
         ((Preference) findPreference("change_photo")).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                dispatchTakePictureIntent();
+                AlertDialog.Builder pDialog = new AlertDialog.Builder(getActivity());
+                pDialog.setTitle("Choose photo").setItems(new String[]{"Take photo", "From gallery"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            dispatchTakePictureIntent();
+                        } else {
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+                        }
+                    }
+                });
+                pDialog.create().show();
                 return true;
             }
         });
@@ -127,42 +144,72 @@ public class AroundSettingsFragment extends PreferenceFragment implements Consta
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            getActivity().getContentResolver().notifyChange(Uri.fromFile(photoFile), null);
-            ContentResolver cr = getActivity().getContentResolver();
+        if (resultCode == Activity.RESULT_OK) {
             ImageHelper pImageHelper = new ImageHelper();
-            Bitmap imageBitmap = null;
-            Matrix matrix = new Matrix();
-            try {
-                imageBitmap = MediaStore.Images.Media.getBitmap(cr, Uri.fromFile(photoFile));
-                matrix.postRotate(getPhotoRotation());
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                getActivity().getContentResolver().notifyChange(Uri.fromFile(photoFile), null);
+                ContentResolver cr = getActivity().getContentResolver();
+                Bitmap imageBitmap = null;
+                Matrix matrix = new Matrix();
+                try {
+                    imageBitmap = MediaStore.Images.Media.getBitmap(cr, Uri.fromFile(photoFile));
+                    matrix.postRotate(getPhotoRotation());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Bitmap rotatedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
+                final String pPhotoString = pImageHelper.compressFromPhoto(rotatedBitmap);
+                new AsyncTask<Void, Void, Boolean>() {
+
+                    @Override
+                    protected Boolean doInBackground(Void... params) {
+                        ConnectionHelper pConnectionHelper = new ConnectionHelper(getActivity().getApplicationContext());
+                        return pConnectionHelper.updatePhoto(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""), pPhotoString);
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean aBoolean) {
+                        super.onPostExecute(aBoolean);
+                        if (aBoolean) {
+                            SharedPreferences.Editor pPrefsEdit = prefs.edit();
+                            pPrefsEdit.putString(Constants.KEY_PHOTO, pPhotoString);
+                            pPrefsEdit.commit();
+                            getActivity().sendBroadcast(new Intent(REFRESH_SETTINGS_LOCAL_ACTION));
+                        } else
+                            Toast.makeText(getActivity().getApplicationContext(), "An error occured while changing photo", Toast.LENGTH_SHORT).show();
+                    }
+                }.execute(null, null, null);
             }
-            Bitmap rotatedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
-            final String pPhotoString = pImageHelper.compressFromPhoto(rotatedBitmap);
-            new AsyncTask<Void, Void, Boolean>() {
+            if (requestCode == SELECT_PICTURE) {
+                Bitmap pBitmap = null;
+                try {
+                    pBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+                    final String pPhotoString = pImageHelper.compressFromPhoto(pBitmap);
+                    new AsyncTask<Void, Void, Boolean>() {
 
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    ConnectionHelper pConnectionHelper = new ConnectionHelper(getActivity().getApplicationContext());
-                    return pConnectionHelper.updatePhoto(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""), pPhotoString);
-                }
+                        @Override
+                        protected Boolean doInBackground(Void... params) {
+                            ConnectionHelper pConnectionHelper = new ConnectionHelper(getActivity().getApplicationContext());
+                            return pConnectionHelper.updatePhoto(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""), pPhotoString);
+                        }
 
-                @Override
-                protected void onPostExecute(Boolean aBoolean) {
-                    super.onPostExecute(aBoolean);
-                    if (aBoolean) {
-                        SharedPreferences.Editor pPrefsEdit = prefs.edit();
-                        pPrefsEdit.putString(Constants.KEY_PHOTO, pPhotoString);
-                        pPrefsEdit.commit();
-                        getActivity().sendBroadcast(new Intent(REFRESH_SETTINGS_LOCAL_ACTION));
-                    } else
-                        Toast.makeText(getActivity().getApplicationContext(), "An error occured while changing photo", Toast.LENGTH_SHORT).show();
+                        @Override
+                        protected void onPostExecute(Boolean aBoolean) {
+                            super.onPostExecute(aBoolean);
+                            if (aBoolean) {
+                                SharedPreferences.Editor pPrefsEdit = prefs.edit();
+                                pPrefsEdit.putString(Constants.KEY_PHOTO, pPhotoString);
+                                pPrefsEdit.commit();
+                                getActivity().sendBroadcast(new Intent(REFRESH_SETTINGS_LOCAL_ACTION));
+                            } else
+                                Toast.makeText(getActivity().getApplicationContext(), "An error occured while changing photo", Toast.LENGTH_SHORT).show();
+                        }
+                    }.execute(null, null, null);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            }.execute(null, null, null);
+            }
         }
-
     }
 
     private int getPhotoRotation() throws IOException {

@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,38 +46,47 @@ public class NavDrawer extends Fragment implements Constants {
         addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
                 if (friendLogin.isShown()) {
-                    new AsyncTask<Void, Void, Boolean>() {
-                        @Override
-                        protected Boolean doInBackground(Void... params) {
-                            return sendRequest(friendLogin.getText().toString());
-                        }
+                    if (getActivity().getCurrentFocus() != null) {
+                        InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                                InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                    DataManagerImpl dataManager = DataManagerImpl.getInstance(context);
+                    String friendName = friendLogin.getText().toString();
+                    if (TextUtils.isEmpty(friendName) || dataManager.findFriend(friendName) != -1) {
+                        Toast.makeText(context, "Can't add typed friend", Toast.LENGTH_SHORT).show();
+                    } else {
+                        new AsyncTask<Void, Void, Boolean>() {
+                            @Override
+                            protected Boolean doInBackground(Void... params) {
+                                return sendRequest(friendLogin.getText().toString());
+                            }
 
-                        @Override
-                        protected void onPostExecute(Boolean aBoolean) {
-                            super.onPostExecute(aBoolean);
-                            if (aBoolean) {
-                                Toast.makeText(getActivity().getApplicationContext(), friendLogin.getText().toString() + " added", Toast.LENGTH_LONG).show();
-                                DataManagerImpl dataManager = new DataManagerImpl(context);
-                                FriendsInfo pFriend = new FriendsInfo();
-                                ImageHelper pImageHelper = new ImageHelper();
-                                pFriend.setLoginFriend(friendLogin.getText().toString());
-                                pFriend.setProfilePhoto(pImageHelper.encodeImageForDB(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example)));
-                                pFriend.setStatus(Constants.STATUS_INVITATION);
-                                dataManager.saveRequest(pFriend);
-                                context.sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
-                                friendLogin.setVisibility(View.INVISIBLE);
-                                friendLogin.setText("");
-                            } else
-                                Toast.makeText(context, "Friend cannot be added now", Toast.LENGTH_SHORT).show();
-                        }
-                    }.execute(null, null, null);
+                            @Override
+                            protected void onPostExecute(Boolean aBoolean) {
+                                super.onPostExecute(aBoolean);
+                                if (aBoolean) {
+                                    Toast.makeText(getActivity().getApplicationContext(), friendLogin.getText().toString() + " added", Toast.LENGTH_LONG).show();
+
+                                    FriendsInfo pFriend = new FriendsInfo();
+                                    ImageHelper pImageHelper = new ImageHelper();
+                                    pFriend.setLoginFriend(friendLogin.getText().toString());
+                                    pFriend.setProfilePhoto(pImageHelper.encodeImageForDB(BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook_example)));
+                                    pFriend.setStatus(Constants.STATUS_INVITATION);
+                                    dataManager.saveRequest(pFriend);
+                                    context.sendBroadcast(new Intent(REFRESH_FRIEND_LIST_LOCAL_ACTION));
+                                    friendLogin.setVisibility(View.INVISIBLE);
+                                    friendLogin.setText("");
+                                } else
+                                    Toast.makeText(context, "Friend cannot be added now", Toast.LENGTH_SHORT).show();
+                            }
+                        }.execute(null, null, null);
+                    }
                 } else {
                     friendLogin.setVisibility(View.VISIBLE);
                 }
+
             }
         });
     }

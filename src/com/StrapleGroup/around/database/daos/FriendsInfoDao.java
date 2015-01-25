@@ -21,8 +21,9 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
             + FriendsInfoColumns.LOGIN_FRIEND + " , "
             + FriendsInfoColumns.PROFILE_PHOTO + " , "
             + FriendsInfoColumns.X_FRIEND + " , " + FriendsInfoColumns.Y_FRIEND + " , "
-            + FriendsInfoColumns.STATUS + " , " + FriendsInfoColumns.ACTIVITY
-            + ") values (?, ?, ?, ?, ?, ?)";
+            + FriendsInfoColumns.STATUS + " , " + FriendsInfoColumns.ACTIVITY + " , "
+            + FriendsInfoColumns.SCORE + " , " + FriendsInfoColumns.IS_POKED
+            + ") values (?, ?, ?, ?, ?, ?, ?, ?)";
     private SQLiteDatabase db;
     private SQLiteStatement insertStatement;
 
@@ -40,6 +41,8 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         insertStatement.bindDouble(4, friendsInfo.getYFriend());
         insertStatement.bindString(5, friendsInfo.getStatus());
         insertStatement.bindDouble(6, friendsInfo.getActivities());
+        insertStatement.bindDouble(7, friendsInfo.getScore());
+        insertStatement.bindString(8, "false");
         return insertStatement.executeInsert();
     }
 
@@ -52,6 +55,8 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         insertStatement.bindDouble(4, 0);
         insertStatement.bindString(5, friendsInfo.getStatus());
         insertStatement.bindDouble(6, DetectedActivity.UNKNOWN);
+        insertStatement.bindDouble(7, friendsInfo.getScore());
+        insertStatement.bindString(8, "false");
         insertStatement.executeInsert();
     }
 
@@ -63,6 +68,7 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         values.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
         values.put(FriendsInfoColumns.STATUS, friendsInfo.getStatus());
         values.put(FriendsInfoColumns.ACTIVITY, friendsInfo.getActivities());
+        values.put(FriendsInfoColumns.SCORE, friendsInfo.getScore());
         db.update(FriendsInfoTable.TABLE_NAME, values,
                 BaseColumns._ID + " = " + find(friendsInfo.getLoginFriend()), null);
     }
@@ -76,14 +82,12 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
                 BaseColumns._ID + " = " + find(friendsInfo.getLoginFriend()), null);
     }
 
-    @Override
-    public void updateCoordinates(FriendsInfo friendsInfo, String id) {
-        final ContentValues pValues = new ContentValues();
-        pValues.put(FriendsInfoColumns.STATUS, friendsInfo.getStatus());
-        pValues.put(FriendsInfoColumns.ACTIVITY, friendsInfo.getActivities());
-        pValues.put(FriendsInfoColumns.X_FRIEND, friendsInfo.getXFriend());
-        pValues.put(FriendsInfoColumns.Y_FRIEND, friendsInfo.getYFriend());
-        db.update(FriendsInfoTable.TABLE_NAME, pValues, BaseColumns._ID + "=" + id, null);
+    public void setPoked(FriendsInfo friendsInfo) {
+        final ContentValues values = new ContentValues();
+        values.put(FriendsInfoColumns.LOGIN_FRIEND, friendsInfo.getLoginFriend());
+        values.put(FriendsInfoColumns.IS_POKED, friendsInfo.isPoked());
+        db.update(FriendsInfoTable.TABLE_NAME, values,
+                BaseColumns._ID + " = " + find(friendsInfo.getLoginFriend()), null);
     }
 
     @Override
@@ -96,7 +100,8 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         FriendsInfo pFriendsInfo = null;
         Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
                         FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO, FriendsInfoTable.FriendsInfoColumns.X_FRIEND,
-                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY},
+                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY,
+                        FriendsInfoColumns.SCORE, FriendsInfoColumns.IS_POKED},
                 BaseColumns._ID + " =?", new String[]{String.valueOf(id)},
                 null, null, null, "1");
         if (pCursor.moveToFirst()) {
@@ -113,7 +118,8 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
         List<FriendsInfo> pFriendsList = new ArrayList<FriendsInfo>();
         Cursor pCursor = db.query(FriendsInfoTable.TABLE_NAME, new String[]{FriendsInfoTable.FriendsInfoColumns._ID,
                         FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND, FriendsInfoTable.FriendsInfoColumns.PROFILE_PHOTO, FriendsInfoTable.FriendsInfoColumns.X_FRIEND,
-                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY},
+                        FriendsInfoTable.FriendsInfoColumns.Y_FRIEND, FriendsInfoTable.FriendsInfoColumns.STATUS, FriendsInfoTable.FriendsInfoColumns.ACTIVITY,
+                        FriendsInfoColumns.SCORE, FriendsInfoColumns.IS_POKED},
                 null, null, null, null, FriendsInfoTable.FriendsInfoColumns.LOGIN_FRIEND + " COLLATE NOCASE ASC", null);
         if (pCursor.moveToFirst()) {
             do {
@@ -141,6 +147,8 @@ public class FriendsInfoDao implements Dao<FriendsInfo> {
             pFriendsInfo.setYFriend(pCursor.getDouble(4));
             pFriendsInfo.setStatus(pCursor.getString(5));
             pFriendsInfo.setActivities(pCursor.getInt(6));
+            pFriendsInfo.setScore(pCursor.getInt(7));
+            pFriendsInfo.setPoked(Boolean.parseBoolean(pCursor.getString(8)));
         }
         return pFriendsInfo;
     }

@@ -32,7 +32,7 @@ public class UpdateHelper implements Constants {
 
     public UpdateHelper(Context context) {
         this.context = context;
-        dataManager = new DataManagerImpl(context);
+        dataManager = DataManagerImpl.getInstance(context);
     }
 
     public void getUpdateOnDemand() {
@@ -41,15 +41,12 @@ public class UpdateHelper implements Constants {
         ConnectionHelper connectionHelper = new ConnectionHelper(context);
         JSONObject pRefreshObject = connectionHelper.updateToApp(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""),
                 Double.parseDouble(prefs.getString(KEY_X, "")), Double.parseDouble(prefs.getString(KEY_Y, "")),
-                prefs.getInt(KEY_ACTIVITY, 4), settingsPrefs.getString(KEY_STATUS, ""));
+                prefs.getInt(KEY_ACTIVITY, 4), settingsPrefs.getString(KEY_STATUS, ""), prefs.getInt(KEY_SCORE, 0));
         try {
             if (pRefreshObject != null) {
                 if (pRefreshObject.getBoolean(KEY_VALID)) {
                     JSONArray pFriendArray = pRefreshObject.getJSONArray(KEY_FRIEND_LIST);
                     JSONArray pRequestArray = pRefreshObject.getJSONArray(KEY_REQUEST_LIST);
-                    if (pRefreshObject.getBoolean(KEY_PHOTO_LIST)) {
-                        connectionHelper.updatePhotoRequest(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""));
-                    }
                     for (int i = 0; i < pFriendArray.length(); i++) {
                         JSONObject pJsonFriend = pFriendArray.getJSONObject(i);
                         DataManagerImpl pDataManager = new DataManagerImpl(context);
@@ -62,6 +59,7 @@ public class UpdateHelper implements Constants {
                         pFriend.setYFriend(pFriendLng);
                         pFriend.setActivities(pJsonFriend.getInt(KEY_ACTIVITY));
                         pFriend.setStatus(pJsonFriend.getString(KEY_STATUS));
+                        pFriend.setScore(pJsonFriend.getInt(KEY_SCORE));
                         if (pDataManager.findFriend(pJsonFriend.getString(KEY_LOGIN)) == -1) {
                             pDataManager.saveFriendInfo(pFriend);
                         } else {
@@ -98,6 +96,9 @@ public class UpdateHelper implements Constants {
                             dataManager.updateAroundFriend(pAround);
                         } else if (pAroundL != l) {
                             dataManager.deleteAround(dataManager.findAround(pName));
+                        }
+                        if (pRefreshObject.getBoolean(KEY_PHOTO_LIST)) {
+                            connectionHelper.updatePhotoRequest(prefs.getString(KEY_LOGIN, ""), prefs.getString(KEY_PASS, ""));
                         }
                     }
                     context.sendBroadcast(new Intent(MARKER_LOCAL_ACTION));

@@ -43,14 +43,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by Robert on 2014-08-30.
  */
 public class DataRefreshService extends Service implements Constants, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
-    float MIN_DISTANCE = 1 * 1000;
     private SendInfoTask sendInfo;
     private Timer looper;
     private Context context;
     private SharedPreferences prefs;
     private Handler serviceHandler;
     private GoogleApiClient googleApiClient;
-    private DataManagerImpl dataManager;
     private Location lastLocation;
     private PendingIntent mActivityRecognitionPendingIntent;
 
@@ -68,8 +66,8 @@ public class DataRefreshService extends Service implements Constants, GoogleApiC
         context = getApplicationContext();
         prefs = getSharedPreferences(USER_PREFS, MODE_PRIVATE);
         //dataManager initialization
-        dataManager = new DataManagerImpl(this.context);
-        googleApiClient = new GoogleApiClient.Builder(this).addApi(ActivityRecognition.API).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
+        googleApiClient = new GoogleApiClient.Builder(this).addApi(ActivityRecognition.API).addApi(LocationServices.API).addConnectionCallbacks(this).
+                addOnConnectionFailedListener(this).build();
         Intent activityRecognitionIntent = new Intent(
                 context, ActivityRecognitionService.class);
         mActivityRecognitionPendingIntent =

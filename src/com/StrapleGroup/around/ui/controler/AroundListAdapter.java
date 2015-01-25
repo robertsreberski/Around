@@ -29,7 +29,7 @@ public class AroundListAdapter extends CursorAdapter implements Constants {
 
     public AroundListAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
-        dataManager = new DataManagerImpl(context);
+        dataManager = DataManagerImpl.getInstance(context);
     }
 
     @Override

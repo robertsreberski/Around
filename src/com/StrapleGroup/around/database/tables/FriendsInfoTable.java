@@ -14,6 +14,8 @@ public class FriendsInfoTable {
         public static final String STATUS = "status";
         public static final String ACTIVITY = "activity";
         public static final String PROFILE_PHOTO = "profile_photo";
+        public static final String SCORE = "score";
+        public static final String IS_POKED = "is_poked";
     }
 
     public static void onCreate(SQLiteDatabase db) {
@@ -25,7 +27,9 @@ public class FriendsInfoTable {
         build.append(FriendsInfoColumns.X_FRIEND + " DOUBLE, ");
         build.append(FriendsInfoColumns.Y_FRIEND + " DOUBLE, ");
         build.append(FriendsInfoColumns.STATUS + " TEXT, ");
-        build.append(FriendsInfoColumns.ACTIVITY + " INTEGER");
+        build.append(FriendsInfoColumns.ACTIVITY + " INTEGER, ");
+        build.append(FriendsInfoColumns.SCORE + " INTEGER, ");
+        build.append(FriendsInfoColumns.IS_POKED + " BOOLEAN");
         build.append(");");
         db.execSQL(build.toString());
     }
